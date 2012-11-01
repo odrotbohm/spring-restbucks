@@ -98,6 +98,7 @@ class PaymentServiceImpl implements PaymentService, ApplicationEventPublisherAwa
 	 * @see org.springsource.restbucks.payment.PaymentService#getPaymentFor(org.springsource.restbucks.order.Order)
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public Payment getPaymentFor(Order order) {
 		return paymentRepository.findByOrder(order);
 	}
