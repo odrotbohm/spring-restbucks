@@ -35,7 +35,7 @@ public class ApplicationIntegrationTest extends AbstractIntegrationTest {
 	ApplicationContext context;
 
 	@Test
-	public void foo() {
+	public void initializesRootApplicationContext() {
 		new Repositories(context);
 	}
 
