@@ -17,12 +17,15 @@ package org.springsource.restbucks.payment;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.payment.Payment.Receipt;
+import org.springsource.restbucks.support.NoOpApplicationEventPublisher;
 
 /**
  * Implementation of {@link PaymentService} delegating persistence operations to {@link PaymentRepository} and
@@ -32,10 +35,12 @@ import org.springsource.restbucks.payment.Payment.Receipt;
  */
 @Service
 @Transactional
-class PaymentServiceImpl implements PaymentService {
+class PaymentServiceImpl implements PaymentService, ApplicationEventPublisherAware {
 
 	private final CreditCardRepository creditCardRepository;
 	private final PaymentRepository paymentRepository;
+
+	private ApplicationEventPublisher publisher = NoOpApplicationEventPublisher.INSTANCE;
 
 	/**
 	 * Creates a new {@link PaymentServiceImpl} from the given {@link PaymentRepository} and {@link CreditCardRepository}.
@@ -55,23 +60,35 @@ class PaymentServiceImpl implements PaymentService {
 
 	/* 
 	 * (non-Javadoc)
+	 * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
+	 */
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
+		this.publisher = publisher;
+	}
+
+	/* 
+	 * (non-Javadoc)
 	 * @see org.springsource.restbucks.payment.PaymentService#pay(org.springsource.restbucks.order.Order, org.springsource.restbucks.payment.Payment)
 	 */
 	@Override
 	public CreditCardPayment pay(Order order, CreditCardNumber creditCardNumber) {
 
 		if (order.isPaid()) {
-			throw new RuntimeException();
+			throw new PaymentException(order, "Order already paid!");
 		}
 
 		CreditCard creditCard = creditCardRepository.findByNumber(creditCardNumber);
 
 		if (!creditCard.isValid(new LocalDate())) {
-			throw new IllegalArgumentException();
+			throw new PaymentException(order, String.format("No credit card found for NUMBER: %s",
+					creditCardNumber.getNumber()));
 		}
 
-		CreditCardPayment payment = paymentRepository.save(new CreditCardPayment(creditCard, order));
 		order.markPaid();
+		CreditCardPayment payment = paymentRepository.save(new CreditCardPayment(creditCard, order));
+
+		publisher.publishEvent(new OrderPayedEvent(order.getId(), this));
 
 		return payment;
 	}
