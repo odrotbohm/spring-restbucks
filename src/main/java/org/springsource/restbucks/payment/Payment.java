@@ -2,6 +2,7 @@ package org.springsource.restbucks.payment;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -27,7 +28,7 @@ import org.springsource.restbucks.order.Order;
 @NoArgsConstructor
 public abstract class Payment extends AbstractEntity {
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.MERGE)
 	private Order order;
 	private Date paymentDate;
 
