@@ -64,6 +64,6 @@ public class CreditCard extends AbstractEntity {
 	public boolean isValid(LocalDate date) {
 
 		LocalDate reference = new LocalDate(expiryYear.getYears(), expiryMonth.getMonths(), 1);
-		return date == null ? false : reference.isBefore(date);
+		return date == null ? false : reference.isAfter(date);
 	}
 }
