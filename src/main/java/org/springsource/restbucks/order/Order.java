@@ -18,9 +18,9 @@ import org.springsource.restbucks.core.AbstractEntity;
 import org.springsource.restbucks.core.MonetaryAmount;
 
 @Entity
-@Table(name = "RBOrder")
 @Getter
-@Setter()
+@Setter
+@Table(name = "RBOrder")
 public class Order extends AbstractEntity {
 
 	private Location location;
@@ -73,23 +73,101 @@ public class Order extends AbstractEntity {
 		return result;
 	}
 
+	/**
+	 * Marks the {@link Order} as payed.
+	 */
 	public void markPaid() {
+
+		if (isPaid()) {
+			throw new IllegalStateException("Already paid order cannot be paid again!");
+		}
+
 		this.status = Status.PAYED;
 	}
 
+	/**
+	 * Marks the {@link Order} as in preparation.
+	 */
+	public void markInPreparation() {
+
+		if (this.status != Status.PAYED) {
+			throw new IllegalStateException(String.format("Order must be in state payed to start preparation! "
+					+ "Current status: %s", this.status));
+		}
+
+		this.status = Status.PREPARING;
+	}
+
+	/**
+	 * Marks the {@link Order} as prepared.
+	 */
+	public void markPrepared() {
+
+		if (this.status != Status.PREPARING) {
+			throw new IllegalStateException(String.format("Cannot mark Order prepared that is currently not "
+					+ "preparing! Current status: %s.", this.status));
+		}
+
+		this.status = Status.READY;
+	}
+
+	/**
+	 * Returns whether the {@link Order} has been paid already.
+	 * 
+	 * @return
+	 */
 	public boolean isPaid() {
 		return !this.status.equals(Status.PAYMENT_EXPECTED);
 	}
 
+	/**
+	 * Returns if the {@link Order} is ready to be taken.
+	 * 
+	 * @return
+	 */
 	public boolean isReady() {
 		return this.status.equals(Status.READY);
 	}
 
+	/**
+	 * Returns the date the {@link Order} was placed.
+	 * 
+	 * @return
+	 */
 	public DateTime getOrderedDate() {
 		return orderedDate == null ? null : new DateTime(orderedDate);
 	}
 
+	/**
+	 * Enumeration for all the statuses an {@link Order} can be in.
+	 * 
+	 * @author Oliver Gierke
+	 */
 	public static enum Status {
-		PAYMENT_EXPECTED, PAYED, PREPARING, READY, TAKEN;
+
+		/**
+		 * Placed, but not payed yet. Still changeable.
+		 */
+		PAYMENT_EXPECTED,
+
+		/**
+		 * {@link Order} was payed. No changes allowed to it anymore.
+		 */
+		PAYED,
+
+		/**
+		 * The {@link Order} is currently processed.
+		 */
+		PREPARING,
+
+		/**
+		 * The {@link Order} is ready to be picked up by the customer.
+		 */
+		READY,
+
+		/**
+		 * The {@link Order} was completed.
+		 */
+		TAKEN;
 	}
 }
