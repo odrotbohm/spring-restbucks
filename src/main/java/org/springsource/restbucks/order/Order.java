@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.joda.time.DateTime;
 import org.springsource.restbucks.core.AbstractEntity;
 import org.springsource.restbucks.core.MonetaryAmount;
@@ -21,6 +23,7 @@ import org.springsource.restbucks.core.MonetaryAmount;
 @Getter
 @Setter
 @Table(name = "RBOrder")
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, isGetterVisibility = Visibility.NONE)
 public class Order extends AbstractEntity {
 
 	private Location location;
@@ -127,6 +130,10 @@ public class Order extends AbstractEntity {
 	 */
 	public boolean isReady() {
 		return this.status.equals(Status.READY);
+	}
+
+	public boolean isTaken() {
+		return this.status.equals(Status.TAKEN);
 	}
 
 	/**

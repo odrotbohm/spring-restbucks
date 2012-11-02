@@ -91,27 +91,64 @@ public class PaymentController {
 		PaymentResource resource = new PaymentResource(order.getPrice(), payment.getCreditCard());
 		resource.add(entityLinks.linkToSingleResource(order));
 
-		return new ResponseEntity<PaymentResource>(resource, HttpStatus.OK);
+		return new ResponseEntity<PaymentResource>(resource, HttpStatus.CREATED);
 	}
 
 	/**
-	 * Shows the {@link Receipt} for the given {@link Order}.
+	 * Shows the {@link Receipt} for the given order.
 	 * 
 	 * @param order
 	 * @return
 	 */
-	@RequestMapping(value = PaymentLinks.RECEIPT, method = RequestMethod.DELETE)
+	@RequestMapping(value = PaymentLinks.RECEIPT, method = RequestMethod.GET)
 	ResponseEntity<Resource<Receipt>> showReceipt(@PathVariable("id") Order order) {
 
-		if (!order.isPaid()) {
+		if (order == null || !order.isPaid() || order.isTaken()) {
 			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
 		}
 
 		Payment payment = paymentService.getPaymentFor(order);
 
-		Resource<Receipt> resource = new Resource<Receipt>(payment.getReceipt());
+		if (payment == null) {
+			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
+		}
+
+		return createReceiptResponse(payment.getReceipt());
+	}
+
+	/**
+	 * Takes the {@link Receipt} for the given {@link Order} and thus completes the process.
+	 * 
+	 * @param order
+	 * @return
+	 */
+	@RequestMapping(value = PaymentLinks.RECEIPT, method = RequestMethod.DELETE)
+	ResponseEntity<Resource<Receipt>> takeReceipt(@PathVariable("id") Order order) {
+
+		if (order == null || !order.isPaid()) {
+			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
+		}
+
+		return createReceiptResponse(paymentService.takeReceiptFor(order));
+	}
+
+	/**
+	 * Renders the given {@link Receipt} including links to the associated {@link Order} as well as a self link in case
+	 * the {@link Receipt} is still available.
+	 * 
+	 * @param receipt
+	 * @return
+	 */
+	private ResponseEntity<Resource<Receipt>> createReceiptResponse(Receipt receipt) {
+
+		Order order = receipt.getOrder();
+
+		Resource<Receipt> resource = new Resource<Receipt>(receipt);
 		resource.add(entityLinks.linkToSingleResource(order));
-		resource.add(entityLinks.linkForSingleResource(order).slash("receipt").withSelfRel());
+
+		if (!order.isTaken()) {
+			resource.add(entityLinks.linkForSingleResource(order).slash("receipt").withSelfRel());
+		}
 
 		return new ResponseEntity<Resource<Receipt>>(resource, HttpStatus.OK);
 	}

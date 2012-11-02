@@ -9,6 +9,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -24,6 +25,7 @@ import org.springsource.restbucks.order.Order;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Getter
 @ToString(callSuper = true)
 @NoArgsConstructor
 public abstract class Payment extends AbstractEntity {
