@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
+import org.springsource.restbucks.order.OrderRepository;
 import org.springsource.restbucks.payment.Payment.Receipt;
 
 /**
@@ -36,21 +37,26 @@ class PaymentServiceImpl implements PaymentService {
 
 	private final CreditCardRepository creditCardRepository;
 	private final PaymentRepository paymentRepository;
+	private final OrderRepository orderRepository;
 
 	/**
 	 * Creates a new {@link PaymentServiceImpl} from the given {@link PaymentRepository} and {@link CreditCardRepository}.
 	 * 
 	 * @param paymentRepository must not be {@literal null}.
 	 * @param creditCardRepository must not be {@literal null}.
+	 * @param orderRepository must not be {@literal null}.
 	 */
 	@Autowired
-	public PaymentServiceImpl(PaymentRepository paymentRepository, CreditCardRepository creditCardRepository) {
+	public PaymentServiceImpl(PaymentRepository paymentRepository, CreditCardRepository creditCardRepository,
+			OrderRepository orderRepository) {
 
 		Assert.notNull(paymentRepository, "PaymentRepository must not be null!");
 		Assert.notNull(creditCardRepository, "CreditCardRepository must not be null!");
+		Assert.notNull(orderRepository, "OrderRepository must not be null!");
 
 		this.creditCardRepository = creditCardRepository;
 		this.paymentRepository = paymentRepository;
+		this.orderRepository = orderRepository;
 	}
 
 	/* 
@@ -93,6 +99,7 @@ class PaymentServiceImpl implements PaymentService {
 	public Receipt takeReceiptFor(Order order) {
 
 		order.setStatus(Status.TAKEN);
+		orderRepository.save(order);
 
 		Payment payment = getPaymentFor(order);
 		return payment == null ? null : payment.getReceipt();

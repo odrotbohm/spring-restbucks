@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springsource.restbucks.order.Order;
+import org.springsource.restbucks.order.OrderRepository;
 
 /**
  * Unit tests for {@link PaymentServiceImpl}.
@@ -42,23 +43,25 @@ public class PaymentServiceImplUnitTest {
 	PaymentRepository paymentRepository;
 	@Mock
 	CreditCardRepository creditCardRepository;
+	@Mock
+	OrderRepository orderRepository;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setUp() {
-		this.paymentService = new PaymentServiceImpl(paymentRepository, creditCardRepository);
+		this.paymentService = new PaymentServiceImpl(paymentRepository, creditCardRepository, orderRepository);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void rejectsNullPaymentRepository() {
-		new PaymentServiceImpl(null, creditCardRepository);
+		new PaymentServiceImpl(null, creditCardRepository, orderRepository);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void rejectsNullCreditCardRepository() {
-		new PaymentServiceImpl(paymentRepository, null);
+		new PaymentServiceImpl(paymentRepository, null, orderRepository);
 	}
 
 	@Test

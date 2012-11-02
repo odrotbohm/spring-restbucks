@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
 import org.springsource.restbucks.order.Order;
+import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.OrderRepository;
 
 /**
@@ -47,5 +48,18 @@ public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 
 		assertThat(paymentService.getPaymentFor(order), is((Payment) payment));
 		assertThat(order.isPaid(), is(true));
+	}
+
+	@Test
+	public void marksOrderAsTakenIfReceiptIsTaken() {
+
+		Order order = orderRepository.findOne(1L);
+		order.markPaid();
+		order.markInPreparation();
+		order.markPrepared();
+		orderRepository.save(order);
+
+		paymentService.takeReceiptFor(order);
+		assertThat(orderRepository.findOne(1L).getStatus(), is(Status.TAKEN));
 	}
 }
