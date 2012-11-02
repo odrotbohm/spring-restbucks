@@ -53,7 +53,7 @@ public class Order extends AbstractEntity {
 		this(Arrays.asList(items), null);
 	}
 
-	protected Order() {
+	public Order() {
 		this(new Item[0]);
 	}
 
