@@ -22,6 +22,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+
 /**
  * Value object to represent a {@link CreditCardNumber}.
  * 
@@ -30,6 +33,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class CreditCardNumber {
 
 	private static final String regex = "[0-9]{16}";

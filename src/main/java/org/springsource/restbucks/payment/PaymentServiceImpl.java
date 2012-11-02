@@ -72,9 +72,14 @@ class PaymentServiceImpl implements PaymentService {
 
 		CreditCard creditCard = creditCardRepository.findByNumber(creditCardNumber);
 
-		if (!creditCard.isValid(new LocalDate())) {
-			throw new PaymentException(order, String.format("No credit card found for NUMBER: %s",
+		if (creditCard == null) {
+			throw new PaymentException(order, String.format("No credit card found for number: %s",
 					creditCardNumber.getNumber()));
+		}
+
+		if (!creditCard.isValid(new LocalDate())) {
+			throw new PaymentException(order, String.format("Invalid credit card with number %s, expired %s!",
+					creditCardNumber.getNumber(), creditCard.getExpirationDate()));
 		}
 
 		order.markPaid();

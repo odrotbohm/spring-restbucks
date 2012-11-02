@@ -23,14 +23,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.ser.std.ToStringSerializer;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonUnwrapped;
 import org.joda.time.LocalDate;
 import org.joda.time.Months;
 import org.joda.time.Years;
 import org.springsource.restbucks.core.AbstractEntity;
-import org.springsource.restbucks.support.Serializers;
 
 /**
  * Abstraction of a credit card.
@@ -38,21 +38,21 @@ import org.springsource.restbucks.support.Serializers;
  * @author Oliver Gierke
  */
 @Entity
-@Getter
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE)
 public class CreditCard extends AbstractEntity {
 
+	@Getter
+	@JsonUnwrapped
 	private CreditCardNumber number;
-	private String cardholderName;
 
-	@JsonSerialize(using = ToStringSerializer.class)
-	@JsonDeserialize(using = Serializers.MonthsDeserializer.class)
+	@Getter
+	@JsonProperty
+	private String cardHolderName;
+
 	private Months expiryMonth;
-
-	@JsonSerialize(using = ToStringSerializer.class)
-	@JsonDeserialize(using = Serializers.YearssDeserializer.class)
 	private Years expiryYear;
 
 	/**
@@ -62,8 +62,26 @@ public class CreditCard extends AbstractEntity {
 	 * @return
 	 */
 	public boolean isValid(LocalDate date) {
+		return date == null ? false : getExpirationDate().isAfter(date);
+	}
 
-		LocalDate reference = new LocalDate(expiryYear.getYears(), expiryMonth.getMonths(), 1);
-		return date == null ? false : reference.isAfter(date);
+	/**
+	 * Returns the {@link LocalDate} the {@link CreditCard} expires.
+	 * 
+	 * @return will never be {@literal null}.
+	 */
+	public LocalDate getExpirationDate() {
+		return new LocalDate(expiryYear.getYears(), expiryMonth.getMonths(), 1);
+	}
+
+	/**
+	 * Protected setter to allow binding the expiration date.
+	 * 
+	 * @param date
+	 */
+	protected void setExpirationDate(LocalDate date) {
+
+		this.expiryYear = Years.years(date.getYear());
+		this.expiryMonth = Months.months(date.getMonthOfYear());
 	}
 }

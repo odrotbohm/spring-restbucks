@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.joda.time.LocalDate;
 import org.joda.time.Months;
 import org.joda.time.Years;
 import org.junit.Before;
@@ -31,7 +32,7 @@ import org.springsource.restbucks.payment.CreditCardNumber;
  */
 public class CreditCardMarshallingTest {
 
-	static final String REFERENCE = "{\"number\":{\"creditCardNumber\":\"1234123412341234\"},\"cardholderName\":\"Oliver Gierke\",\"expiryMonth\":\"P11M\",\"expiryYear\":\"P2013Y\"}";
+	static final String REFERENCE = "{\"number\":\"1234123412341234\",\"cardHolderName\":\"Oliver Gierke\",\"expirationDate\":[2013,11,1]}";
 
 	ObjectMapper mapper = new ObjectMapper();
 
@@ -54,8 +55,7 @@ public class CreditCardMarshallingTest {
 		CreditCard creditCard = mapper.readValue(REFERENCE, CreditCard.class);
 
 		assertThat(creditCard.getId(), is(nullValue()));
-		assertThat(creditCard.getExpiryMonth(), is(Months.ELEVEN));
-		assertThat(creditCard.getExpiryYear(), is(Years.years(2013)));
-		assertThat(creditCard.getNumber(), is(new CreditCardNumber("1234123412341234")));
+		assertThat(creditCard.getExpirationDate(), is(new LocalDate(2013, 11, 1)));
+		assertThat(creditCard.getNumber(), is(notNullValue()));
 	}
 }
