@@ -58,7 +58,7 @@ public class PaymentAspectIntegrationTests extends AbstractIntegrationTest {
 		assertThat(listener.invoked, is(true));
 	}
 
-	static class TestApplicationListener implements ApplicationListener<OrderPayedEvent> {
+	static class TestApplicationListener implements ApplicationListener<OrderPaidEvent> {
 
 		boolean invoked = false;
 
@@ -67,7 +67,7 @@ public class PaymentAspectIntegrationTests extends AbstractIntegrationTest {
 		 * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
 		 */
 		@Override
-		public void onApplicationEvent(OrderPayedEvent event) {
+		public void onApplicationEvent(OrderPaidEvent event) {
 			this.invoked = true;
 		}
 	}

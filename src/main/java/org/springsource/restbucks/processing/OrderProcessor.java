@@ -24,17 +24,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
-import org.springsource.restbucks.payment.OrderPayedEvent;
+import org.springsource.restbucks.payment.OrderPaidEvent;
 
 /**
- * Simple {@link ApplicationListener} implementation that listens to {@link OrderPayedEvent}s marking the according
+ * Simple {@link ApplicationListener} implementation that listens to {@link OrderPaidEvent}s marking the according
  * {@link Order} as in process, sleeping for 10 seconds and marking the order as processed right after that.
  * 
  * @author Oliver Gierke
  */
 @Slf4j
 @Service
-class OrderProcessor implements ApplicationListener<OrderPayedEvent> {
+class OrderProcessor implements ApplicationListener<OrderPaidEvent> {
 
 	private final OrderRepository repository;
 
@@ -56,7 +56,7 @@ class OrderProcessor implements ApplicationListener<OrderPayedEvent> {
 	 */
 	@Async
 	@Override
-	public void onApplicationEvent(OrderPayedEvent event) {
+	public void onApplicationEvent(OrderPaidEvent event) {
 
 		Order order = repository.findOne(event.getOrderId());
 		order.markInPreparation();
@@ -65,7 +65,7 @@ class OrderProcessor implements ApplicationListener<OrderPayedEvent> {
 		log.info("Starting to process order {}.", order);
 
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}

@@ -26,18 +26,18 @@ import org.springsource.restbucks.order.Order;
  * @author Oliver Gierke
  */
 @Getter
-public class OrderPayedEvent extends ApplicationEvent {
+public class OrderPaidEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = -6150362015056003378L;
 	private final long orderId;
 
 	/**
-	 * Creates a new {@link OrderPayedEvent}
+	 * Creates a new {@link OrderPaidEvent}
 	 * 
 	 * @param orderId the id of the order that just has been payed
 	 * @param source must not be {@literal null}.
 	 */
-	public OrderPayedEvent(long orderId, Object source) {
+	public OrderPaidEvent(long orderId, Object source) {
 
 		super(source);
 		this.orderId = orderId;

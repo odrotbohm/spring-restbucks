@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springsource.restbucks.order.Order;
 
 /**
- * Aspect to publish an {@link OrderPayedEvent} on successful execution of
+ * Aspect to publish an {@link OrderPaidEvent} on successful execution of
  * {@link PaymentService#pay(Order, CreditCardNumber)} <em>after</em> the transaction has completed. Manually defines
  * the order of the aspect to be <em>before</em> the transaction aspect.
  * 
@@ -58,7 +58,7 @@ class PaymentAspect implements ApplicationEventPublisherAware, Ordered {
 	}
 
 	/**
-	 * Publishes an {@link OrderPayedEvent} for the given {@link Order}.
+	 * Publishes an {@link OrderPaidEvent} for the given {@link Order}.
 	 * 
 	 * @param order
 	 */
@@ -70,6 +70,6 @@ class PaymentAspect implements ApplicationEventPublisherAware, Ordered {
 		}
 
 		log.info("Publishing order payed event for order {}!", order.getId());
-		this.publisher.publishEvent(new OrderPayedEvent(order.getId(), this));
+		this.publisher.publishEvent(new OrderPaidEvent(order.getId(), this));
 	}
 }
