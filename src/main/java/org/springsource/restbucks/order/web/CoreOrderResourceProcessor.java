@@ -20,9 +20,13 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 
 /**
+ * {@link ResourceProcessor} implementation to add links to the {@link Order} representation that indicate that the
+ * Order can be updated or cancelled as long as it has not been paid yet.
+ * 
  * @author Oliver Gierke
  */
 @Component
@@ -34,10 +38,13 @@ class CoreOrderResourceProcessor implements ResourceProcessor<Resource<Order>> {
 	private final EntityLinks entityLinks;
 
 	/**
-	 * @param entityLinks
+	 * Creates a new {@link CoreOrderResourceProcessor} using the given {@link EntityLinks} instance.
+	 * 
+	 * @param entityLinks must not be {@literal null}.
 	 */
 	@Autowired
 	public CoreOrderResourceProcessor(EntityLinks entityLinks) {
+		Assert.notNull(entityLinks, "EntityLinks must not be null!");
 		this.entityLinks = entityLinks;
 	}
 

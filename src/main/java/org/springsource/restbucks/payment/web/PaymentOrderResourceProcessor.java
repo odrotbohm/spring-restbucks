@@ -40,7 +40,7 @@ class PaymentOrderResourceProcessor implements ResourceProcessor<Resource<Order>
 	@Autowired
 	public PaymentOrderResourceProcessor(PaymentLinks paymentLinks) {
 
-		Assert.notNull(paymentLinks, "PaymentController must not be null!");
+		Assert.notNull(paymentLinks, "PaymentLinks must not be null!");
 		this.paymentLinks = paymentLinks;
 	}
 
