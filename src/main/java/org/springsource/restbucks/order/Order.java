@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
@@ -22,6 +23,7 @@ import org.springsource.restbucks.core.MonetaryAmount;
 @Entity
 @Getter
 @Setter
+@ToString(exclude = "items")
 @Table(name = "RBOrder")
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, isGetterVisibility = Visibility.NONE)
 public class Order extends AbstractEntity {
