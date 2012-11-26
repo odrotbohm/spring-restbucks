@@ -46,7 +46,7 @@ import org.springsource.restbucks.order.TestUtils;
 public class PaymentOrderResourceProcessorUnitTest {
 
 	@Mock
-	PaymentLinks controller;
+	PaymentLinks paymentLinks;
 
 	PaymentOrderResourceProcessor processor;
 	Link paymentLink, receiptLink;
@@ -58,9 +58,12 @@ public class PaymentOrderResourceProcessorUnitTest {
 		ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
 		RequestContextHolder.setRequestAttributes(requestAttributes);
 
-		processor = new PaymentOrderResourceProcessor(controller);
-		when(controller.getPaymentLink(Mockito.any(Order.class))).thenReturn(new Link("foo"));
-		when(controller.getReceiptLink(Mockito.any(Order.class))).thenReturn(new Link("bar"));
+		paymentLink = new Link("payment", PaymentLinks.PAYMENT_REL);
+		receiptLink = new Link("receipt", PaymentLinks.RECEIPT_REL);
+
+		processor = new PaymentOrderResourceProcessor(paymentLinks);
+		when(paymentLinks.getPaymentLink(Mockito.any(Order.class))).thenReturn(paymentLink);
+		when(paymentLinks.getReceiptLink(Mockito.any(Order.class))).thenReturn(receiptLink);
 	}
 
 	@Test
