@@ -10,7 +10,7 @@
 	
 	<properties>
 		<roo.version>1.1.0.RELEASE</roo.version>
-		<spring.version>3.2.0.RC1</spring.version>
+		<spring.version>3.2.0.RC2</spring.version>
 		<slf4j.version>1.7.2</slf4j.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
