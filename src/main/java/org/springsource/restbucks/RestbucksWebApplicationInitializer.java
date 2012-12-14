@@ -30,9 +30,11 @@ import org.springframework.format.support.FormattingConversionService;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.hateoas.config.EnableEntityLinks;
+import org.springframework.http.MediaType;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
@@ -136,6 +138,15 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 			Repositories repositories = new Repositories(context);
 			RepositoryLinkMetadataFactory factory = new RepositoryLinkMetadataFactory(repositories);
 			return new RestResourceEntityLinks(factory, "");
+		}
+
+		/* 
+		 * (non-Javadoc)
+		 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureContentNegotiation(org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer)
+		 */
+		@Override
+		protected void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+			configurer.defaultContentType(MediaType.APPLICATION_JSON);
 		}
 	}
 }

@@ -65,7 +65,7 @@ class OrderProcessor implements ApplicationListener<OrderPaidEvent> {
 		log.info("Starting to process order {}.", order);
 
 		try {
-			Thread.sleep(20000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}

@@ -1,0 +1,466 @@
+/*
+ * Copyright 2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.springsource.restbucks;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.nio.file.Files;
+
+import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
+
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.rest.webmvc.RepositoryRestMvcConfiguration;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkDiscoverer;
+import org.springframework.hateoas.core.DefaultLinkDiscoverer;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
+import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfiguration;
+import org.springsource.restbucks.order.Order;
+
+import com.jayway.jsonpath.JsonPath;
+
+/**
+ * Integration tests modeling the hypermedia-driven interaction flow against the server implementation. Uses the Spring
+ * MVC integration test facilities introduced in 3.2. Implements the order process modeled in my presentation on
+ * Hypermedia design with Spring.
+ * 
+ * @see http://bit.ly/UIcDvq
+ * @author Oliver Gierke
+ */
+@Slf4j
+public class PaymentProcessIntegrationTest {
+
+	private static final String FIRST_ORDER_EXPRESSION = "$content[0]";
+
+	private static final String ORDERS_REL = "orders";
+	private static final String ORDER_REL = "orders.Orders";
+	private static final String RECEIPT_REL = "receipt";
+	private static final String CANCEL_REL = "cancel";
+	private static final String UPDATE_REL = "update";
+	private static final String PAYMENT_REL = "payment";
+
+	static AnnotationConfigWebApplicationContext servletApplicationContext;
+	static OpenEntityManagerInViewFilter osivFilter;
+	static MockMvc mvc;
+
+	static LinkDiscoverer links;
+
+	@BeforeClass
+	public static void beforeClass() {
+
+		MockServletContext servletContext = new MockServletContext();
+
+		osivFilter = new OpenEntityManagerInViewFilter();
+		osivFilter.setServletContext(servletContext);
+
+		servletApplicationContext = new AnnotationConfigWebApplicationContext();
+		servletApplicationContext.register(RepositoryRestMvcConfiguration.class, WebConfiguration.class);
+		servletApplicationContext.setParent(new AnnotationConfigApplicationContext(ApplicationConfig.class));
+		servletApplicationContext.setServletContext(servletContext);
+		servletContext
+				.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, servletApplicationContext);
+		servletApplicationContext.refresh();
+
+		mvc = MockMvcBuilders.webAppContextSetup(servletApplicationContext). //
+				addFilter(new ShallowEtagHeaderFilter()). //
+				addFilter(osivFilter). //
+				build();
+
+		links = new DefaultLinkDiscoverer();
+	}
+
+	/**
+	 * Processes the first existing {@link Order} found.
+	 */
+	@Test
+	public void processExistingOrder() throws Exception {
+
+		MockHttpServletResponse response = accessRootResource();
+
+		response = discoverOrdersResource(response);
+		response = accessFirstOrder(response);
+		response = triggerPayment(response);
+		response = pollUntilOrderHasReceiptLink(response);
+		response = takeReceipt(response);
+
+		verifyOrderTaken(response);
+	}
+
+	/**
+	 * Creates a new {@link Order} and processes that one.
+	 */
+	@Test
+	public void processNewOrder() throws Exception {
+
+		MockHttpServletResponse response = accessRootResource();
+
+		response = createNewOrder(response);
+		response = triggerPayment(response);
+		response = pollUntilOrderHasReceiptLink(response);
+		response = takeReceipt(response);
+
+		verifyOrderTaken(response);
+	}
+
+	/**
+	 * Creates a new {@link Order} and cancels it right away.
+	 */
+	@Test
+	public void cancelOrderBeforePayment() throws Exception {
+
+		MockHttpServletResponse response = accessRootResource();
+
+		response = createNewOrder(response);
+		cancelOrder(response);
+	}
+
+	/**
+	 * Access the root resource by referencing the well-known URI. Verifies the orders resource being present.
+	 * 
+	 * @return the response for the orders resource
+	 * @throws Exception
+	 */
+	private MockHttpServletResponse accessRootResource() throws Exception {
+
+		log.info("Accessing root resource…");
+
+		MockHttpServletResponse response = mvc.perform(get("/")). //
+				andExpect(status().isOk()). //
+				andExpect(linkWithRelIsPresent(ORDERS_REL)). //
+				andReturn().getResponse();
+
+		return response;
+	}
+
+	/**
+	 * Creates a new {@link Order} by looking up the orders link from the source and posting the content of
+	 * {@code orders.json} to it. Verifies we get receive a {@code 201 Created} and a {@code Location} header. Follows the
+	 * location header to retrieve the {@link Order} just created.
+	 * 
+	 * @param source
+	 * @return
+	 * @throws Exception
+	 */
+	private MockHttpServletResponse createNewOrder(MockHttpServletResponse source) throws Exception {
+
+		String content = source.getContentAsString();
+		Link ordersLink = links.findLinkWithRel(ORDERS_REL, content);
+
+		ClassPathResource resource = new ClassPathResource("order.json");
+		byte[] data = Files.readAllBytes(resource.getFile().toPath());
+
+		MockHttpServletResponse result = mvc.perform(post(ordersLink.getHref()).content(data)). //
+				andExpect(status().isCreated()). //
+				andExpect(header().string("Location", is(notNullValue()))). //
+				andReturn().getResponse();
+
+		return mvc.perform(get(result.getHeader("Location"))).andReturn().getResponse();
+	}
+
+	/**
+	 * Follows the {@code orders} link returns the {@link Order}s found.
+	 * 
+	 * @param source
+	 * @return
+	 * @throws Exception
+	 */
+	private MockHttpServletResponse discoverOrdersResource(MockHttpServletResponse source) throws Exception {
+
+		String content = source.getContentAsString();
+		Link ordersLink = links.findLinkWithRel(ORDERS_REL, content);
+
+		log.info("Root resource returned: " + content);
+		log.info(String.format("Found orders link pointing to %s… Following…", ordersLink));
+
+		MockHttpServletResponse response = mvc.perform(get(ordersLink.getHref())). //
+				andExpect(status().isOk()). //
+				andReturn().getResponse();
+
+		log.info("Found orders: " + response.getContentAsString());
+		return response;
+	}
+
+	/**
+	 * Looks up the first {@link Order} from the orders representation using a JSONPath expression of
+	 * {@value #FIRST_ORDER_EXPRESSION}. Looks up the {@value Link#REL_SELF} link from the nested object and follows it to
+	 * lookup the representation. Verifies the {@code self}, {@code cancel}, and {@code update} link to be present.
+	 * 
+	 * @param source
+	 * @return
+	 * @throws Exception
+	 */
+	private MockHttpServletResponse accessFirstOrder(MockHttpServletResponse source) throws Exception {
+
+		String content = source.getContentAsString();
+		String order = JsonPath.read(content, FIRST_ORDER_EXPRESSION).toString();
+		Link orderLink = links.findLinkWithRel("self", order);
+
+		log.info(String.format("Picking first order using JSONPath expression %s…", FIRST_ORDER_EXPRESSION));
+		log.info(String.format("Discovered self link pointing to %s… Following", orderLink));
+
+		return mvc.perform(get(orderLink.getHref())). //
+				andExpect(linkWithRelIsPresent("self")). //
+				andExpect(linkWithRelIsPresent(CANCEL_REL)). //
+				andExpect(linkWithRelIsPresent(UPDATE_REL)).andExpect(linkWithRelIsPresent(PAYMENT_REL)).//
+				andReturn().getResponse();
+	}
+
+	/**
+	 * Triggers the payment of an {@link Order} by following the {@code payment} link and submitting a credit card number
+	 * to it. Verifies that we get a {@code 201 Created} and the response contains an {@code order} link. After the
+	 * payment has been triggered we fake a cancellation to make sure it is rejected with a {@code 404 Not found}.
+	 * 
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	private MockHttpServletResponse triggerPayment(MockHttpServletResponse response) throws Exception {
+
+		String content = response.getContentAsString();
+		Link paymentLink = links.findLinkWithRel(PAYMENT_REL, content);
+
+		log.info(String.format("Discovered payment link pointing to %s…", paymentLink));
+
+		assertThat(paymentLink, not(nullValue()));
+
+		log.info("Triggering payment…");
+
+		ResultActions action = mvc.perform(put(paymentLink.getHref()).content("\"1234123412341234\"").contentType(
+				MediaType.APPLICATION_JSON));
+
+		MockHttpServletResponse result = action.andExpect(status().isCreated()). //
+				andExpect(linkWithRelIsPresent(ORDER_REL)). //
+				andReturn().getResponse();
+
+		log.info("Payment triggered…");
+
+		// Make sure we cannot cheat and cancel the order after it has been payed
+		log.info("Faking a cancel request to make sure it's forbidden…");
+		Link selfLink = links.findLinkWithRel(Link.REL_SELF, content);
+		mvc.perform(get(selfLink.getHref() + "/cancel")).andExpect(status().isNotFound());
+
+		return result;
+	}
+
+	/**
+	 * Polls the order resource every 2 seconds and uses an {@code If-None-Match} header alongside the {@code ETag} of the
+	 * first response to avoid sending the representation over and over again.
+	 * 
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	private MockHttpServletResponse pollUntilOrderHasReceiptLink(MockHttpServletResponse response) throws Exception {
+
+		// Grab
+		String content = response.getContentAsString();
+		Link orderLink = links.findLinkWithRel(ORDER_REL, content);
+
+		// Poll order until receipt link is set
+		Link receiptLink = null;
+		String etag = null;
+		MockHttpServletResponse pollResponse;
+
+		do {
+
+			HttpHeaders headers = new HttpHeaders();
+			if (etag != null) {
+				headers.setIfNoneMatch(etag);
+			}
+
+			log.info("Poll state of order until receipt is ready…");
+
+			ResultActions action = mvc.perform(get(orderLink.getHref()).headers(headers));
+			pollResponse = action.andReturn().getResponse();
+
+			int status = pollResponse.getStatus();
+			etag = pollResponse.getHeader("ETag");
+
+			log.info(String.format("Received %s with ETag of %s…", status, etag));
+
+			if (status == HttpStatus.OK.value()) {
+
+				action.andExpect(linkWithRelIsPresent(Link.REL_SELF)). //
+						andExpect(linkWithRelIsNotPresent(UPDATE_REL)). //
+						andExpect(linkWithRelIsNotPresent(CANCEL_REL));
+
+				receiptLink = links.findLinkWithRel(RECEIPT_REL, pollResponse.getContentAsString());
+
+			} else if (status == HttpStatus.NO_CONTENT.value()) {
+				action.andExpect(content().string(isEmptyOrNullString()));
+			}
+
+			if (receiptLink == null) {
+				Thread.sleep(2000);
+			}
+
+		} while (receiptLink == null);
+
+		return pollResponse;
+	}
+
+	/**
+	 * Concludes the {@link Order} by looking up the {@code receipt} link from the response and follows it. Triggers a
+	 * {@code DELETE} request susequently.
+	 * 
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	private MockHttpServletResponse takeReceipt(MockHttpServletResponse response) throws Exception {
+
+		Link receiptLink = links.findLinkWithRel(RECEIPT_REL, response.getContentAsString());
+
+		MockHttpServletResponse receiptResponse = mvc.perform(get(receiptLink.getHref()). //
+				accept(MediaType.APPLICATION_JSON)). //
+				andExpect(status().isOk()). //
+				andReturn().getResponse();
+
+		log.info("Accessing receipt, got:" + receiptResponse.getContentAsString());
+		log.info("Taking receipt…");
+
+		return mvc.perform(delete(receiptLink.getHref()).accept(MediaType.APPLICATION_JSON)). //
+				andExpect(status().isOk()). //
+				andReturn().getResponse();
+	}
+
+	/**
+	 * Follows the {@code order} link and asserts only the self link being present so that no further navigation is
+	 * possible anymore.
+	 * 
+	 * @param response
+	 * @throws Exception
+	 */
+	private void verifyOrderTaken(MockHttpServletResponse response) throws Exception {
+
+		Link orderLink = links.findLinkWithRel(ORDER_REL, response.getContentAsString());
+		MockHttpServletResponse orderResponse = mvc.perform(get(orderLink.getHref())). //
+				andExpect(status().isOk()). // //
+				andExpect(linkWithRelIsPresent(Link.REL_SELF)). //
+				andExpect(linkWithRelIsNotPresent(UPDATE_REL)). //
+				andExpect(linkWithRelIsNotPresent(CANCEL_REL)). //
+				andExpect(linkWithRelIsNotPresent(PAYMENT_REL)). //
+				andExpect(jsonPath("$status", is("TAKEN"))). //
+				andReturn().getResponse();
+
+		log.info("Final order state: " + orderResponse.getContentAsString());
+	}
+
+	/**
+	 * Cancels the order by issuing a delete request. Verifies the resource being inavailable after that.
+	 * 
+	 * @param response the response that retrieved an order resource
+	 * @throws Exception
+	 */
+	private void cancelOrder(MockHttpServletResponse response) throws Exception {
+
+		String content = response.getContentAsString();
+
+		Link selfLink = links.findLinkWithRel(Link.REL_SELF, content);
+		Link cancellationLink = links.findLinkWithRel(CANCEL_REL, content);
+
+		mvc.perform(delete(cancellationLink.getHref())).andExpect(status().isNoContent());
+		mvc.perform(get(selfLink.getHref())).andExpect(status().isNotFound());
+	}
+
+	// Helper methods
+
+	/**
+	 * Creates a JSONPath expression to find links with the given relation type.
+	 * 
+	 * @param rel
+	 * @return
+	 */
+	private static String linkExpressionForRel(String rel) {
+		return String.format("$links[?(@.rel == '%s')].href", rel);
+	}
+
+	/**
+	 * Creates a {@link ResultMatcher} that checks for the presence of a link with the given rel.
+	 * 
+	 * @param rel
+	 * @return
+	 */
+	private static ResultMatcher linkWithRelIsPresent(String rel) {
+		return jsonPath(linkExpressionForRel(rel), is(notNullValue()));
+	}
+
+	/**
+	 * Creates a {@link ResultMatcher} that checks for the non-presence of a link with the given rel.
+	 * 
+	 * @param rel
+	 * @return
+	 */
+	private static ResultMatcher linkWithRelIsNotPresent(String rel) {
+		return jsonPath(linkExpressionForRel(rel), is(anyOf(nullValue(), IsJsonArrayOfSizeMatcher.isJsonArrayOfSize(0))));
+	}
+
+	/**
+	 * {@link Matcher} implementation that checks an object is a {@link JSONArray} of a defined size.
+	 * 
+	 * @author Oliver Gierke
+	 */
+	static class IsJsonArrayOfSizeMatcher extends BaseMatcher<Object> {
+
+		private int expectedSize;
+
+		public static IsJsonArrayOfSizeMatcher isJsonArrayOfSize(int size) {
+
+			IsJsonArrayOfSizeMatcher matcher = new IsJsonArrayOfSizeMatcher();
+			matcher.expectedSize = size;
+			return matcher;
+		}
+
+		@Override
+		public boolean matches(Object item) {
+
+			if (!(item instanceof JSONArray)) {
+				return false;
+			}
+
+			JSONArray array = (JSONArray) item;
+
+			return array.size() == expectedSize;
+		}
+
+		@Override
+		public void describeTo(Description description) {
+			description.appendText("Expected JSONArray of size ").appendText(String.valueOf(expectedSize));
+		}
+	};
+}

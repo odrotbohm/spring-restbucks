@@ -34,6 +34,10 @@ class PaymentInitializer {
 	@Autowired
 	public PaymentInitializer(CreditCardRepository repository) {
 
+		if (repository.count() > 0) {
+			return;
+		}
+
 		CreditCardNumber number = new CreditCardNumber("1234123412341234");
 		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Months.TWELVE, Years.years(2014));
 
