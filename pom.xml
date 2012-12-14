@@ -10,7 +10,7 @@
 	
 	<properties>
 		<roo.version>1.1.0.RELEASE</roo.version>
-		<spring.version>3.2.0.RC2</spring.version>
+		<spring.version>3.2.0.RELEASE</spring.version>
 		<slf4j.version>1.7.2</slf4j.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -185,7 +185,7 @@
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.5.v20120716</version>
+				<version>8.1.8.v20121106</version>
 			</plugin>
 		</plugins>
 	</build>

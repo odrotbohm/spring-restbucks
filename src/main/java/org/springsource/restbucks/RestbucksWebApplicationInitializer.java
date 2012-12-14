@@ -15,14 +15,6 @@
  */
 package org.springsource.restbucks;
 
-import java.util.EnumSet;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration.Dynamic;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +24,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.data.rest.webmvc.RepositoryRestExporterServlet;
 import org.springframework.data.rest.webmvc.RepositoryRestMvcConfiguration;
 import org.springframework.data.rest.webmvc.ResourceProcessorInvokingHandlerAdapter;
 import org.springframework.format.support.FormattingConversionService;
@@ -42,51 +33,58 @@ import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import org.springsource.restbucks.payment.web.PaymentController;
 import org.springsource.restbucks.support.RepositoryLinkMetadataFactory;
 import org.springsource.restbucks.support.RestResourceEntityLinks;
 
 /**
- * Servlet 3.0 {@link WebApplicationInitializer} to setup both a root {@link WebApplicationContext} using the
- * {@link ApplicationConfig} class for repository setup. Beyond that it will deploy a
- * {@link RepositoryRestExporterServlet} to export the repositories defined in {@link ApplicationConfig} via a REST
- * interface.
+ * Servlet 3.0 {@link WebApplicationInitializer} using Spring 3.2 convenient base class
+ * {@link AbstractAnnotationConfigDispatcherServletInitializer}. It essentially sets up a root application context from
+ * {@link ApplicationConfig}, and a dispatcher servlet application context from {@link RepositoryRestMvcConfiguration}
+ * (enabling Spring Data REST) and {@link WebConfiguration} for general Spring MVC customizations.
  * 
  * @author Oliver Gierke
  */
-public class RestbucksWebApplicationInitializer implements WebApplicationInitializer {
+public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-	/*
+	/* 
 	 * (non-Javadoc)
-	 * @see org.springframework.web.WebApplicationInitializer#onStartup(javax.servlet.ServletContext)
+	 * @see org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer#getRootConfigClasses()
 	 */
-	public void onStartup(ServletContext container) throws ServletException {
+	@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class<?>[] { ApplicationConfig.class };
+	}
 
-		Dynamic filter = container.addFilter("oemivf", OpenEntityManagerInViewFilter.class);
-		filter.addMappingForServletNames(EnumSet.of(DispatcherType.REQUEST), false, "dispatcher");
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer#getServletConfigClasses()
+	 */
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return new Class<?>[] { RepositoryRestMvcConfiguration.class, WebConfiguration.class };
+	}
 
-		// Create the 'root' Spring application context
-		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-		rootContext.register(ApplicationConfig.class);
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.web.servlet.support.AbstractDispatcherServletInitializer#getServletMappings()
+	 */
+	@Override
+	protected String[] getServletMappings() {
+		return new String[] { "/" };
+	}
 
-		// Manage the lifecycle of the root application context
-		container.addListener(new ContextLoaderListener(rootContext));
-
-		// Register and map the dispatcher servlet
-		AnnotationConfigWebApplicationContext servletContext = new AnnotationConfigWebApplicationContext();
-		servletContext.register(RepositoryRestMvcConfiguration.class, WebConfiguration.class);
-
-		DispatcherServlet servlet = new DispatcherServlet(servletContext);
-		ServletRegistration.Dynamic dispatcher = container.addServlet("dispatcher", servlet);
-		dispatcher.setLoadOnStartup(1);
-		dispatcher.addMapping("/");
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.web.servlet.support.AbstractDispatcherServletInitializer#getServletFilters()
+	 */
+	@Override
+	protected javax.servlet.Filter[] getServletFilters() {
+		return new javax.servlet.Filter[] { new OpenEntityManagerInViewFilter() };
 	}
 
 	/**
