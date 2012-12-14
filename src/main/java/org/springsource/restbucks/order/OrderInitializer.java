@@ -25,26 +25,25 @@ import org.springframework.util.Assert;
 import org.springsource.restbucks.core.MonetaryAmount;
 
 /**
+ * Initializer to set up two {@link Order}s.
+ * 
  * @author Oliver Gierke
  */
 @Service
 class OrderInitializer {
 
 	/**
+	 * Creates two orders and persists them using the given {@link OrderRepository}.
+	 * 
 	 * @param orderRepository must not be {@literal null}.
-	 * @param itemRepository must not be {@literal null}.
 	 */
 	@Autowired
-	public OrderInitializer(OrderRepository orderRepository, ItemRepository itemRepository) {
+	public OrderInitializer(OrderRepository orderRepository) {
 
 		Assert.notNull(orderRepository, "OrderRepository must not be null!");
-		Assert.notNull(itemRepository, "ItemRepository must not be null!");
 
 		Item javaChip = new Item("Java Chip", new MonetaryAmount(EURO, 4.20));
 		Item cappuchino = new Item("Cappuchino", new MonetaryAmount(EURO, 3.20));
-
-		javaChip = itemRepository.save(javaChip);
-		cappuchino = itemRepository.save(cappuchino);
 
 		Order javaChipOrder = new Order(javaChip);
 		Order cappuchinoOrder = new Order(cappuchino);
