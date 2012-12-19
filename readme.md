@@ -2,9 +2,32 @@
 
 This project is a sample implementation of the Restbucks application described in the book [REST in Practice](http://shop.oreilly.com/product/9780596805838.do) by Jim Webber, Savas Parastatidis and Ian Robinson. It's a showcase for bringing different Spring eco-system technologies together to implement a REST web service.
 
+## Setup
+
+From the command line do:
+
+```
+git clone https://github.com/olivergierke/spring-restbucks.git
+cd spring-restbucks
+mvn jetty:run
+```
+
+For the usage inside an IDE do the following:
+
+1. Make sure you have an Eclipse with m2e installed (preferably [STS](http://www.springsource.org/sts)).
+2. Install [Lombok](projectlombok.org).
+   1. Download it from the [project page](http://projectlombok.org/download.html).
+   2. Run the JAR (double click or `java -jar …`).
+   3. Point it to your Eclipse installation, run the install.
+   4. Restart Eclipse.
+   
+3. Import the checked out code through *File > Import > Existing Maven Project…*
+
+## Project description
+
 The project uses:
 
-- [Spring (MVC)](http://github.com/SpringSource/spring-framework) - 3.2.0.M2
+- [Spring (MVC)](http://github.com/SpringSource/spring-framework) - 3.2.0.RELEASE
 - [Spring Data JPA](http://github.com/SpringSource/spring-data-jpa) - 1.2.0.RELEASE
 - [Spring Data REST](http://github.com/SpringSource/spring-data-rest) - 1.0.0.RELEASE
 - [Spring Hateoas](http://github.com/SpringSource/spring-hateoas) - 0.4.0.BUILD-SNAPSHOT
