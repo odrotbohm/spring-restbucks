@@ -1,7 +1,5 @@
 package org.springsource.restbucks.payment;
 
-import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -13,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.util.Assert;
 import org.springsource.restbucks.core.AbstractEntity;
@@ -32,7 +31,9 @@ public abstract class Payment extends AbstractEntity {
 
 	@OneToOne(cascade = CascadeType.MERGE)
 	private Order order;
-	private Date paymentDate;
+
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	private DateTime paymentDate;
 
 	/**
 	 * Creates a new {@link Payment} referring to the given {@link Order}.
@@ -43,7 +44,7 @@ public abstract class Payment extends AbstractEntity {
 
 		Assert.notNull(order);
 		this.order = order;
-		this.paymentDate = new Date();
+		this.paymentDate = new DateTime();
 	}
 
 	/**
@@ -52,7 +53,7 @@ public abstract class Payment extends AbstractEntity {
 	 * @return
 	 */
 	public Receipt getReceipt() {
-		return new Receipt(order, new DateTime(paymentDate));
+		return new Receipt(order, paymentDate);
 	}
 
 	/**

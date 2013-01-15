@@ -2,7 +2,6 @@ package org.springsource.restbucks.order;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +16,7 @@ import lombok.ToString;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springsource.restbucks.core.AbstractEntity;
 import org.springsource.restbucks.core.MonetaryAmount;
@@ -31,7 +31,9 @@ public class Order extends AbstractEntity {
 
 	private Location location;
 	private Status status;
-	private Date orderedDate;
+
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	private DateTime orderedDate;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Item> items = new HashSet<Item>();
@@ -47,7 +49,7 @@ public class Order extends AbstractEntity {
 		this.location = location == null ? Location.TAKE_AWAY : location;
 		this.status = Status.PAYMENT_EXPECTED;
 		this.items.addAll(items);
-		this.orderedDate = new Date();
+		this.orderedDate = new DateTime();
 	}
 
 	/**
@@ -137,15 +139,6 @@ public class Order extends AbstractEntity {
 
 	public boolean isTaken() {
 		return this.status.equals(Status.TAKEN);
-	}
-
-	/**
-	 * Returns the date the {@link Order} was placed.
-	 * 
-	 * @return
-	 */
-	public DateTime getOrderedDate() {
-		return orderedDate == null ? null : new DateTime(orderedDate);
 	}
 
 	/**
