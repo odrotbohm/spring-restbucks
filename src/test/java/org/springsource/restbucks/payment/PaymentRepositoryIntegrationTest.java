@@ -60,6 +60,6 @@ public class PaymentRepositoryIntegrationTest extends AbstractIntegrationTest {
 
 		CreditCardPayment payment = repository.save(new CreditCardPayment(creditCard, order));
 		assertThat(payment.getId(), is(notNullValue()));
-		assertThat(orderRepository.findOne(1L).getStatus(), is(Status.PAYED));
+		assertThat(orderRepository.findOne(1L).getStatus(), is(Status.PAID));
 	}
 }

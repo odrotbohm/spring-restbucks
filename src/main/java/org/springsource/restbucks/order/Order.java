@@ -90,7 +90,7 @@ public class Order extends AbstractEntity {
 			throw new IllegalStateException("Already paid order cannot be paid again!");
 		}
 
-		this.status = Status.PAYED;
+		this.status = Status.PAID;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class Order extends AbstractEntity {
 	 */
 	public void markInPreparation() {
 
-		if (this.status != Status.PAYED) {
+		if (this.status != Status.PAID) {
 			throw new IllegalStateException(String.format("Order must be in state payed to start preparation! "
 					+ "Current status: %s", this.status));
 		}
@@ -156,7 +156,7 @@ public class Order extends AbstractEntity {
 		/**
 		 * {@link Order} was payed. No changes allowed to it anymore.
 		 */
-		PAYED,
+		PAID,
 
 		/**
 		 * The {@link Order} is currently processed.
