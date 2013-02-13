@@ -224,7 +224,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.8.v20121106</version>
+				<version>8.1.9.v20130131</version>
 			</plugin>
 		</plugins>
 	</build>
