@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 the original author or authors.
+ * Copyright 2012-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import lombok.ToString;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonUnwrapped;
 import org.joda.time.LocalDate;
@@ -54,6 +55,16 @@ public class CreditCard extends AbstractEntity {
 
 	private Months expiryMonth;
 	private Years expiryYear;
+
+	/**
+	 * Returns whether the {@link CreditCard} is currently valid.
+	 * 
+	 * @return
+	 */
+	@JsonIgnore
+	public boolean isValid() {
+		return isValid(new LocalDate());
+	}
 
 	/**
 	 * Returns whether the {@link CreditCard} is valid for the given date.

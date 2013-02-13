@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 the original author or authors.
+ * Copyright 2012-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springsource.restbucks.payment;
 
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +76,7 @@ class PaymentServiceImpl implements PaymentService {
 					creditCardNumber.getNumber()));
 		}
 
-		if (!creditCard.isValid(new LocalDate())) {
+		if (!creditCard.isValid()) {
 			throw new PaymentException(order, String.format("Invalid credit card with number %s, expired %s!",
 					creditCardNumber.getNumber(), creditCard.getExpirationDate()));
 		}
