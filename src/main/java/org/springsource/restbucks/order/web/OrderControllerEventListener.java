@@ -20,11 +20,13 @@ import org.springframework.stereotype.Component;
 import org.springsource.restbucks.order.Order;
 
 /**
+ * Event listener to reject {@code DELETE} requests to Spring Data REST.
+ * 
  * @author Oliver Gierke
  */
 @Component
 @SuppressWarnings("rawtypes")
-public class OrderControllerEventListener extends AbstractRepositoryEventListener {
+class OrderControllerEventListener extends AbstractRepositoryEventListener {
 
 	/* 
 	 * (non-Javadoc)
