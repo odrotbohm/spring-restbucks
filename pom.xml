@@ -110,7 +110,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.springframework.hateoas</groupId>
 			<artifactId>spring-hateoas</artifactId>
-			<version>0.4.0.RELEASE</version>
+			<version>0.5.0.BUILD-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
