@@ -32,7 +32,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.rest.webmvc.RepositoryRestMvcConfiguration;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkDiscoverer;
 import org.springframework.hateoas.core.DefaultLinkDiscoverer;
@@ -89,7 +88,7 @@ public class PaymentProcessIntegrationTest {
 		osivFilter.setServletContext(servletContext);
 
 		servletApplicationContext = new AnnotationConfigWebApplicationContext();
-		servletApplicationContext.register(RepositoryRestMvcConfiguration.class, WebConfiguration.class);
+		servletApplicationContext.register(WebConfiguration.class);
 		servletApplicationContext.setParent(new AnnotationConfigApplicationContext(ApplicationConfig.class));
 		servletApplicationContext.setServletContext(servletContext);
 		servletContext
@@ -184,7 +183,8 @@ public class PaymentProcessIntegrationTest {
 		ClassPathResource resource = new ClassPathResource("order.json");
 		byte[] data = Files.readAllBytes(resource.getFile().toPath());
 
-		MockHttpServletResponse result = mvc.perform(post(ordersLink.getHref()).content(data)). //
+		MockHttpServletResponse result = mvc
+				.perform(post(ordersLink.getHref()).contentType(MediaType.APPLICATION_JSON).content(data)). //
 				andExpect(status().isCreated()). //
 				andExpect(header().string("Location", is(notNullValue()))). //
 				andReturn().getResponse();

@@ -18,12 +18,10 @@ package org.springsource.restbucks.payment;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 
 /**
  * Value object to represent a {@link CreditCardNumber}.
@@ -33,7 +31,7 @@ import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 @Data
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class CreditCardNumber {
 
 	private static final String regex = "[0-9]{16}";

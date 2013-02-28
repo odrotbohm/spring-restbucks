@@ -16,32 +16,29 @@
 package org.springsource.restbucks;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.data.rest.webmvc.RepositoryRestMvcConfiguration;
-import org.springframework.data.rest.webmvc.ResourceProcessorInvokingHandlerAdapter;
+import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.http.MediaType;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import org.springsource.restbucks.payment.web.PaymentController;
 import org.springsource.restbucks.support.RepositoryLinkMetadataFactory;
 import org.springsource.restbucks.support.RestResourceEntityLinks;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
  * Servlet 3.0 {@link WebApplicationInitializer} using Spring 3.2 convenient base class
@@ -68,7 +65,7 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 	 */
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class<?>[] { RepositoryRestMvcConfiguration.class, WebConfiguration.class };
+		return new Class<?>[] { WebConfiguration.class };
 	}
 
 	/* 
@@ -95,36 +92,17 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 	 * @author Oliver Gierke
 	 */
 	@Configuration
-	@EnableWebMvc
 	@EnableEntityLinks
+	@Import(RepositoryRestMvcConfiguration.class)
 	@ComponentScan(excludeFilters = @Filter({ Service.class, Configuration.class }))
 	public static class WebConfiguration extends WebMvcConfigurationSupport {
 
 		@Autowired
-		ApplicationContext context;
+		Repositories repositories;
 
-		/**
-		 * Overrride {@link RequestMappingHandlerAdapter} by a custom one provided by Spring Data REST which will invoke
-		 * {@link ResourceProcessor} instances registered in the {@link ApplicationContext}. See
-		 * {@link PaymentOrderResourceProcessor} for example.
-		 */
 		@Bean
-		@Override
-		public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
-			RequestMappingHandlerAdapter original = super.requestMappingHandlerAdapter();
-			return new ResourceProcessorInvokingHandlerAdapter(original);
-		}
-
-		/**
-		 * Registers a {@link DomainClassConverter} to allow usage of domain types as Spring MVC controller method
-		 * arguments. As an example see {@link PaymentController} methods using {@link Order} in the method signatures
-		 * directly instead of a raw {@link Long} or {@link String} and manually resolving the {@link Order} instance.
-		 * 
-		 * @return
-		 */
-		@Bean
-		public DomainClassConverter<?> domainClassConverter() {
-			return new DomainClassConverter<FormattingConversionService>(mvcConversionService());
+		public DomainClassConverter<FormattingConversionService> domainClassConverter() {
+			return new DomainClassConverter<>(mvcConversionService());
 		}
 
 		/**
@@ -133,20 +111,26 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 		 * @return
 		 */
 		@Bean
-		public RestResourceEntityLinks restResourceEntityLinks() {
-
-			Repositories repositories = new Repositories(context);
+		public RestResourceEntityLinks restResourceEntityLinks() throws Exception {
 			RepositoryLinkMetadataFactory factory = new RepositoryLinkMetadataFactory(repositories);
 			return new RestResourceEntityLinks(factory, "");
 		}
 
-		/* 
+		/*
 		 * (non-Javadoc)
 		 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureContentNegotiation(org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer)
 		 */
 		@Override
-		protected void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+		public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 			configurer.defaultContentType(MediaType.APPLICATION_JSON);
 		}
+
+		@Bean
+		public ObjectMapper objectMapper() {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JodaModule());
+			return mapper;
+		}
 	}
+
 }

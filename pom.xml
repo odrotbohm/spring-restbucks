@@ -11,8 +11,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<properties>
 		<spring.version>3.2.1.RELEASE</spring.version>
 		<slf4j.version>1.7.2</slf4j.version>
+		<jackson.version>2.1.4</jackson.version>
+		<logback.version>1.0.9</logback.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sd.rest>1.1.0.BUILD-20121127.165012-2</sd.rest>
+		<sd.rest>1.1.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
 
 	<dependencies>
@@ -146,6 +148,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<version>4.1.6.Final</version>
 		</dependency>
 
+	    <!-- For now, include a few dependencies until they're made optional upstream. -->
+	    <dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.3.1.Final</version>
+		</dependency>
+
 		<!-- Joda -->
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -157,6 +166,19 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<groupId>org.jadira.usertype</groupId>
 			<artifactId>usertype.core</artifactId>
 			<version>3.0.0.GA</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		
+		<!-- This is *not* a mistake. The latest Joda binding is in 2.1.2 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>2.1.2</version>
 		</dependency>
 
 		<!-- Database -->
@@ -195,6 +217,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 			<version>0.8.1</version>
+		</dependency>
+		
+		<!-- Logging -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 	</dependencies>

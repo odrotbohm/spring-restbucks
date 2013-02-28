@@ -9,8 +9,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.hateoas.Identifiable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Base class for entity implementations. Uses a {@link Long} id.

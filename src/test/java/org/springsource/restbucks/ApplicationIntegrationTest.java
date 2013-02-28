@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.data.rest.webmvc.RepositoryRestMvcConfiguration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfiguration;
 
