@@ -25,8 +25,7 @@ import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.config.EnableEntityLinks;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.http.MediaType;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.stereotype.Service;
@@ -82,12 +81,12 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 	}
 
 	/**
-	 * Web layer configuration enabling Spring MVC, Spring Hateoas {@link EntityLinks}.
+	 * Web layer configuration enabling Spring MVC, Spring Hateoas hypermedia support.
 	 * 
 	 * @author Oliver Gierke
 	 */
 	@Configuration
-	@EnableEntityLinks
+	@EnableHypermediaSupport
 	@Import(RepositoryRestMvcConfiguration.class)
 	@ComponentScan(excludeFilters = @Filter({ Service.class, Configuration.class }))
 	public static class WebConfiguration extends WebMvcConfigurationSupport {

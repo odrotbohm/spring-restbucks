@@ -23,18 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.file.Files;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONArray;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkDiscoverer;
-import org.springframework.hateoas.core.DefaultLinkDiscoverer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,6 +37,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -100,7 +96,7 @@ public class PaymentProcessIntegrationTest {
 				addFilter(osivFilter). //
 				build();
 
-		links = new DefaultLinkDiscoverer();
+		links = servletApplicationContext.getBean(LinkDiscoverer.class);
 	}
 
 	/**
@@ -416,8 +412,8 @@ public class PaymentProcessIntegrationTest {
 	 * @param rel
 	 * @return
 	 */
-	private static ResultMatcher linkWithRelIsPresent(String rel) {
-		return jsonPath(linkExpressionForRel(rel), is(notNullValue()));
+	private static ResultMatcher linkWithRelIsPresent(final String rel) {
+		return new LinkWithRelMatcher(rel, true);
 	}
 
 	/**
@@ -427,40 +423,28 @@ public class PaymentProcessIntegrationTest {
 	 * @return
 	 */
 	private static ResultMatcher linkWithRelIsNotPresent(String rel) {
-		return jsonPath(linkExpressionForRel(rel), is(anyOf(nullValue(), IsJsonArrayOfSizeMatcher.isJsonArrayOfSize(0))));
+		return new LinkWithRelMatcher(rel, false);
 	}
 
-	/**
-	 * {@link Matcher} implementation that checks an object is a {@link JSONArray} of a defined size.
-	 * 
-	 * @author Oliver Gierke
-	 */
-	static class IsJsonArrayOfSizeMatcher extends BaseMatcher<Object> {
+	private static class LinkWithRelMatcher implements ResultMatcher {
 
-		private int expectedSize;
+		private final String rel;
+		private final boolean present;
 
-		public static IsJsonArrayOfSizeMatcher isJsonArrayOfSize(int size) {
-
-			IsJsonArrayOfSizeMatcher matcher = new IsJsonArrayOfSizeMatcher();
-			matcher.expectedSize = size;
-			return matcher;
+		public LinkWithRelMatcher(String rel, boolean present) {
+			this.rel = rel;
+			this.present = present;
 		}
 
+		/* 
+		 * (non-Javadoc)
+		 * @see org.springframework.test.web.servlet.ResultMatcher#match(org.springframework.test.web.servlet.MvcResult)
+		 */
 		@Override
-		public boolean matches(Object item) {
+		public void match(MvcResult result) throws Exception {
 
-			if (!(item instanceof JSONArray)) {
-				return false;
-			}
-
-			JSONArray array = (JSONArray) item;
-
-			return array.size() == expectedSize;
+			String content = result.getResponse().getContentAsString();
+			assertThat(links.findLinkWithRel(rel, content), is(present ? notNullValue() : nullValue()));
 		}
-
-		@Override
-		public void describeTo(Description description) {
-			description.appendText("Expected JSONArray of size ").appendText(String.valueOf(expectedSize));
-		}
-	};
+	}
 }
