@@ -35,9 +35,6 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-
 /**
  * Servlet 3.0 {@link WebApplicationInitializer} using Spring 3.2 convenient base class
  * {@link AbstractAnnotationConfigDispatcherServletInitializer}. It essentially sets up a root application context from
@@ -111,13 +108,5 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 		public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 			configurer.defaultContentType(MediaType.APPLICATION_JSON);
 		}
-
-		@Bean
-		public ObjectMapper objectMapper() {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JodaModule());
-			return mapper;
-		}
 	}
-
 }
