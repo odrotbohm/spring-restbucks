@@ -67,7 +67,7 @@ public class PaymentProcessIntegrationTest {
 	private static final String FIRST_ORDER_EXPRESSION = "$content[0]";
 
 	private static final String ORDERS_REL = "orders";
-	private static final String ORDER_REL = "orders.Orders";
+	private static final String ORDER_REL = ORDERS_REL + ".order";
 	private static final String RECEIPT_REL = "receipt";
 	private static final String CANCEL_REL = "cancel";
 	private static final String UPDATE_REL = "update";

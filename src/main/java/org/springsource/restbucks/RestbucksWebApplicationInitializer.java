@@ -34,8 +34,6 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import org.springsource.restbucks.support.RepositoryLinkMetadataFactory;
-import org.springsource.restbucks.support.RestResourceEntityLinks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
@@ -103,17 +101,6 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 		@Bean
 		public DomainClassConverter<FormattingConversionService> domainClassConverter() {
 			return new DomainClassConverter<>(mvcConversionService());
-		}
-
-		/**
-		 * Registers a custom {@link EntityLinks} instance for all the types managed by Spring Data REST.
-		 * 
-		 * @return
-		 */
-		@Bean
-		public RestResourceEntityLinks restResourceEntityLinks() throws Exception {
-			RepositoryLinkMetadataFactory factory = new RepositoryLinkMetadataFactory(repositories);
-			return new RestResourceEntityLinks(factory, "");
 		}
 
 		/*
