@@ -15,14 +15,12 @@
  */
 package org.springsource.restbucks;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.repository.support.DomainClassConverter;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
@@ -90,9 +88,6 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 	@Import(RepositoryRestMvcConfiguration.class)
 	@ComponentScan(excludeFilters = @Filter({ Service.class, Configuration.class }))
 	public static class WebConfiguration extends WebMvcConfigurationSupport {
-
-		@Autowired
-		Repositories repositories;
 
 		@Bean
 		public DomainClassConverter<FormattingConversionService> domainClassConverter() {
