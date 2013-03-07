@@ -24,9 +24,10 @@ import java.nio.file.Files;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkDiscoverer;
@@ -34,15 +35,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfiguration;
 import org.springsource.restbucks.order.Order;
@@ -58,6 +61,10 @@ import com.jayway.jsonpath.JsonPath;
  * @author Oliver Gierke
  */
 @Slf4j
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextHierarchy({ @ContextConfiguration(name = "root", classes = ApplicationConfig.class),
+		@ContextConfiguration(name = "dispatcher", classes = WebConfiguration.class) })
 public class PaymentProcessIntegrationTest {
 
 	private static final String FIRST_ORDER_EXPRESSION = "$content[0]";
@@ -69,34 +76,24 @@ public class PaymentProcessIntegrationTest {
 	private static final String UPDATE_REL = "update";
 	private static final String PAYMENT_REL = "payment";
 
-	static AnnotationConfigWebApplicationContext servletApplicationContext;
-	static OpenEntityManagerInViewFilter osivFilter;
-	static MockMvc mvc;
+	@Autowired
+	WebApplicationContext context;
 
-	static LinkDiscoverer links;
+	MockMvc mvc;
+	LinkDiscoverer links;
 
-	@BeforeClass
-	public static void beforeClass() {
+	@Before
+	public void setUp() {
 
-		MockServletContext servletContext = new MockServletContext();
+		OpenEntityManagerInViewFilter oemivFilter = new OpenEntityManagerInViewFilter();
+		oemivFilter.setServletContext(context.getServletContext());
 
-		osivFilter = new OpenEntityManagerInViewFilter();
-		osivFilter.setServletContext(servletContext);
-
-		servletApplicationContext = new AnnotationConfigWebApplicationContext();
-		servletApplicationContext.register(WebConfiguration.class);
-		servletApplicationContext.setParent(new AnnotationConfigApplicationContext(ApplicationConfig.class));
-		servletApplicationContext.setServletContext(servletContext);
-		servletContext
-				.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, servletApplicationContext);
-		servletApplicationContext.refresh();
-
-		mvc = MockMvcBuilders.webAppContextSetup(servletApplicationContext). //
+		mvc = MockMvcBuilders.webAppContextSetup(context). //
 				addFilter(new ShallowEtagHeaderFilter()). //
-				addFilter(osivFilter). //
+				addFilter(oemivFilter). //
 				build();
 
-		links = servletApplicationContext.getBean(LinkDiscoverer.class);
+		links = context.getBean(LinkDiscoverer.class);
 	}
 
 	/**
@@ -412,7 +409,7 @@ public class PaymentProcessIntegrationTest {
 	 * @param rel
 	 * @return
 	 */
-	private static ResultMatcher linkWithRelIsPresent(final String rel) {
+	private ResultMatcher linkWithRelIsPresent(final String rel) {
 		return new LinkWithRelMatcher(rel, true);
 	}
 
@@ -422,11 +419,11 @@ public class PaymentProcessIntegrationTest {
 	 * @param rel
 	 * @return
 	 */
-	private static ResultMatcher linkWithRelIsNotPresent(String rel) {
+	private ResultMatcher linkWithRelIsNotPresent(String rel) {
 		return new LinkWithRelMatcher(rel, false);
 	}
 
-	private static class LinkWithRelMatcher implements ResultMatcher {
+	private class LinkWithRelMatcher implements ResultMatcher {
 
 		private final String rel;
 		private final boolean present;
