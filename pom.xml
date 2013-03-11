@@ -249,6 +249,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>8.1.9.v20130131</version>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+			</plugin>
 		</plugins>
 	</build>
 	
