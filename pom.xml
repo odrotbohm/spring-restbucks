@@ -9,7 +9,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<name>Spring RESTBucks</name>
 	
 	<properties>
-		<spring.version>3.2.1.RELEASE</spring.version>
+		<spring.version>3.2.2.RELEASE</spring.version>
 		<slf4j.version>1.7.2</slf4j.version>
 		<jackson.version>2.1.4</jackson.version>
 		<logback.version>1.0.9</logback.version>
