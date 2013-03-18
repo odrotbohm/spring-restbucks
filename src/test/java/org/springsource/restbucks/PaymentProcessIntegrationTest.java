@@ -63,8 +63,8 @@ import com.jayway.jsonpath.JsonPath;
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextHierarchy({ @ContextConfiguration(name = "root", classes = ApplicationConfig.class),
-		@ContextConfiguration(name = "dispatcher", classes = WebConfiguration.class) })
+@ContextHierarchy({ @ContextConfiguration(classes = ApplicationConfig.class),
+		@ContextConfiguration(classes = WebConfiguration.class) })
 public class PaymentProcessIntegrationTest {
 
 	private static final String FIRST_ORDER_EXPRESSION = "$content[0]";
@@ -79,8 +79,10 @@ public class PaymentProcessIntegrationTest {
 	@Autowired
 	WebApplicationContext context;
 
-	MockMvc mvc;
+	@Autowired
 	LinkDiscoverer links;
+
+	MockMvc mvc;
 
 	@Before
 	public void setUp() {
@@ -92,8 +94,6 @@ public class PaymentProcessIntegrationTest {
 				addFilter(new ShallowEtagHeaderFilter()). //
 				addFilter(oemivFilter). //
 				build();
-
-		links = context.getBean(LinkDiscoverer.class);
 	}
 
 	/**
