@@ -53,7 +53,7 @@ public class GeneralMvcIntegrationTest {
 
 	@Configuration
 	@EnableWebMvc
-	static class WebConfiguration {
+	static class WebTestConfiguration {
 
 		@Bean
 		public LinkHeaderController controller() {
