@@ -43,10 +43,21 @@ public class ApplicationIntegrationTest extends AbstractIntegrationTest {
 	@Ignore
 	public void initializesWebApplicationContext() {
 
-		AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
-		applicationContext.register(RepositoryRestMvcConfiguration.class);
-		applicationContext.register(WebConfiguration.class);
-		applicationContext.setParent(context);
-		applicationContext.refresh();
+		AnnotationConfigWebApplicationContext applicationContext = null;
+
+		try {
+
+			applicationContext = new AnnotationConfigWebApplicationContext();
+			applicationContext.register(RepositoryRestMvcConfiguration.class);
+			applicationContext.register(WebConfiguration.class);
+			applicationContext.setParent(context);
+			applicationContext.refresh();
+
+		} finally {
+
+			if (applicationContext != null) {
+				applicationContext.close();
+			}
+		}
 	}
 }

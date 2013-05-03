@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks;
+package org.springsource.restbucks.payment.web;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.hateoas.Link;
@@ -36,10 +35,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.ContextHierarchy;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -47,7 +42,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
-import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfiguration;
+import org.springsource.restbucks.AbstractWebIntegrationTest;
 import org.springsource.restbucks.order.Order;
 
 import com.jayway.jsonpath.JsonPath;
@@ -61,11 +56,7 @@ import com.jayway.jsonpath.JsonPath;
  * @author Oliver Gierke
  */
 @Slf4j
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextHierarchy({ @ContextConfiguration(classes = ApplicationConfig.class),
-		@ContextConfiguration(classes = WebConfiguration.class) })
-public class PaymentProcessIntegrationTest {
+public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 	private static final String FIRST_ORDER_EXPRESSION = "$content[0]";
 
@@ -392,16 +383,6 @@ public class PaymentProcessIntegrationTest {
 	}
 
 	// Helper methods
-
-	/**
-	 * Creates a JSONPath expression to find links with the given relation type.
-	 * 
-	 * @param rel
-	 * @return
-	 */
-	private static String linkExpressionForRel(String rel) {
-		return String.format("$links[?(@.rel == '%s')].href", rel);
-	}
 
 	/**
 	 * Creates a {@link ResultMatcher} that checks for the presence of a link with the given rel.
