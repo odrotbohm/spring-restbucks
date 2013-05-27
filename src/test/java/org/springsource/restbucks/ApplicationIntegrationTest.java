@@ -15,12 +15,11 @@
  */
 package org.springsource.restbucks;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfiguration;
 
@@ -40,7 +39,6 @@ public class ApplicationIntegrationTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Ignore
 	public void initializesWebApplicationContext() {
 
 		AnnotationConfigWebApplicationContext applicationContext = null;
@@ -48,7 +46,7 @@ public class ApplicationIntegrationTest extends AbstractIntegrationTest {
 		try {
 
 			applicationContext = new AnnotationConfigWebApplicationContext();
-			applicationContext.register(RepositoryRestMvcConfiguration.class);
+			applicationContext.setServletContext(new MockServletContext());
 			applicationContext.register(WebConfiguration.class);
 			applicationContext.setParent(context);
 			applicationContext.refresh();
