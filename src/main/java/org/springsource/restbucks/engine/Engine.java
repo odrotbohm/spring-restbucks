@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks.processing;
+package org.springsource.restbucks.engine;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
 import org.springsource.restbucks.payment.OrderPaidEvent;
@@ -34,20 +39,19 @@ import org.springsource.restbucks.payment.OrderPaidEvent;
  */
 @Slf4j
 @Service
-class OrderProcessor implements ApplicationListener<OrderPaidEvent> {
+@AllArgsConstructor(onConstructor = @_(@Autowired))
+class Engine implements ApplicationListener<OrderPaidEvent>, InProgressAware {
 
-	private final OrderRepository repository;
+	private final @NonNull OrderRepository repository;
+	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
 
-	/**
-	 * Creates a new {@link OrderProcessor} using the given {@link OrderRepository}.
-	 * 
-	 * @param repository must not be {@literal null}.
+	/*
+	 * (non-Javadoc)
+	 * @see org.springsource.restbucks.engine.InProgressAware#getOrders()
 	 */
-	@Autowired
-	public OrderProcessor(OrderRepository repository) {
-
-		Assert.notNull(repository, "OrderRepository must not be null!");
-		this.repository = repository;
+	@Override
+	public Set<Order> getOrders() {
+		return ordersInProgress;
 	}
 
 	/* 
@@ -62,6 +66,8 @@ class OrderProcessor implements ApplicationListener<OrderPaidEvent> {
 		order.markInPreparation();
 		order = repository.save(order);
 
+		ordersInProgress.add(order);
+
 		log.info("Starting to process order {}.", order);
 
 		try {
@@ -72,6 +78,8 @@ class OrderProcessor implements ApplicationListener<OrderPaidEvent> {
 
 		order.markPrepared();
 		repository.save(order);
+
+		ordersInProgress.remove(order);
 
 		log.info("Finished processing order {}.", order);
 	}
