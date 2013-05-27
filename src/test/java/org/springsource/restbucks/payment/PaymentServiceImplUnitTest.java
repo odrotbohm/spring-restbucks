@@ -39,29 +39,25 @@ public class PaymentServiceImplUnitTest {
 
 	PaymentService paymentService;
 
-	@Mock
-	PaymentRepository paymentRepository;
-	@Mock
-	CreditCardRepository creditCardRepository;
-	@Mock
-	OrderRepository orderRepository;
+	@Mock PaymentRepository paymentRepository;
+	@Mock CreditCardRepository creditCardRepository;
+	@Mock OrderRepository orderRepository;
 
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
+	@Rule public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setUp() {
-		this.paymentService = new PaymentServiceImpl(paymentRepository, creditCardRepository, orderRepository);
+		this.paymentService = new PaymentServiceImpl(creditCardRepository, paymentRepository, orderRepository);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void rejectsNullPaymentRepository() {
-		new PaymentServiceImpl(null, creditCardRepository, orderRepository);
+		new PaymentServiceImpl(creditCardRepository, null, orderRepository);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void rejectsNullCreditCardRepository() {
-		new PaymentServiceImpl(paymentRepository, null, orderRepository);
+		new PaymentServiceImpl(null, paymentRepository, orderRepository);
 	}
 
 	@Test

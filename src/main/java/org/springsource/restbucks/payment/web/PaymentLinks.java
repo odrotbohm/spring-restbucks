@@ -15,11 +15,13 @@
  */
 package org.springsource.restbucks.payment.web;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
@@ -30,6 +32,7 @@ import org.springsource.restbucks.payment.Payment.Receipt;
  * @author Oliver Gierke
  */
 @Component
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class PaymentLinks {
 
 	static final String PAYMENT = "/payment";
@@ -37,19 +40,7 @@ public class PaymentLinks {
 	static final String PAYMENT_REL = "payment";
 	static final String RECEIPT_REL = "receipt";
 
-	private final EntityLinks entityLinks;
-
-	/**
-	 * Creates a new {@link PaymentLinks} instance using the given {@link EntityLinks}.
-	 * 
-	 * @param entityLinks must not be {@literal null}.
-	 */
-	@Autowired
-	public PaymentLinks(EntityLinks entityLinks) {
-
-		Assert.notNull(entityLinks, "EntityLinks must not be null!");
-		this.entityLinks = entityLinks;
-	}
+	private final @NonNull EntityLinks entityLinks;
 
 	/**
 	 * Returns the {@link Link} to point to the {@link Payment} for the given {@link Order}.

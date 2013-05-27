@@ -15,8 +15,10 @@
  */
 package org.springsource.restbucks.payment.web;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.support.DomainClassConverter;
@@ -27,7 +29,6 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,26 +50,11 @@ import org.springsource.restbucks.payment.PaymentService;
 @Controller
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class PaymentController {
 
-	private final PaymentService paymentService;
-	private final EntityLinks entityLinks;
-
-	/**
-	 * Creates a new {@link PaymentController} using the given {@link PaymentService}.
-	 * 
-	 * @param paymentService must not be {@literal null}.
-	 * @param entityLinks must not be {@literal null}.
-	 */
-	@Autowired
-	public PaymentController(PaymentService paymentService, EntityLinks entityLinks) {
-
-		Assert.notNull(paymentService, "PaymentService must not be null!");
-		Assert.notNull(entityLinks, "EntityLinks must not be null!");
-
-		this.paymentService = paymentService;
-		this.entityLinks = entityLinks;
-	}
+	private final @NonNull PaymentService paymentService;
+	private final @NonNull EntityLinks entityLinks;
 
 	/**
 	 * Accepts a payment for an {@link Order}

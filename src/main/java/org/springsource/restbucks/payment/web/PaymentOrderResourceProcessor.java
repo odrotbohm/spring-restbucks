@@ -15,11 +15,13 @@
  */
 package org.springsource.restbucks.payment.web;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 
 /**
@@ -28,21 +30,10 @@ import org.springsource.restbucks.order.Order;
  * @author Oliver Gierke
  */
 @Component
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 class PaymentOrderResourceProcessor implements ResourceProcessor<Resource<Order>> {
 
-	private final PaymentLinks paymentLinks;
-
-	/**
-	 * Creates a new {@link PaymentOrderResourceProcessor} from the given {@link PaymentController}.
-	 * 
-	 * @param paymentLinks must not be {@literal null}.
-	 */
-	@Autowired
-	public PaymentOrderResourceProcessor(PaymentLinks paymentLinks) {
-
-		Assert.notNull(paymentLinks, "PaymentLinks must not be null!");
-		this.paymentLinks = paymentLinks;
-	}
+	private final @NonNull PaymentLinks paymentLinks;
 
 	/* 
 	 * (non-Javadoc)
