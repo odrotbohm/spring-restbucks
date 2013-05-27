@@ -17,7 +17,7 @@ package org.springsource.restbucks.order;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.repository.annotation.RestResource;
 import org.springsource.restbucks.order.Order.Status;
@@ -28,7 +28,7 @@ import org.springsource.restbucks.order.Order.Status;
  * @author Oliver Gierke
  */
 @RestResource(path = "orders", rel = "orders")
-public interface OrderRepository extends CrudRepository<Order, Long> {
+public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
 
 	/**
 	 * Returns all {@link Order}s with the given {@link Status}.
