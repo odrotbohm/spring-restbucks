@@ -20,16 +20,17 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
-import org.springframework.format.support.FormattingConversionService;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.http.MediaType;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -85,14 +86,10 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 	 */
 	@Configuration
 	@EnableHypermediaSupport
+	@EnableSpringDataWebSupport
 	@Import(RepositoryRestMvcConfiguration.class)
 	@ComponentScan(excludeFilters = @Filter({ Service.class, Configuration.class }))
-	public static class WebConfiguration extends WebMvcConfigurationSupport {
-
-		@Bean
-		public DomainClassConverter<FormattingConversionService> domainClassConverter() {
-			return new DomainClassConverter<>(mvcConversionService());
-		}
+	public static class WebConfiguration extends DelegatingWebMvcConfiguration {
 
 		/*
 		 * (non-Javadoc)
@@ -101,6 +98,29 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 		@Override
 		public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 			configurer.defaultContentType(MediaType.APPLICATION_JSON);
+		}
+
+		/**
+		 * Customize {@link RequestMappingHandlerMapping} to ignore Spring Data REST controllers until DATAREST-83 is fixed.
+		 */
+		@Override
+		@Bean
+		public RequestMappingHandlerMapping requestMappingHandlerMapping() {
+
+			RequestMappingHandlerMapping handlerMapping = new RequestMappingHandlerMapping() {
+
+				@Override
+				protected boolean isHandler(Class<?> beanType) {
+					return beanType == null || ClassUtils.getPackageName(beanType).startsWith("org.springframework.data") ? false
+							: super.isHandler(beanType);
+				}
+			};
+
+			handlerMapping.setOrder(0);
+			handlerMapping.setInterceptors(getInterceptors());
+			handlerMapping.setContentNegotiationManager(mvcContentNegotiationManager());
+
+			return handlerMapping;
 		}
 	}
 }
