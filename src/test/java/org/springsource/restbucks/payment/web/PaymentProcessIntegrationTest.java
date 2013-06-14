@@ -52,7 +52,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	private static final String FIRST_ORDER_EXPRESSION = "$content[0]";
 
 	private static final String ORDERS_REL = "orders";
-	private static final String ORDER_REL = ORDERS_REL + ".order";
+	private static final String ORDER_REL = "order";
 	private static final String RECEIPT_REL = "receipt";
 	private static final String CANCEL_REL = "cancel";
 	private static final String UPDATE_REL = "update";
@@ -227,7 +227,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		// Make sure we cannot cheat and cancel the order after it has been payed
 		log.info("Faking a cancel request to make sure it's forbidden…");
 		Link selfLink = links.findLinkWithRel(Link.REL_SELF, content);
-		mvc.perform(get(selfLink.getHref() + "/cancel")).andExpect(status().isNotFound());
+		mvc.perform(delete(selfLink.getHref())).andExpect(status().isMethodNotAllowed());
 
 		return result;
 	}
