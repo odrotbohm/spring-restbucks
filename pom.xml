@@ -11,7 +11,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<properties>
 		<spring.version>3.2.3.RELEASE</spring.version>
 		<slf4j.version>1.7.2</slf4j.version>
-		<jackson.version>2.1.4</jackson.version>
+		<jackson.version>2.2.2</jackson.version>
 		<logback.version>1.0.11</logback.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sd.rest>2.0.0.BUILD-SNAPSHOT</sd.rest>
@@ -165,7 +165,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-joda</artifactId>
-			<version>2.1.2</version>
+			<version>${jackson.version}</version>
 		</dependency>
 
 		<!-- Database -->
