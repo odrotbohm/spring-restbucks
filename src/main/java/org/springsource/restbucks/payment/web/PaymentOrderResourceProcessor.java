@@ -15,8 +15,8 @@
  */
 package org.springsource.restbucks.payment.web;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
@@ -30,7 +30,7 @@ import org.springsource.restbucks.order.Order;
  * @author Oliver Gierke
  */
 @Component
-@AllArgsConstructor(onConstructor = @_(@Autowired))
+@RequiredArgsConstructor(onConstructor = @_(@Autowired))
 class PaymentOrderResourceProcessor implements ResourceProcessor<Resource<Order>> {
 
 	private final @NonNull PaymentLinks paymentLinks;

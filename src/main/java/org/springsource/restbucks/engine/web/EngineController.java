@@ -16,6 +16,8 @@
 package org.springsource.restbucks.engine.web;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,13 +45,14 @@ import org.springsource.restbucks.order.OrderRepository;
  * @author Oliver Gierke
  */
 @Controller
+@RequiredArgsConstructor(onConstructor = @_(@Autowired))
 class EngineController implements ResourceProcessor<RepositoryLinksResource> {
 
 	public static final String ENGINE_REL = "engine";
 	public static final String PAGES_REL = "pages";
 
-	private @Autowired InProgressAware processor;
-	private @Autowired OrderRepository repository;
+	private final @NonNull InProgressAware processor;
+	private final @NonNull OrderRepository repository;
 
 	/**
 	 * Exposes all {@link Order}s currently in preparation.

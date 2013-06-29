@@ -18,7 +18,6 @@ package org.springsource.restbucks.payment.web;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.nio.file.Files;
@@ -218,7 +217,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		ResultActions action = mvc.perform(put(paymentLink.getHref()).content("\"1234123412341234\"").contentType(
 				MediaType.APPLICATION_JSON));
 
-		MockHttpServletResponse result = action.andDo(print()).andExpect(status().isCreated()). //
+		MockHttpServletResponse result = action.andExpect(status().isCreated()). //
 				andExpect(linkWithRelIsPresent(ORDER_REL)). //
 				andReturn().getResponse();
 

@@ -25,23 +25,17 @@ import org.springsource.restbucks.order.Order;
  * @author Oliver Gierke
  */
 @Component
-@SuppressWarnings("rawtypes")
-class OrderControllerEventListener extends AbstractRepositoryEventListener {
+class OrderControllerEventListener extends AbstractRepositoryEventListener<Order> {
 
 	/* 
 	 * (non-Javadoc)
 	 * @see org.springframework.data.rest.repository.context.AbstractRepositoryEventListener#onBeforeDelete(java.lang.Object)
 	 */
 	@Override
-	protected void onBeforeDelete(Object entity) {
+	protected void onBeforeDelete(Order order) {
 
-		if (entity instanceof Order) {
-
-			Order order = (Order) entity;
-
-			if (order.isPaid()) {
-				throw new OrderAlreadyPaidException();
-			}
+		if (order.isPaid()) {
+			throw new OrderAlreadyPaidException();
 		}
 	}
 }

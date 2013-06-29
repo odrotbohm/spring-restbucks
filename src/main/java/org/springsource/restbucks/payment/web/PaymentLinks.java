@@ -15,8 +15,8 @@
  */
 package org.springsource.restbucks.payment.web;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
@@ -32,8 +32,8 @@ import org.springsource.restbucks.payment.Payment.Receipt;
  * @author Oliver Gierke
  */
 @Component
-@AllArgsConstructor(onConstructor = @_(@Autowired))
-public class PaymentLinks {
+@RequiredArgsConstructor(onConstructor = @_(@Autowired))
+class PaymentLinks {
 
 	static final String PAYMENT = "/payment";
 	static final String RECEIPT = "/receipt";

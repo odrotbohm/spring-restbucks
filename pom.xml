@@ -14,7 +14,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<jackson.version>2.1.4</jackson.version>
 		<logback.version>1.0.11</logback.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sd.rest>1.1.0.BUILD-SNAPSHOT</sd.rest>
+		<sd.rest>2.0.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
 
 	<dependencies>

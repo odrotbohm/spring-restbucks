@@ -16,7 +16,6 @@
 package org.springsource.restbucks.payment;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.rest.repository.annotation.RestResource;
 import org.springsource.restbucks.order.Order;
 
 /**
@@ -24,7 +23,6 @@ import org.springsource.restbucks.order.Order;
  * 
  * @author Oliver Gierke
  */
-@RestResource(exported = false)
 interface PaymentRepository extends PagingAndSortingRepository<Payment, Long> {
 
 	/**

@@ -16,14 +16,12 @@
 package org.springsource.restbucks.payment;
 
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.rest.repository.annotation.RestResource;
 
 /**
  * Repository to access {@link CreditCard} instances.
  * 
  * @author Oliver Gierke
  */
-@RestResource(exported = false)
 interface CreditCardRepository extends CrudRepository<CreditCard, Long> {
 
 	/**

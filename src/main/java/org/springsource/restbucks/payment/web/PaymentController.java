@@ -15,10 +15,10 @@
  */
 package org.springsource.restbucks.payment.web;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.support.DomainClassConverter;
@@ -26,6 +26,7 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -50,7 +51,7 @@ import org.springsource.restbucks.payment.PaymentService;
 @Controller
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
-@AllArgsConstructor(onConstructor = @_(@Autowired))
+@RequiredArgsConstructor(onConstructor = @_(@Autowired))
 public class PaymentController {
 
 	private final @NonNull PaymentService paymentService;
@@ -87,7 +88,7 @@ public class PaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = PaymentLinks.RECEIPT, method = RequestMethod.GET)
-	ResponseEntity<Resource<Receipt>> showReceipt(@PathVariable("id") Order order) {
+	HttpEntity<Resource<Receipt>> showReceipt(@PathVariable("id") Order order) {
 
 		if (order == null || !order.isPaid() || order.isTaken()) {
 			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
@@ -109,7 +110,7 @@ public class PaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = PaymentLinks.RECEIPT, method = RequestMethod.DELETE)
-	ResponseEntity<Resource<Receipt>> takeReceipt(@PathVariable("id") Order order) {
+	HttpEntity<Resource<Receipt>> takeReceipt(@PathVariable("id") Order order) {
 
 		if (order == null || !order.isPaid()) {
 			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
@@ -125,7 +126,7 @@ public class PaymentController {
 	 * @param receipt
 	 * @return
 	 */
-	private ResponseEntity<Resource<Receipt>> createReceiptResponse(Receipt receipt) {
+	private HttpEntity<Resource<Receipt>> createReceiptResponse(Receipt receipt) {
 
 		Order order = receipt.getOrder();
 

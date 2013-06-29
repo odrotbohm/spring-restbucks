@@ -15,12 +15,14 @@
  */
 package org.springsource.restbucks.order.web;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 
 /**
@@ -30,23 +32,13 @@ import org.springsource.restbucks.order.Order;
  * @author Oliver Gierke
  */
 @Component
+@RequiredArgsConstructor(onConstructor = @_(@Autowired))
 class CoreOrderResourceProcessor implements ResourceProcessor<Resource<Order>> {
 
 	public static final String CANCEL_REL = "cancel";
 	public static final String UPDATE_REL = "update";
 
-	private final EntityLinks entityLinks;
-
-	/**
-	 * Creates a new {@link CoreOrderResourceProcessor} using the given {@link EntityLinks} instance.
-	 * 
-	 * @param entityLinks must not be {@literal null}.
-	 */
-	@Autowired
-	public CoreOrderResourceProcessor(EntityLinks entityLinks) {
-		Assert.notNull(entityLinks, "EntityLinks must not be null!");
-		this.entityLinks = entityLinks;
-	}
+	private final @NonNull EntityLinks entityLinks;
 
 	/* 
 	 * (non-Javadoc)
