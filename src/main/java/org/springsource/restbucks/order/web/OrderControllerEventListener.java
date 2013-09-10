@@ -15,7 +15,7 @@
  */
 package org.springsource.restbucks.order.web;
 
-import org.springframework.data.rest.repository.context.AbstractRepositoryEventListener;
+import org.springframework.data.rest.core.event.AbstractRepositoryEventListener;
 import org.springframework.stereotype.Component;
 import org.springsource.restbucks.order.Order;
 
