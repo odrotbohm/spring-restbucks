@@ -35,9 +35,9 @@ public class CreditCardUnitTest {
 	@Test
 	public void discoversExpiredCreditCard() {
 
-		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Months.ELEVEN, Years.years(2013));
+		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Months.ELEVEN, Years.years(2016));
 
 		assertThat(creditCard.isValid(new LocalDate()), is(true));
-		assertThat(creditCard.isValid(new LocalDate(2013, 12, 1)), is(false));
+		assertThat(creditCard.isValid(new LocalDate(2016, 12, 1)), is(false));
 	}
 }

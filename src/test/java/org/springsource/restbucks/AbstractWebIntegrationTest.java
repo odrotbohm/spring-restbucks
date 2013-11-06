@@ -46,11 +46,9 @@ import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfigur
 		@ContextConfiguration(classes = WebConfiguration.class) })
 public abstract class AbstractWebIntegrationTest {
 
-	@Autowired
-	protected WebApplicationContext context;
+	@Autowired protected WebApplicationContext context;
 
-	@Autowired
-	protected LinkDiscoverer links;
+	@Autowired protected LinkDiscoverer links;
 	protected MockMvc mvc;
 
 	@Before

@@ -35,12 +35,16 @@ class OrderInitializer {
 	/**
 	 * Creates two orders and persists them using the given {@link OrderRepository}.
 	 * 
-	 * @param orderRepository must not be {@literal null}.
+	 * @param repository must not be {@literal null}.
 	 */
 	@Autowired
-	public OrderInitializer(OrderRepository orderRepository) {
+	public OrderInitializer(OrderRepository repository) {
 
-		Assert.notNull(orderRepository, "OrderRepository must not be null!");
+		if (repository.count() > 0) {
+			return;
+		}
+
+		Assert.notNull(repository, "OrderRepository must not be null!");
 
 		Item javaChip = new Item("Java Chip", new MonetaryAmount(EURO, 4.20));
 		Item cappuchino = new Item("Cappuchino", new MonetaryAmount(EURO, 3.20));
@@ -48,6 +52,6 @@ class OrderInitializer {
 		Order javaChipOrder = new Order(javaChip);
 		Order cappuchinoOrder = new Order(cappuchino);
 
-		orderRepository.save(Arrays.asList(javaChipOrder, cappuchinoOrder));
+		repository.save(Arrays.asList(javaChipOrder, cappuchinoOrder));
 	}
 }
