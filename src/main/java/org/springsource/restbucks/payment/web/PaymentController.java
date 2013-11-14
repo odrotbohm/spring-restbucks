@@ -51,7 +51,7 @@ import org.springsource.restbucks.payment.PaymentService;
 @Controller
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
-@RequiredArgsConstructor(onConstructor = @_(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentController {
 
 	private final @NonNull PaymentService paymentService;

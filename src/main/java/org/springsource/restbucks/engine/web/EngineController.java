@@ -45,7 +45,7 @@ import org.springsource.restbucks.order.OrderRepository;
  * @author Oliver Gierke
  */
 @Controller
-@RequiredArgsConstructor(onConstructor = @_(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class EngineController implements ResourceProcessor<RepositoryLinksResource> {
 
 	public static final String ENGINE_REL = "engine";

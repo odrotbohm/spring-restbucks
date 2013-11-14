@@ -32,7 +32,7 @@ import org.springsource.restbucks.order.Order;
  * @author Oliver Gierke
  */
 @Component
-@RequiredArgsConstructor(onConstructor = @_(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class CoreOrderResourceProcessor implements ResourceProcessor<Resource<Order>> {
 
 	public static final String CANCEL_REL = "cancel";

@@ -39,7 +39,7 @@ import org.springsource.restbucks.payment.OrderPaidEvent;
  */
 @Slf4j
 @Service
-@AllArgsConstructor(onConstructor = @_(@Autowired))
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 class Engine implements ApplicationListener<OrderPaidEvent>, InProgressAware {
 
 	private final @NonNull OrderRepository repository;

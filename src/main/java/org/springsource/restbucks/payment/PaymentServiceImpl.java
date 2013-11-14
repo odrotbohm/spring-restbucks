@@ -15,8 +15,8 @@
  */
 package org.springsource.restbucks.payment;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ import org.springsource.restbucks.payment.Payment.Receipt;
  */
 @Service
 @Transactional
-@AllArgsConstructor(onConstructor = @_(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class PaymentServiceImpl implements PaymentService {
 
 	private final @NonNull CreditCardRepository creditCardRepository;

@@ -32,7 +32,7 @@ import org.springsource.restbucks.payment.Payment.Receipt;
  * @author Oliver Gierke
  */
 @Component
-@RequiredArgsConstructor(onConstructor = @_(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class PaymentLinks {
 
 	static final String PAYMENT = "/payment";
