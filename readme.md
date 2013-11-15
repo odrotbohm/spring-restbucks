@@ -9,12 +9,13 @@ From the command line do:
 ```
 git clone https://github.com/olivergierke/spring-restbucks.git
 cd spring-restbucks
-mvn jetty:run
+mvn clean package
+java -jar target/*.war
 ```
 
 For the usage inside an IDE do the following:
 
-1. Make sure you have an Eclipse with m2e installed (preferably [STS](http://www.springsource.org/sts)).
+1. Make sure you have an Eclipse with m2e installed (preferably [STS](http://spring.io/sts)).
 2. Install [Lombok](projectlombok.org).
    1. Download it from the [project page](http://projectlombok.org/download.html).
    2. Run the JAR (double click or `java -jar …`).
@@ -27,11 +28,12 @@ For the usage inside an IDE do the following:
 
 The project uses:
 
-- [Spring (MVC)](http://github.com/SpringSource/spring-framework) - 3.2.0.RELEASE
-- [Spring Data JPA](http://github.com/SpringSource/spring-data-jpa) - 1.2.0.RELEASE
-- [Spring Data REST](http://github.com/SpringSource/spring-data-rest) - 1.0.0.RELEASE
-- [Spring Hateoas](http://github.com/SpringSource/spring-hateoas) - 0.4.0.BUILD-SNAPSHOT
-- [Spring Plugin](http://github.com/SpringSource/spring-plugin) - 0.8.0.BUILD-SNAPSHOT
+- [Spring Boot](http://github.com/spring-projects/spring-boot) - 0.5.0.M6
+- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.0.0.RC1
+- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.4.1.RELEASE
+- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.0.0.BUILD-SNAPSHOT
+- [Spring Hateoas](http://github.com/spring-projects/spring-hateoas) - 0.8.0.RELEASE
+- [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 0.8.0.BUILD-SNAPSHOT
 
 The implementation consists of mainly two parts, the `order` and the `payment` part. The `Orders` are exposed as REST resources using Spring Data RESTs capability to automatically expose Spring Data JPA repositories contained in the application. The `Payment` process and the REST application protocol described in the book are implemented manually using a Spring MVC controller (`PaymentController`).
 

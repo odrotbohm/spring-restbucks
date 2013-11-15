@@ -19,6 +19,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import lombok.Data;
@@ -44,10 +45,11 @@ import org.springsource.restbucks.order.Order;
 @NoArgsConstructor
 public abstract class Payment extends AbstractEntity {
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "rborder")//
+	@OneToOne(cascade = CascadeType.MERGE)//
 	private Order order;
 
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")//
 	private DateTime paymentDate;
 
 	/**

@@ -59,11 +59,9 @@ public class GeneralMvcIntegrationTest {
 		public LinkHeaderController controller() {
 			return new LinkHeaderController();
 		}
-
 	}
 
-	@Autowired
-	WebApplicationContext wac;
+	@Autowired WebApplicationContext wac;
 
 	MockMvc mvc;
 

@@ -34,7 +34,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfiguration;
 import org.springsource.restbucks.engine.InProgressAware;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
@@ -71,7 +70,8 @@ class EngineController implements ResourceProcessor<RepositoryLinksResource> {
 	/**
 	 * An additional resource exposing paged {@link Order}s to show the usage of both {@link Pageable} and
 	 * {@link PagedResourcesAssembler} in controller methods. Both arguments are resolved through infrastructure
-	 * components registered through {@link EnableSpringDataWebSupport} on {@link WebConfiguration}.
+	 * components registered through {@link EnableSpringDataWebSupport} on
+	 * {@link org.springsource.restbucks.Restbucks.WebConfiguration}.
 	 * 
 	 * @param pageable the {@link Pageable} derived from the request.
 	 * @param assembler the {@link PagedResourcesAssembler} to easily build {@link PagedResources} instances from

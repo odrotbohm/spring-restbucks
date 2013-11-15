@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springsource.restbucks.Restbucks.ApplicationConfig;
 
 /**
  * Base class to implement transactiona integration tests using the root {@link ApplicationConfig}.

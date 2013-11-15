@@ -21,7 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfiguration;
+import org.springsource.restbucks.Restbucks.WebConfiguration;
 
 /**
  * Integration test to bootstrap the root {@link ApplicationContext}.
@@ -30,8 +30,7 @@ import org.springsource.restbucks.RestbucksWebApplicationInitializer.WebConfigur
  */
 public class ApplicationIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	ApplicationContext context;
+	@Autowired ApplicationContext context;
 
 	@Test
 	public void initializesRootApplicationContext() {
@@ -46,9 +45,8 @@ public class ApplicationIntegrationTest extends AbstractIntegrationTest {
 		try {
 
 			applicationContext = new AnnotationConfigWebApplicationContext();
-			applicationContext.setServletContext(new MockServletContext());
 			applicationContext.register(WebConfiguration.class);
-			applicationContext.setParent(context);
+			applicationContext.setServletContext(new MockServletContext());
 			applicationContext.refresh();
 
 		} finally {

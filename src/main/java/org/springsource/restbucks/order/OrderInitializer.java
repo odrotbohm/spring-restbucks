@@ -40,11 +40,11 @@ class OrderInitializer {
 	@Autowired
 	public OrderInitializer(OrderRepository repository) {
 
+		Assert.notNull(repository, "OrderRepository must not be null!");
+
 		if (repository.count() > 0) {
 			return;
 		}
-
-		Assert.notNull(repository, "OrderRepository must not be null!");
 
 		Item javaChip = new Item("Java Chip", new MonetaryAmount(EURO, 4.20));
 		Item cappuchino = new Item("Cappuchino", new MonetaryAmount(EURO, 3.20));

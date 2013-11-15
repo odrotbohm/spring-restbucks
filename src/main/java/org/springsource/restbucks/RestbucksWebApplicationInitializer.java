@@ -15,19 +15,16 @@
  */
 package org.springsource.restbucks;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
-import org.springframework.hateoas.config.EnableHypermediaSupport;
-import org.springframework.http.MediaType;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.stereotype.Service;
 import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
+import org.springframework.web.context.support.LiveBeansViewServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import org.springsource.restbucks.Restbucks.WebConfiguration;
 
 /**
  * Servlet 3.0 {@link WebApplicationInitializer} using Spring 3.2 convenient base class
@@ -45,7 +42,7 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 	 */
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class<?>[] { ApplicationConfig.class };
+		return new Class<?>[0];
 	}
 
 	/* 
@@ -75,24 +72,15 @@ public class RestbucksWebApplicationInitializer extends AbstractAnnotationConfig
 		return new javax.servlet.Filter[] { new OpenEntityManagerInViewFilter() };
 	}
 
-	/**
-	 * Web layer configuration enabling Spring MVC, Spring Hateoas hypermedia support.
-	 * 
-	 * @author Oliver Gierke
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.web.servlet.support.AbstractDispatcherServletInitializer#onStartup(javax.servlet.ServletContext)
 	 */
-	@Configuration
-	@EnableHypermediaSupport
-	@Import(RepositoryRestMvcConfiguration.class)
-	@ComponentScan(excludeFilters = @Filter({ Service.class, Configuration.class }))
-	public static class WebConfiguration extends DelegatingWebMvcConfiguration {
+	@Override
+	public void onStartup(ServletContext servletContext) throws ServletException {
+		super.onStartup(servletContext);
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureContentNegotiation(org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer)
-		 */
-		@Override
-		public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-			configurer.defaultContentType(MediaType.APPLICATION_JSON);
-		}
+		ServletRegistration servlet = servletContext.addServlet("liveBeansView", LiveBeansViewServlet.class);
+		servlet.addMapping("/live");
 	}
 }
