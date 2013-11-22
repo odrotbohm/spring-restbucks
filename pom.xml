@@ -15,6 +15,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</parent>
 	
 	<properties>
+		<hibernate-entitymanager.version>4.3.0.CR1</hibernate-entitymanager.version>
 		<sd.rest>2.0.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
 

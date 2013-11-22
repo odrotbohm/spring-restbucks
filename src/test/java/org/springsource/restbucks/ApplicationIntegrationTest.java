@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springsource.restbucks.Restbucks.WebConfiguration;
 
@@ -38,6 +39,7 @@ public class ApplicationIntegrationTest extends AbstractIntegrationTest {
 	}
 
 	@Test
+	@DirtiesContext
 	public void initializesWebApplicationContext() {
 
 		AnnotationConfigWebApplicationContext applicationContext = null;
