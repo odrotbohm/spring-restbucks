@@ -18,11 +18,11 @@ For the usage inside an IDE do the following:
 1. Make sure you have an Eclipse with m2e installed (preferably [STS](http://spring.io/sts)).
 2. Install [Lombok](projectlombok.org).
    1. Download it from the [project page](http://projectlombok.org/download.html).
-   2. Run the JAR (double click or `java -jar …`).
+   2. Run the JAR (double click or `java -jar ...`).
    3. Point it to your Eclipse installation, run the install.
    4. Restart Eclipse.
    
-3. Import the checked out code through *File > Import > Existing Maven Project…*
+3. Import the checked out code through *File > Import > Existing Maven Project...*
 
 ## Project description
 
@@ -31,7 +31,7 @@ The project uses:
 - [Spring Boot](http://github.com/spring-projects/spring-boot) - 0.5.0.M6
 - [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.0.0.RC1
 - [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.4.1.RELEASE
-- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.0.0.BUILD-SNAPSHOT
+- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.0.0.M1
 - [Spring Hateoas](http://github.com/spring-projects/spring-hateoas) - 0.8.0.RELEASE
 - [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 0.8.0.BUILD-SNAPSHOT
 
