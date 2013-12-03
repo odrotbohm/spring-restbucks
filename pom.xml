@@ -1,42 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.springsource.restbucks</groupId>
 	<artifactId>restbucks</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0.BUILD-SNAPSHOT</version>
 	<name>Spring RESTBucks</name>
-	
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>0.5.0.M6</version>
 	</parent>
-	
+
 	<properties>
 		<hibernate-entitymanager.version>4.3.0.CR1</hibernate-entitymanager.version>
-		<sd.rest>2.0.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
 
 	<dependencies>
 
 		<!-- Spring Data REST -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-core</artifactId>
+			<version>2.0.0.M1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-rest-webmvc</artifactId>
-			<version>${sd.rest}</version>
+			<version>2.0.0.M1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Spring HATEOAS -->
+		<dependency>
+			<groupId>org.springframework.hateoas</groupId>
+			<artifactId>spring-hateoas</artifactId>
+			<version>0.8.0.RELEASE</version>
 		</dependency>
 
 		<!-- Spring -->
@@ -58,7 +69,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jadira.usertype</groupId>
 			<artifactId>usertype.core</artifactId>
@@ -81,7 +92,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<version>1.12.2</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
@@ -95,6 +106,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<version>0.8.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -106,6 +123,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 
@@ -113,27 +138,35 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			
+
 		</plugins>
 	</build>
-	
+
 	<repositories>
 		<repository>
-			<id>spring-libs-milestone</id>
-			<url>http://repo.springsource.org/libs-snapshot</url>
+			<id>spring-snapshots</id>
+			<url>http://repo.spring.io/snapshot</url>
 			<snapshots>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<url>http://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 	<pluginRepositories>
 		<pluginRepository>
-			<id>spring-libs-milestone</id>
-			<url>http://repo.springsource.org/libs-snapshot</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
+			<id>spring-snapshots</id>
+			<url>http://repo.spring.io/snapshot</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<url>http://repo.spring.io/milestone</url>
 		</pluginRepository>
 	</pluginRepositories>
 

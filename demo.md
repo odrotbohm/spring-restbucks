@@ -36,13 +36,13 @@
 ## Payment process
 
 * Explain `PaymentService`
-* Explain `PaymentController` (esp. `submitPayment(…)`)
+* Explain `PaymentController` (esp. `submitPayment(...)`)
 * Hook link into `Order` resource if `Order` is in `PAYMENT_EXPECTED` state
 * Show `PaymentOrderResourceProcessor`
 
 ## SpringMVC Test
 
 * Integration tests required Servlet container running
-* Spring 3.2 introduced MVC test framework (mocks for `ServletContext`, `HttpServletRequest`, `…Response`)
-* Show `PaymentProcessIntegrationTest.beforeClass(…)`
-* Walk through `processNewOrder(…)`
+* Spring 3.2 introduced MVC test framework (mocks for `ServletContext`, `HttpServletRequest`, `...Response`)
+* Show `PaymentProcessIntegrationTest.beforeClass(...)`
+* Walk through `processNewOrder(...)`

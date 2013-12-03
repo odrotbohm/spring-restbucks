@@ -110,7 +110,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	 */
 	private MockHttpServletResponse accessRootResource() throws Exception {
 
-		log.info("Accessing root resource…");
+		log.info("Accessing root resource...");
 
 		MockHttpServletResponse response = mvc.perform(get("/")). //
 				andExpect(status().isOk()). //
@@ -159,7 +159,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		Link ordersLink = links.findLinkWithRel(ORDERS_REL, content);
 
 		log.info("Root resource returned: " + content);
-		log.info(String.format("Found orders link pointing to %s… Following…", ordersLink));
+		log.info(String.format("Found orders link pointing to %s... Following...", ordersLink));
 
 		MockHttpServletResponse response = mvc.perform(get(ordersLink.getHref())). //
 				andExpect(status().isOk()). //
@@ -184,8 +184,8 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		String order = JsonPath.read(content, FIRST_ORDER_EXPRESSION).toString();
 		Link orderLink = links.findLinkWithRel("self", order);
 
-		log.info(String.format("Picking first order using JSONPath expression %s…", FIRST_ORDER_EXPRESSION));
-		log.info(String.format("Discovered self link pointing to %s… Following", orderLink));
+		log.info(String.format("Picking first order using JSONPath expression %s...", FIRST_ORDER_EXPRESSION));
+		log.info(String.format("Discovered self link pointing to %s... Following", orderLink));
 
 		return mvc.perform(get(orderLink.getHref())). //
 				andExpect(linkWithRelIsPresent("self")). //
@@ -208,11 +208,11 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		String content = response.getContentAsString();
 		Link paymentLink = links.findLinkWithRel(PAYMENT_REL, content);
 
-		log.info(String.format("Discovered payment link pointing to %s…", paymentLink));
+		log.info(String.format("Discovered payment link pointing to %s...", paymentLink));
 
 		assertThat(paymentLink, not(nullValue()));
 
-		log.info("Triggering payment…");
+		log.info("Triggering payment...");
 
 		ResultActions action = mvc.perform(put(paymentLink.getHref()).content("\"1234123412341234\"").contentType(
 				MediaType.APPLICATION_JSON));
@@ -221,10 +221,10 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				andExpect(linkWithRelIsPresent(ORDER_REL)). //
 				andReturn().getResponse();
 
-		log.info("Payment triggered…");
+		log.info("Payment triggered...");
 
 		// Make sure we cannot cheat and cancel the order after it has been payed
-		log.info("Faking a cancel request to make sure it's forbidden…");
+		log.info("Faking a cancel request to make sure it's forbidden...");
 		Link selfLink = links.findLinkWithRel(Link.REL_SELF, content);
 		mvc.perform(delete(selfLink.getHref())).andExpect(status().isMethodNotAllowed());
 
@@ -257,7 +257,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				headers.setIfNoneMatch(etag);
 			}
 
-			log.info("Poll state of order until receipt is ready…");
+			log.info("Poll state of order until receipt is ready...");
 
 			ResultActions action = mvc.perform(get(orderLink.getHref()).headers(headers));
 			pollResponse = action.andReturn().getResponse();
@@ -265,7 +265,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 			int status = pollResponse.getStatus();
 			etag = pollResponse.getHeader("ETag");
 
-			log.info(String.format("Received %s with ETag of %s…", status, etag));
+			log.info(String.format("Received %s with ETag of %s...", status, etag));
 
 			if (status == HttpStatus.OK.value()) {
 
@@ -306,7 +306,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				andReturn().getResponse();
 
 		log.info("Accessing receipt, got:" + receiptResponse.getContentAsString());
-		log.info("Taking receipt…");
+		log.info("Taking receipt...");
 
 		return mvc.perform(delete(receiptLink.getHref()).accept(MediaType.APPLICATION_JSON)). //
 				andExpect(status().isOk()). //
