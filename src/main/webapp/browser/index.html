@@ -1,0 +1,246 @@
+<!doctype html>
+  <head>
+    <meta charset="utf-8">
+    <title>The HAL Browser</title>
+    <link rel="stylesheet" media="screen" href="vendor/css/bootstrap.css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link rel="stylesheet" media="screen" href="vendor/css/bootstrap-responsive.css" />
+    <link rel="stylesheet" media="screen" href="styles.css" />
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand">The HAL Browser</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li><a href="#/" id="entryPointLink">Go To Entry Point</a></li>
+              <li><a href="https://github.com/mikekelly/hal-browser">About The HAL Browser</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="browser" class="container-fluid"></div>
+
+  <script id="location-bar-template" type="text/template">
+<form>
+    <div class="input-append span12 location-bar-container">
+      <input class="span11" id="appendedInputButton" type="text" value="<%= url %>">
+      <button class="btn" type="submit">Go!</button>
+       <span class="ajax-loader"></span>
+    </div>
+</form>
+  </script>
+
+  <script id="links-template" type="text/template">
+    <h2>Links</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>rel</th>
+          <th>title</th>
+          <th>name / index</th>
+          <th>docs</th>
+          <th>GET</th>
+          <th>NON-GET</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% _.each(links, function(obj, rel) { %>
+        <% if ($.isArray(obj)) { %>
+          <% _.each(obj, function(link, i) { %>
+            <tr>
+              <td><strong><%= HAL.truncateIfUrl(rel) %></strong></td>
+              <td><%= link.title || '' %></td>
+              <td><%= link.name ? 'name: ' + link.name : 'index: ' + i %></a></td>
+              <td>
+              <% if (HAL.isUrl(rel)) { %>
+                <a class="dox" href="<%= HAL.buildUrl(rel) %>"><i class="icon-book"></i></a>
+              <% } %>
+              </td>
+              <td>
+                <% if (link.templated === true) { %>
+                  <a class="query btn btn-success" href="<%= link.href %>" title="Query URI template"><i class="icon-question-sign"></i></a>
+                <% } else { %>
+                  <a class="follow btn btn-success" href="<%= link.href %>" title="Follow link"><i class="icon-arrow-right"></i></a>
+                <% } %>
+              </td>
+              <td>
+                <a class="non-get btn btn-warning" href="<%= link.href %>" title="Perform non-GET request">!</a>
+              </td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td><strong><%= HAL.truncateIfUrl(rel) %></strong></td>
+            <td><%= obj.title || '' %></td>
+            <td><%= obj.name || '' %></td>
+            <td>
+            <% if (HAL.isUrl(rel)) { %>
+              <a class="dox" href="<%= HAL.buildUrl(rel) %>"><i class="icon-book"></i></a>
+            <% } %>
+            </td>
+            <td>
+              <% if (obj.templated === true) { %>
+                <a class="query btn btn-success" href="<%= obj.href %>" title="Query URI template"><i class="icon-question-sign"></i></a>
+              <% } else { %>
+                <a class="follow btn btn-success" href="<%= obj.href %>" title="Follow link"><i class="icon-arrow-right"></i></a>
+              <% } %>
+            </td>
+            <td>
+              <a class="non-get btn btn-warning" href="<%= obj.href %>" title="Perform non-GET request">!</a>
+            </td>
+          </tr>
+        <% } %>
+      <% }) %>
+      </tbody>
+    </table>
+  </script>
+
+  <script id="properties-template" type="text/template">
+    <h2>Properties</h2>
+    <pre><%= _.escape(JSON.stringify(properties, null, HAL.jsonIndent)) %></pre>
+  </script>
+
+  <script id="request-headers-template" type="text/template">
+    <h2>Custom Request Headers</h2>
+    <textarea class="span12"></textarea>
+  </script>
+
+  <script id="response-headers-template" type="text/template">
+    <h2>Response Headers</h2>
+    <pre><%= status.code %> <%= status.text %>
+
+<%= headers %></pre>
+  </script>
+
+  <script id="response-body-template" type="text/template">
+    <h2>Response Body</h2>
+    <pre><%= _.escape(body) %></pre>
+  </script>
+
+  <script id="query-uri-template" type="text/template">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>Expand URI Template</h3>
+    </div>
+
+    <form id="query" action="<%= href %>">
+      <div class="modal-body">
+        <p>URI Template:</p>
+        <pre><%= href %></pre>
+        <p>Input (JSON):</p>
+        <textarea><%= input %></textarea>
+        <p>Expanded URI:</p>
+        <pre class="preview">&nbsp;</pre>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Follow URI</button>
+      </div>
+    </form>
+  </script>
+
+
+  <script id="non-safe-request-template" type="text/template">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3>Make a non-GET request</h3>
+    </div>
+
+    <form class="non-safe" action="<%= href %>">
+      <div class="modal-body">
+        <p>Target URI</p>
+        <input name="url" type="text" class="url" value="<%= href %>" />
+        <p>Method:</p>
+        <input name="method" type="text" class="method" value="POST" />
+        <p>Headers:</p>
+<textarea name="headers" class="headers" style="height: 100px">
+Content-Type: application/json
+<%= user_defined_headers %>
+</textarea>
+        <p>Body:</p>
+<textarea name="body" class="body" style="height: 200px">
+{
+
+}
+</textarea>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Make Request</button>
+      </div>
+    </form>
+  </script>
+
+  <script id="embedded-resources-template" type="text/template">
+    <h2>Embedded Resources</h2>
+  </script>
+
+  <script id="embedded-resource-template" type="text/template">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" href="#"><%= resource.identifier %>
+      <% if (HAL.isUrl(resource.embed_rel)) { %>
+        <span class="dox pull-right" data-href="<%= HAL.buildUrl(resource.embed_rel) %>">
+          <i class="icon-book"></i>
+        </span>
+      <% } %>
+      </a>
+    </div>
+  </script>
+
+  <script src="vendor/js/jquery-1.10.2.min.js"></script>
+  <script src="vendor/js/underscore.js"></script>
+  <script src="vendor/js/backbone.js"></script>
+  <script src="vendor/js/uritemplates.js"></script>
+  <script src="vendor/js/bootstrap.js"></script>
+
+  <script src="js/hal.js"></script>
+  <script src="js/hal/browser.js"></script>
+
+  <script src="js/hal/http/client.js"></script>
+  <script src="js/hal/resource.js"></script>
+
+  <script src="js/hal/views/browser.js"></script>
+  <script src="js/hal/views/explorer.js"></script>
+  <script src="js/hal/views/inspector.js"></script>
+
+  <script src="js/hal/views/navigation.js"></script>
+  <script src="js/hal/views/location_bar.js"></script>
+  <script src="js/hal/views/request_headers.js"></script>
+
+  <script src="js/hal/views/resource.js"></script>
+  <script src="js/hal/views/properties.js"></script>
+  <script src="js/hal/views/links.js"></script>
+  <script src="js/hal/views/embedded_resources.js"></script>
+  <script src="js/hal/views/embedded_resource.js"></script>
+
+  <script src="js/hal/views/non_safe_request_dialog.js"></script>
+  <script src="js/hal/views/query_uri_dialog.js"></script>
+
+  <script src="js/hal/views/response.js"></script>
+  <script src="js/hal/views/response_headers.js"></script>
+  <script src="js/hal/views/response_body.js"></script>
+
+  <script src="js/hal/views/documentation.js"></script>
+
+  <script>
+    var browser = new HAL.Browser({
+      container: $('#browser'),
+      entryPoint: '/'
+    });
+    Backbone.history.start();
+  </script>
+</body>

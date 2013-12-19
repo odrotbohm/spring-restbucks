@@ -1,0 +1,67 @@
+#browser #location-bar { margin: 10px 0; }
+
+#browser #location-bar .address {
+  border: 1px solid #999;
+  padding: 4px; margin: 0;
+}
+
+#browser #headers-bar {
+ border: 1px solid #888;
+ padding: 5px
+}
+
+#request-headers {
+  border: 0;
+  outline: none;
+  padding: 0;
+  resize: vertical;
+  width: 100%;
+  height: 40px;
+  margin-bottom: 0px;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.inspector { height: 100%; }
+
+.documentation { height: 100%; }
+.documentation iframe { width: 100%; height: 100%; }
+
+.modal input, .modal textarea {
+  width: 90%;
+}
+
+.modal textarea {
+  height: 100px;
+}
+
+.links .btn {
+  padding: 2px 5px 2px;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+body table.table {
+  font-size: 11px;
+}
+
+.location-bar-container {
+  line-height: 30px;
+}
+
+.ajax-loader {
+  vertical-align: middle;
+  background-image: url("./vendor/img/ajax-loader.gif");
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  opacity: 0;
+  display: inline-block;
+  transition: opacity 1s;
+}
+.ajax-loader.visible {
+  opacity: 1;
+}
