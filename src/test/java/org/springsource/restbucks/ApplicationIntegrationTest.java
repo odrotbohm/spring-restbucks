@@ -42,20 +42,11 @@ public class ApplicationIntegrationTest extends AbstractIntegrationTest {
 	@DirtiesContext
 	public void initializesWebApplicationContext() {
 
-		AnnotationConfigWebApplicationContext applicationContext = null;
+		try (AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext()) {
 
-		try {
-
-			applicationContext = new AnnotationConfigWebApplicationContext();
 			applicationContext.register(WebConfiguration.class);
 			applicationContext.setServletContext(new MockServletContext());
 			applicationContext.refresh();
-
-		} finally {
-
-			if (applicationContext != null) {
-				applicationContext.close();
-			}
 		}
 	}
 }

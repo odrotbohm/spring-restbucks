@@ -29,8 +29,11 @@ import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.jayway.jsonpath.JsonPath;
 
 /**
+ * Integration tests for marshalling of {@link CreditCard}.
+ * 
  * @author Oliver Gierke
  */
 public class CreditCardMarshallingTest {
@@ -49,7 +52,14 @@ public class CreditCardMarshallingTest {
 
 		CreditCard creditCard = new CreditCard(new CreditCardNumber("1234123412341234"), "Oliver Gierke", Months.ELEVEN,
 				Years.years(2013));
-		assertThat(mapper.writeValueAsString(creditCard), is(REFERENCE));
+
+		String result = mapper.writeValueAsString(creditCard);
+
+		assertThat(JsonPath.<String> read(result, "$number"), is("1234123412341234"));
+		assertThat(JsonPath.<String> read(result, "$cardHolderName"), is("Oliver Gierke"));
+		assertThat(JsonPath.<Integer> read(result, "$expirationDate[0]"), is(2013));
+		assertThat(JsonPath.<Integer> read(result, "$expirationDate[1]"), is(11));
+		assertThat(JsonPath.<Integer> read(result, "$expirationDate[2]"), is(1));
 	}
 
 	@Test

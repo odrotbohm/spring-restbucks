@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
+import org.springsource.restbucks.Restbucks;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
@@ -37,7 +38,7 @@ class PaymentLinks {
 
 	static final String PAYMENT = "/payment";
 	static final String RECEIPT = "/receipt";
-	static final String PAYMENT_REL = "payment";
+	static final String PAYMENT_REL = Restbucks.CURIE_NAMESPACE + ":payment";
 	static final String RECEIPT_REL = "receipt";
 
 	private final @NonNull EntityLinks entityLinks;

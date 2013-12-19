@@ -11,11 +11,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>0.5.0.M6</version>
+		<version>0.5.0.BUILD-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
-		<hibernate-entitymanager.version>4.3.0.CR1</hibernate-entitymanager.version>
+		<spring.version>4.0.0.RELEASE</spring.version>
+		<hibernate-entitymanager.version>4.3.0.Final</hibernate-entitymanager.version>
+		<jackson.version>2.3.0</jackson.version>
 		<sd.rest>2.0.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
 
@@ -30,6 +32,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		</dependency>
 		
 		<dependency>
+			<groupId>org.springframework.hateoas</groupId>
+			<artifactId>spring-hateoas</artifactId>
+			<version>0.9.0.BUILD-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
@@ -38,25 +46,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-		<!-- Spring -->
-
+		
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-library</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
 		
 		<dependency>
@@ -81,18 +74,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<version>1.12.2</version>
 			<scope>provided</scope>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
-			<scope>test</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
-			<version>0.8.1</version>
+			<version>0.9.1</version>
 		</dependency>
 
 	</dependencies>
@@ -119,20 +105,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	
 	<repositories>
 		<repository>
-			<id>spring-libs-milestone</id>
+			<id>spring-libs-snapshot</id>
 			<url>http://repo.springsource.org/libs-snapshot</url>
 			<snapshots>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
 	
 	<pluginRepositories>
 		<pluginRepository>
-			<id>spring-libs-milestone</id>
+			<id>spring-libs-snapshot</id>
 			<url>http://repo.springsource.org/libs-snapshot</url>
 			<snapshots>
-				<enabled>false</enabled>
+				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>

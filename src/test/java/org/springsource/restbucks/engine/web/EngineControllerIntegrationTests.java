@@ -20,9 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.Test;
 import org.springframework.hateoas.Link;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.LinkDiscoverer;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springsource.restbucks.AbstractWebIntegrationTest;
+import org.springsource.restbucks.Restbucks;
 
 /**
  * Integration tests for {@link EngineController}.
@@ -31,16 +34,20 @@ import org.springsource.restbucks.AbstractWebIntegrationTest;
  */
 public class EngineControllerIntegrationTests extends AbstractWebIntegrationTest {
 
+	private final String ENGINE_REL = Restbucks.CURIE_NAMESPACE + ":" + EngineController.ENGINE_REL;
+
 	@Test
 	public void customControllerReturnsDefaultMediaType() throws Exception {
 
 		MockHttpServletResponse response = mvc.perform(get("/")).//
-				andExpect(linkWithRelIsPresent(EngineController.ENGINE_REL)). //
+				andDo(MockMvcResultHandlers.print()).//
+				andExpect(linkWithRelIsPresent(ENGINE_REL)). //
 				andReturn().getResponse();
 
-		Link link = links.findLinkWithRel(EngineController.ENGINE_REL, response.getContentAsString());
+		LinkDiscoverer discoverer = links.getLinkDiscovererFor(response.getContentType());
+		Link link = discoverer.findLinkWithRel(ENGINE_REL, response.getContentAsString());
 
 		mvc.perform(get(link.getHref())). //
-				andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+				andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON));
 	}
 }

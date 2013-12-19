@@ -18,12 +18,11 @@ package org.springsource.restbucks.order.web;
 import static org.hamcrest.CoreMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import net.minidev.json.parser.JSONParser;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
 import org.springsource.restbucks.AbstractWebIntegrationTest;
 
@@ -36,22 +35,13 @@ public class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 
 	@Autowired WebApplicationContext context;
 
-	JSONParser parser;
-
-	@Before
-	@Override
-	public void setUp() {
-
-		super.setUp();
-		parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
-	}
-
 	@Test
 	public void exposesOrdersResourceViaRootResource() throws Exception {
 
 		mvc.perform(get("/")).//
+				andDo(MockMvcResultHandlers.print()).//
 				andExpect(status().isOk()). //
-				andExpect(content().contentType(MediaType.APPLICATION_JSON)). //
-				andExpect(jsonPath("$links[?(@.rel == 'order')].href", notNullValue()));
+				andExpect(content().contentType(MediaTypes.HAL_JSON)). //
+				andExpect(jsonPath("$_links.restbucks:orders.href", notNullValue()));
 	}
 }

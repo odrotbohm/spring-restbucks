@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+Res * Copyright 2012-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
 package org.springsource.restbucks;
 
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.springsource.restbucks.Restbucks.ApplicationConfig;
+import org.springsource.restbucks.Restbucks.ApplicationConfiguration;
 
 /**
- * Base class to implement transactiona integration tests using the root {@link ApplicationConfig}.
+ * Base class to implement transactiona integration tests using the root application configuration.
  * 
  * @author Oliver Gierke
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ApplicationConfig.class)
+@SpringApplicationConfiguration(classes = ApplicationConfiguration.class)
 @Transactional
 public abstract class AbstractIntegrationTest {
 

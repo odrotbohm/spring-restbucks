@@ -17,17 +17,19 @@ package org.springsource.restbucks;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
-import org.springframework.hateoas.config.EnableHypermediaSupport;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.hal.CurieProvider;
+import org.springframework.hateoas.hal.DefaultCurieProvider;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration;
+import org.springframework.web.util.UriTemplate;
 
 /**
  * Central application class containing both general application and web configuration as well as a main-method to
@@ -37,10 +39,12 @@ import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfigu
  * @see SpringApplication
  * @author Oliver Gierke
  */
-public class Restbucks {
+public class Restbucks extends SpringBootServletInitializer {
+
+	public static String CURIE_NAMESPACE = "restbucks";
 
 	/**
-	 * Bootstraps the application.
+	 * Bootstraps the application in standalone mode (i.e. java -jar).
 	 * 
 	 * @param args
 	 */
@@ -48,27 +52,37 @@ public class Restbucks {
 		SpringApplication.run(WebConfiguration.class, args);
 	}
 
+	/**
+	 * Allows the application to be started when being deployed into a Servlet 3 container.
+	 * 
+	 * @see org.springframework.boot.web.SpringBootServletInitializer#configure(org.springframework.boot.builder.SpringApplicationBuilder)
+	 */
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(WebConfiguration.class);
+	}
+
 	@Configuration
 	@EnableAsync
 	@EnableAutoConfiguration
 	@ComponentScan(includeFilters = @Filter(Service.class), useDefaultFilters = false)
-	static class ApplicationConfig {
+	static class ApplicationConfiguration {
 
 	}
 
+	/**
+	 * Web specific configuration.
+	 * 
+	 * @author Oliver Gierke
+	 */
 	@Configuration
-	@EnableHypermediaSupport
-	@Import({ ApplicationConfig.class, RepositoryRestMvcConfiguration.class })
+	@Import({ ApplicationConfiguration.class, RepositoryRestMvcConfiguration.class })
 	@ComponentScan(excludeFilters = @Filter({ Service.class, Configuration.class }))
-	static class WebConfiguration extends DelegatingWebMvcConfiguration {
+	static class WebConfiguration {
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport#configureContentNegotiation(org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer)
-		 */
-		@Override
-		public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-			configurer.defaultContentType(MediaType.APPLICATION_JSON);
+		@Bean
+		public CurieProvider curieProvider() {
+			return new DefaultCurieProvider(CURIE_NAMESPACE, new UriTemplate("http://localhost:8080/rels/{rel}"));
 		}
 	}
 }

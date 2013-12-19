@@ -21,9 +21,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.hateoas.LinkDiscoverer;
+import org.springframework.hateoas.LinkDiscoverers;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,12 +43,12 @@ import org.springsource.restbucks.Restbucks.WebConfiguration;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = WebConfiguration.class)
+@SpringApplicationConfiguration(classes = WebConfiguration.class)
 public abstract class AbstractWebIntegrationTest {
 
 	@Autowired protected WebApplicationContext context;
 
-	@Autowired protected LinkDiscoverer links;
+	@Autowired protected LinkDiscoverers links;
 	protected MockMvc mvc;
 
 	@Before
@@ -81,6 +83,10 @@ public abstract class AbstractWebIntegrationTest {
 		return new LinkWithRelMatcher(rel, false);
 	}
 
+	protected LinkDiscoverer getDiscovererFor(MockHttpServletResponse response) {
+		return links.getLinkDiscovererFor(response.getContentType());
+	}
+
 	private class LinkWithRelMatcher implements ResultMatcher {
 
 		private final String rel;
@@ -98,8 +104,11 @@ public abstract class AbstractWebIntegrationTest {
 		@Override
 		public void match(MvcResult result) throws Exception {
 
-			String content = result.getResponse().getContentAsString();
-			assertThat(links.findLinkWithRel(rel, content), is(present ? notNullValue() : nullValue()));
+			MockHttpServletResponse response = result.getResponse();
+			String content = response.getContentAsString();
+			LinkDiscoverer discoverer = links.getLinkDiscovererFor(response.getContentType());
+
+			assertThat(discoverer.findLinkWithRel(rel, content), is(present ? notNullValue() : nullValue()));
 		}
 	}
 }
