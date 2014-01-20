@@ -45,8 +45,7 @@ import org.springsource.restbucks.order.TestUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class PaymentOrderResourceProcessorUnitTest {
 
-	@Mock
-	PaymentLinks paymentLinks;
+	@Mock PaymentLinks paymentLinks;
 
 	PaymentOrderResourceProcessor processor;
 	Link paymentLink, receiptLink;

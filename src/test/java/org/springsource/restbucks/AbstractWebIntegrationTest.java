@@ -25,7 +25,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.hateoas.LinkDiscoverer;
 import org.springframework.hateoas.LinkDiscoverers;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -54,12 +53,8 @@ public abstract class AbstractWebIntegrationTest {
 	@Before
 	public void setUp() {
 
-		OpenEntityManagerInViewFilter oemivFilter = new OpenEntityManagerInViewFilter();
-		oemivFilter.setServletContext(context.getServletContext());
-
 		mvc = MockMvcBuilders.webAppContextSetup(context). //
 				addFilter(new ShallowEtagHeaderFilter()). //
-				addFilter(oemivFilter). //
 				build();
 	}
 
