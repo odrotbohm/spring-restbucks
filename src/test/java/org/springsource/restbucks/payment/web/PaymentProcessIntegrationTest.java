@@ -141,7 +141,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		byte[] data = Files.readAllBytes(resource.getFile().toPath());
 
 		MockHttpServletResponse result = mvc
-				.perform(post(ordersLink.getHref()).contentType(MediaType.APPLICATION_JSON).content(data)). //
+				.perform(post(ordersLink.expand().getHref()).contentType(MediaType.APPLICATION_JSON).content(data)). //
 				andExpect(status().isCreated()). //
 				andExpect(header().string("Location", is(notNullValue()))). //
 				andReturn().getResponse();
@@ -164,7 +164,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		log.info("Root resource returned: " + content);
 		log.info(String.format("Found orders link pointing to %s… Following…", ordersLink));
 
-		MockHttpServletResponse response = mvc.perform(get(ordersLink.getHref())). //
+		MockHttpServletResponse response = mvc.perform(get(ordersLink.expand().getHref())). //
 				andExpect(status().isOk()). //
 				andReturn().getResponse();
 

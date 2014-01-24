@@ -24,12 +24,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
+import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.hal.CurieProvider;
 import org.springframework.hateoas.hal.DefaultCurieProvider;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriTemplate;
 
 /**
  * Central application class containing both general application and web configuration as well as a main-method to
@@ -65,6 +66,8 @@ public class Restbucks extends SpringBootServletInitializer {
 	@Configuration
 	@EnableAsync
 	@EnableAutoConfiguration
+	// TODO: Remove once Boot's #236 is merged
+	@EnableJpaRepositories
 	@ComponentScan(includeFilters = @Filter(Service.class), useDefaultFilters = false)
 	static class ApplicationConfiguration {
 
