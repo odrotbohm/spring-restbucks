@@ -15,6 +15,8 @@
  */
 package org.springsource.restbucks.payment.web;
 
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -33,7 +35,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springsource.restbucks.core.MonetaryAmount;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.payment.CreditCard;
@@ -66,7 +67,7 @@ public class PaymentController {
 	 * @param number the {@link CreditCardNumber} unmarshalled from the request payload.
 	 * @return
 	 */
-	@RequestMapping(value = PaymentLinks.PAYMENT, method = RequestMethod.PUT)
+	@RequestMapping(value = PaymentLinks.PAYMENT, method = PUT)
 	ResponseEntity<PaymentResource> submitPayment(@PathVariable("id") Order order, @RequestBody CreditCardNumber number) {
 
 		if (order == null || order.isPaid()) {
@@ -87,7 +88,7 @@ public class PaymentController {
 	 * @param order
 	 * @return
 	 */
-	@RequestMapping(value = PaymentLinks.RECEIPT, method = RequestMethod.GET)
+	@RequestMapping(value = PaymentLinks.RECEIPT, method = GET)
 	HttpEntity<Resource<Receipt>> showReceipt(@PathVariable("id") Order order) {
 
 		if (order == null || !order.isPaid() || order.isTaken()) {
@@ -109,7 +110,7 @@ public class PaymentController {
 	 * @param order
 	 * @return
 	 */
-	@RequestMapping(value = PaymentLinks.RECEIPT, method = RequestMethod.DELETE)
+	@RequestMapping(value = PaymentLinks.RECEIPT, method = DELETE)
 	HttpEntity<Resource<Receipt>> takeReceipt(@PathVariable("id") Order order) {
 
 		if (order == null || !order.isPaid()) {
