@@ -18,6 +18,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<spring.version>4.0.0.RELEASE</spring.version>
 		<hibernate-entitymanager.version>4.3.1.Final</hibernate-entitymanager.version>
 		<spring-data-jpa.version>1.5.0.BUILD-SNAPSHOT</spring-data-jpa.version>
+		<spring-hateoas.version>0.10.0.BUILD-SNAPSHOT</spring-hateoas.version>
 		<jackson.version>2.3.0</jackson.version>
 		<sd.rest>2.0.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
@@ -35,7 +36,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.springframework.hateoas</groupId>
 			<artifactId>spring-hateoas</artifactId>
-			<version>0.9.0.BUILD-SNAPSHOT</version>
+			<version>${spring-hateoas.version}</version>
 		</dependency>
 		
 		<dependency>
