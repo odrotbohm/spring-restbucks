@@ -11,15 +11,15 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.0.0.RC1</version>
+		<version>1.0.0.RC3</version>
 	</parent>
 	
 	<properties>
-		<spring.version>4.0.0.RELEASE</spring.version>
+		<spring.version>4.0.2.RELEASE</spring.version>
 		<hibernate-entitymanager.version>4.3.1.Final</hibernate-entitymanager.version>
-		<spring-data-jpa.version>1.5.0.BUILD-SNAPSHOT</spring-data-jpa.version>
+		<spring-data-jpa.version>1.5.0.RELEASE</spring-data-jpa.version>
 		<jackson.version>2.3.0</jackson.version>
-		<sd.rest>2.0.0.BUILD-SNAPSHOT</sd.rest>
+		<sd.rest>2.1.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
 
 	<dependencies>
@@ -35,7 +35,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.springframework.hateoas</groupId>
 			<artifactId>spring-hateoas</artifactId>
-			<version>0.9.0.BUILD-SNAPSHOT</version>
+			<version>0.9.0.RELEASE</version>
 		</dependency>
 		
 		<dependency>
@@ -84,7 +84,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.12.2</version>
+			<version>1.12.4</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -128,11 +128,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	
 	<pluginRepositories>
 		<pluginRepository>
-			<id>spring-libs-snapshot</id>
-			<url>http://repo.springsource.org/libs-snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>spring-plugins-release</id>
+			<url>http://repo.springsource.org/plugins-release</url>
 		</pluginRepository>
 	</pluginRepositories>
 
