@@ -1,5 +1,7 @@
 # Spring Restbucks
 
+[![Build Status](https://travis-ci.org/olivergierke/spring-restbucks.png?branch=master)](https://travis-ci.org/olivergierke/spring-restbucks)
+
 This project is a sample implementation of the Restbucks application described in the book [REST in Practice](http://shop.oreilly.com/product/9780596805838.do) by Jim Webber, Savas Parastatidis and Ian Robinson. It's a showcase for bringing different Spring eco-system technologies together to implement a REST web service. The application uses [HAL](http://stateless.co/hal_specification.html) as the primary representation format.
 
 ## Quickstart
@@ -34,12 +36,12 @@ For the usage inside an IDE do the following:
 
 The project uses:
 
-- [Spring Boot](http://github.com/spring-projects/spring-boot) - 0.5.0.BUILD-SNAPSHOT
-- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.0.0.RELEASE
-- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.4.3.RELEASE
-- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.0.0.BUILD-SNAPSHOT
-- [Spring Hateoas](http://github.com/spring-projects/spring-hateoas) - 0.9.0.BUILD-SNAPSHOT
-- [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 0.8.0.RELEASE
+- [Spring Boot](http://github.com/spring-projects/spring-boot) - 1.0.0.RC3
+- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.0.2.RELEASE
+- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.5.0.RELEASE
+- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.1.0.BUILD-SNAPSHOT
+- [Spring Hateoas](http://github.com/spring-projects/spring-hateoas) - 0.9.0.RELEASE
+- [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 1.0.0.RELEASE
 
 The implementation consists of mainly two parts, the `order` and the `payment` part. The `Orders` are exposed as REST resources using Spring Data RESTs capability to automatically expose Spring Data JPA repositories contained in the application. The `Payment` process and the REST application protocol described in the book are implemented manually using a Spring MVC controller (`PaymentController`).
 
