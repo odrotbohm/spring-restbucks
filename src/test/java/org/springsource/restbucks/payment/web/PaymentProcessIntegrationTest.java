@@ -185,7 +185,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		String content = source.getContentAsString();
 		String order = JsonPath.read(content, FIRST_ORDER_EXPRESSION).toString();
-		Link orderLink = getDiscovererFor(source).findLinkWithRel("self", order);
+		Link orderLink = getDiscovererFor(source).findLinkWithRel("self", order).expand();
 
 		log.info(String.format("Picking first order using JSONPath expression %s…", FIRST_ORDER_EXPRESSION));
 		log.info(String.format("Discovered self link pointing to %s… Following", orderLink));
@@ -230,7 +230,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		// Make sure we cannot cheat and cancel the order after it has been payed
 		log.info("Faking a cancel request to make sure it's forbidden…");
-		Link selfLink = discoverer.findLinkWithRel(Link.REL_SELF, content);
+		Link selfLink = discoverer.findLinkWithRel(Link.REL_SELF, content).expand();
 		mvc.perform(delete(selfLink.getHref())).andExpect(status().isMethodNotAllowed());
 
 		return result;
@@ -265,7 +265,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 			log.info("Poll state of order until receipt is ready…");
 
-			ResultActions action = mvc.perform(get(orderLink.getHref()).headers(headers));
+			ResultActions action = mvc.perform(get(orderLink.expand().getHref()).headers(headers));
 			pollResponse = action.andReturn().getResponse();
 
 			int status = pollResponse.getStatus();
@@ -328,7 +328,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	private void verifyOrderTaken(MockHttpServletResponse response) throws Exception {
 
 		Link orderLink = getDiscovererFor(response).findLinkWithRel(ORDER_REL, response.getContentAsString());
-		MockHttpServletResponse orderResponse = mvc.perform(get(orderLink.getHref())). //
+		MockHttpServletResponse orderResponse = mvc.perform(get(orderLink.expand().getHref())). //
 				andExpect(status().isOk()). // //
 				andExpect(linkWithRelIsPresent(Link.REL_SELF)). //
 				andExpect(linkWithRelIsNotPresent(UPDATE_REL)). //
@@ -351,7 +351,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		String content = response.getContentAsString();
 
 		LinkDiscoverer discoverer = getDiscovererFor(response);
-		Link selfLink = discoverer.findLinkWithRel(Link.REL_SELF, content);
+		Link selfLink = discoverer.findLinkWithRel(Link.REL_SELF, content).expand();
 		Link cancellationLink = discoverer.findLinkWithRel(CANCEL_REL, content);
 
 		mvc.perform(delete(cancellationLink.getHref())).andExpect(status().isNoContent());
