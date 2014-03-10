@@ -11,13 +11,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.0.0.RC3</version>
+		<version>1.0.0.RC4</version>
 	</parent>
 	
 	<properties>
 		<spring.version>4.0.2.RELEASE</spring.version>
 		<hibernate-entitymanager.version>4.3.1.Final</hibernate-entitymanager.version>
-		<spring-data-jpa.version>1.5.0.RELEASE</spring-data-jpa.version>
+		<spring-data-jpa.version>1.6.0.BUILD-SNAPSHOT</spring-data-jpa.version>
+		<spring-data-rest.version>2.1.0.BUILD-SNAPSHOT</spring-data-rest.version>
 		<jackson.version>2.3.0</jackson.version>
 		<sd.rest>2.1.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
@@ -25,21 +26,15 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<dependencies>
 
 		<!-- Spring Data REST -->
-
+		
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-rest-webmvc</artifactId>
-			<version>${sd.rest}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		
 		<dependency>
