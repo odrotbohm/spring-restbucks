@@ -16,7 +16,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	
 	<properties>
 		<spring.version>4.0.2.RELEASE</spring.version>
-		<hibernate-entitymanager.version>4.3.1.Final</hibernate-entitymanager.version>
+		<hibernate-entitymanager.version>4.3.4.Final</hibernate-entitymanager.version>
 		<spring-data-jpa.version>1.6.0.BUILD-SNAPSHOT</spring-data-jpa.version>
 		<spring-data-rest.version>2.1.0.BUILD-SNAPSHOT</spring-data-rest.version>
 		<jackson.version>2.3.0</jackson.version>
