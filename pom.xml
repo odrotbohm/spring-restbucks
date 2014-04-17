@@ -11,16 +11,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.0.0.RC4</version>
+		<version>1.0.1.RELEASE</version>
 	</parent>
 	
 	<properties>
-		<spring.version>4.0.2.RELEASE</spring.version>
 		<hibernate-entitymanager.version>4.3.4.Final</hibernate-entitymanager.version>
 		<spring-data-jpa.version>1.6.0.BUILD-SNAPSHOT</spring-data-jpa.version>
 		<spring-data-rest.version>2.1.0.BUILD-SNAPSHOT</spring-data-rest.version>
-		<jackson.version>2.3.0</jackson.version>
-		<sd.rest>2.1.0.BUILD-SNAPSHOT</sd.rest>
 	</properties>
 
 	<dependencies>
@@ -108,18 +105,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<repositories>
 		<repository>
 			<id>spring-libs-snapshot</id>
-			<url>http://repo.springsource.org/libs-snapshot</url>
+			<url>http://repo.spring.io/libs-snapshot</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
 	</repositories>
-	
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-plugins-release</id>
-			<url>http://repo.springsource.org/plugins-release</url>
-		</pluginRepository>
-	</pluginRepositories>
 
 </project>
