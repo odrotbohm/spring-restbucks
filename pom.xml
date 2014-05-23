@@ -49,8 +49,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		
 		<dependency>
 			<groupId>org.jadira.usertype</groupId>
-			<artifactId>usertype.core</artifactId>
-			<version>3.0.0.GA</version>
+			<artifactId>usertype.extended</artifactId>
+			<version>3.2.0.GA</version>
 		</dependency>
 		
 		<dependency>
@@ -71,7 +71,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.12.4</version>
+			<version>1.12.6</version>
 			<scope>provided</scope>
 		</dependency>
 
