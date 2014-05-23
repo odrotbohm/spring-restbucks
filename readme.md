@@ -36,12 +36,12 @@ For the usage inside an IDE do the following:
 
 The project uses:
 
-- [Spring Boot](http://github.com/spring-projects/spring-boot) - 1.0.0.RC3
-- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.0.2.RELEASE
-- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.5.0.RELEASE
-- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.1.0.BUILD-SNAPSHOT
-- [Spring Hateoas](http://github.com/spring-projects/spring-hateoas) - 0.9.0.RELEASE
-- [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 1.0.0.RELEASE
+- [Spring Boot](http://github.com/spring-projects/spring-boot) - 1.1.0.M1
+- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.0.5.RELEASE
+- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.6.0.RELEASE
+- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.1.0.RELEASE
+- [Spring Hateoas](http://github.com/spring-projects/spring-hateoas) - 0.12.0.RELEASE
+- [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 1.1.0.RELEASE
 
 The implementation consists of mainly two parts, the `order` and the `payment` part. The `Orders` are exposed as REST resources using Spring Data RESTs capability to automatically expose Spring Data JPA repositories contained in the application. The `Payment` process and the REST application protocol described in the book are implemented manually using a Spring MVC controller (`PaymentController`).
 
@@ -78,5 +78,30 @@ A core focus of this sample app is to demonstrate how easy resources can be mode
 2. Cleanly separate resource functionality implementation but still allowing to leverage hypermedia to advertise new functionality for resources as the service implementation evolves. This essentially boils down to an enrichment of resource representations with links.
 
 In our sample the core spot these challenges occur is the `payment` subsystem and the `PaymentController` in particular.
+
+### ALPS
+
+The repository currently contains an `alps` branch that is based on a feature branch of Spring Data REST to automatically expose resources that server [ALPS](http://alps.io) metadata for teh resources exposed.
+
+```
+git checkout alps
+mvn spring-boot:run
+curl http://localhost:8080
+```
+
+This will return:
+
+```javascript
+{
+  "_links" : {
+    …
+    "profile" : {
+      "href" : "http://localhost:8080/alps"
+    }
+  }
+}
+```
+
+You can then follow the `profile` link to access all available ALPS resources, such as the one for `orders`, a link relation also listed in the response for the root resource.
 
 TODO - complete
