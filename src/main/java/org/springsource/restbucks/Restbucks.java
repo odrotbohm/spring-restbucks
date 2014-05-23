@@ -87,7 +87,7 @@ public class Restbucks extends SpringBootServletInitializer {
 
 		@Bean
 		public CurieProvider curieProvider() {
-			return new DefaultCurieProvider(CURIE_NAMESPACE, new UriTemplate("http://localhost:8080/rels/{rel}"));
+			return new DefaultCurieProvider(CURIE_NAMESPACE, new UriTemplate("http://localhost:8080/alps/{rel}"));
 		}
 	}
 }
