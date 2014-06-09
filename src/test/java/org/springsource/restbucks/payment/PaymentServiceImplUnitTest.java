@@ -15,7 +15,11 @@
  */
 package org.springsource.restbucks.payment;
 
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
+
+import java.time.Month;
+import java.time.Year;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,6 +28,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
 
@@ -42,22 +48,23 @@ public class PaymentServiceImplUnitTest {
 	@Mock PaymentRepository paymentRepository;
 	@Mock CreditCardRepository creditCardRepository;
 	@Mock OrderRepository orderRepository;
+	@Mock ApplicationEventPublisher publisher;
 
 	@Rule public ExpectedException exception = ExpectedException.none();
 
 	@Before
 	public void setUp() {
-		this.paymentService = new PaymentServiceImpl(creditCardRepository, paymentRepository, orderRepository);
+		this.paymentService = new PaymentServiceImpl(creditCardRepository, paymentRepository, orderRepository, publisher);
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void rejectsNullPaymentRepository() {
-		new PaymentServiceImpl(creditCardRepository, null, orderRepository);
+		new PaymentServiceImpl(creditCardRepository, null, orderRepository, publisher);
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void rejectsNullCreditCardRepository() {
-		new PaymentServiceImpl(null, paymentRepository, orderRepository);
+		new PaymentServiceImpl(null, paymentRepository, orderRepository, publisher);
 	}
 
 	@Test
@@ -82,5 +89,19 @@ public class PaymentServiceImplUnitTest {
 		exception.expectMessage(NUMBER.getNumber());
 
 		paymentService.pay(new Order(), NUMBER);
+	}
+
+	@Test
+	public void throwsOrderPaidEventOnPayment() {
+
+		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.JANUARY, Year.of(2016));
+		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(creditCard);
+
+		Order order = new Order();
+		ReflectionTestUtils.setField(order, "id", 1L);
+
+		paymentService.pay(order, NUMBER);
+
+		verify(publisher).publishEvent(any((OrderPaidEvent.class)));
 	}
 }

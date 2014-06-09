@@ -19,6 +19,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springsource.restbucks.order.Order;
@@ -40,6 +41,7 @@ class PaymentServiceImpl implements PaymentService {
 	private final @NonNull CreditCardRepository creditCardRepository;
 	private final @NonNull PaymentRepository paymentRepository;
 	private final @NonNull OrderRepository orderRepository;
+	private final @NonNull ApplicationEventPublisher publisher;
 
 	/* 
 	 * (non-Javadoc)
@@ -65,7 +67,11 @@ class PaymentServiceImpl implements PaymentService {
 		}
 
 		order.markPaid();
-		return paymentRepository.save(new CreditCardPayment(creditCard, order));
+		CreditCardPayment payment = paymentRepository.save(new CreditCardPayment(creditCard, order));
+
+		publisher.publishEvent(new OrderPaidEvent(order.getId(), this));
+
+		return payment;
 	}
 
 	/* 

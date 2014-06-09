@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@
  */
 package org.springsource.restbucks.payment;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import org.springframework.context.ApplicationEvent;
+import org.springframework.transaction.event.TransactionBoundApplicationEvent;
 import org.springsource.restbucks.order.Order;
 
 /**
@@ -26,7 +29,9 @@ import org.springsource.restbucks.order.Order;
  * @author Oliver Gierke
  */
 @Getter
-public class OrderPaidEvent extends ApplicationEvent {
+@EqualsAndHashCode(callSuper = true)
+@ToString
+public class OrderPaidEvent extends TransactionBoundApplicationEvent {
 
 	private static final long serialVersionUID = -6150362015056003378L;
 	private final long orderId;
