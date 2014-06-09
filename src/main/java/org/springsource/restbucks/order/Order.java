@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.springsource.restbucks.order;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,7 +31,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 import org.springsource.restbucks.core.AbstractEntity;
 import org.springsource.restbucks.core.MonetaryAmount;
 
@@ -47,10 +47,10 @@ public class Order extends AbstractEntity {
 	private Location location;
 	private Status status;
 
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-	private DateTime orderedDate;
+	@Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")//
+	private LocalDateTime orderedDate;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)//
 	private Set<Item> items = new HashSet<Item>();
 
 	/**
@@ -64,7 +64,7 @@ public class Order extends AbstractEntity {
 		this.location = location == null ? Location.TAKE_AWAY : location;
 		this.status = Status.PAYMENT_EXPECTED;
 		this.items.addAll(items);
-		this.orderedDate = new DateTime();
+		this.orderedDate = LocalDateTime.now();
 	}
 
 	/**

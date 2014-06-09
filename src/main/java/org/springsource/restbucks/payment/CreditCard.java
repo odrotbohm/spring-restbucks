@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package org.springsource.restbucks.payment;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+
 import javax.persistence.Entity;
 
 import lombok.AccessLevel;
@@ -23,9 +27,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Years;
 import org.springsource.restbucks.core.AbstractEntity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -45,16 +46,16 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE)
 public class CreditCard extends AbstractEntity {
 
-	@Getter
-	@JsonUnwrapped
+	@Getter//
+	@JsonUnwrapped//
 	private CreditCardNumber number;
 
-	@Getter
-	@JsonProperty
+	@Getter//
+	@JsonProperty//
 	private String cardHolderName;
 
-	private Months expiryMonth;
-	private Years expiryYear;
+	private Month expiryMonth;
+	private Year expiryYear;
 
 	/**
 	 * Returns whether the {@link CreditCard} is currently valid.
@@ -63,7 +64,7 @@ public class CreditCard extends AbstractEntity {
 	 */
 	@JsonIgnore
 	public boolean isValid() {
-		return isValid(new LocalDate());
+		return isValid(LocalDate.now());
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class CreditCard extends AbstractEntity {
 	 * @return will never be {@literal null}.
 	 */
 	public LocalDate getExpirationDate() {
-		return new LocalDate(expiryYear.getYears(), expiryMonth.getMonths(), 1);
+		return LocalDate.of(expiryYear.getValue(), expiryMonth, 1);
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class CreditCard extends AbstractEntity {
 	 */
 	protected void setExpirationDate(LocalDate date) {
 
-		this.expiryYear = Years.years(date.getYear());
-		this.expiryMonth = Months.months(date.getMonthOfYear());
+		this.expiryYear = Year.of(date.getYear());
+		this.expiryMonth = date.getMonth();
 	}
 }

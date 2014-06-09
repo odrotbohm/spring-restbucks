@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ package org.springsource.restbucks.payment;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import org.joda.time.Months;
-import org.joda.time.Years;
+import java.time.Month;
+import java.time.Year;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
@@ -31,14 +32,13 @@ import org.springsource.restbucks.AbstractIntegrationTest;
  */
 public class CreditCardRepositoryIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	CreditCardRepository repository;
+	@Autowired CreditCardRepository repository;
 
 	@Test
 	public void createsCreditCard() {
 
 		CreditCardNumber number = new CreditCardNumber("4321432143214321");
-		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Months.TWELVE, Years.years(2014));
+		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2014));
 
 		creditCard = repository.save(creditCard);
 		assertThat(repository.findByNumber(number), is(creditCard));

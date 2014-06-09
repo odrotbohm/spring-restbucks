@@ -24,7 +24,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.hal.CurieProvider;
 import org.springframework.hateoas.hal.DefaultCurieProvider;
@@ -76,7 +75,7 @@ public class Restbucks extends SpringBootServletInitializer {
 	 * @author Oliver Gierke
 	 */
 	@Configuration
-	@Import({ ApplicationConfiguration.class, RepositoryRestMvcConfiguration.class })
+	@Import({ ApplicationConfiguration.class })
 	@ComponentScan(excludeFilters = @Filter({ Service.class, Configuration.class }))
 	static class WebConfiguration {
 

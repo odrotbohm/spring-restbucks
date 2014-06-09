@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.springsource.restbucks.payment;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -22,13 +24,12 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.Value;
 
 import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 import org.springframework.util.Assert;
 import org.springsource.restbucks.core.AbstractEntity;
 import org.springsource.restbucks.order.Order;
@@ -49,8 +50,8 @@ public abstract class Payment extends AbstractEntity {
 	@OneToOne(cascade = CascadeType.MERGE)//
 	private Order order;
 
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")//
-	private DateTime paymentDate;
+	@Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")//
+	private LocalDateTime paymentDate;
 
 	/**
 	 * Creates a new {@link Payment} referring to the given {@link Order}.
@@ -61,7 +62,7 @@ public abstract class Payment extends AbstractEntity {
 
 		Assert.notNull(order);
 		this.order = order;
-		this.paymentDate = new DateTime();
+		this.paymentDate = LocalDateTime.now();
 	}
 
 	/**
@@ -70,7 +71,7 @@ public abstract class Payment extends AbstractEntity {
 	 * @return
 	 */
 	public Receipt getReceipt() {
-		return new Receipt(order, paymentDate);
+		return new Receipt(paymentDate, order);
 	}
 
 	/**
@@ -78,10 +79,10 @@ public abstract class Payment extends AbstractEntity {
 	 * 
 	 * @author Oliver Gierke
 	 */
-	@Data
+	@Value
 	public static class Receipt {
 
+		private final LocalDateTime date;
 		private final Order order;
-		private final DateTime date;
 	}
 }

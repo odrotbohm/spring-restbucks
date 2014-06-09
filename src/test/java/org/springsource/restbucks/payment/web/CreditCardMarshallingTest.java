@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ package org.springsource.restbucks.payment.web;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Years;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,7 +29,7 @@ import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.jayway.jsonpath.JsonPath;
 
 /**
@@ -44,14 +45,14 @@ public class CreditCardMarshallingTest {
 
 	@Before
 	public void setUp() {
-		mapper.registerModule(new JodaModule());
+		mapper.registerModule(new JSR310Module());
 	}
 
 	@Test
 	public void serializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
 
-		CreditCard creditCard = new CreditCard(new CreditCardNumber("1234123412341234"), "Oliver Gierke", Months.ELEVEN,
-				Years.years(2013));
+		CreditCard creditCard = new CreditCard(new CreditCardNumber("1234123412341234"), "Oliver Gierke", Month.NOVEMBER,
+				Year.of(2013));
 
 		String result = mapper.writeValueAsString(creditCard);
 
@@ -69,7 +70,7 @@ public class CreditCardMarshallingTest {
 		CreditCard creditCard = mapper.readValue(REFERENCE, CreditCard.class);
 
 		assertThat(creditCard.getId(), is(nullValue()));
-		assertThat(creditCard.getExpirationDate(), is(new LocalDate(2013, 11, 1)));
+		assertThat(creditCard.getExpirationDate(), is(LocalDate.of(2013, 11, 1)));
 		assertThat(creditCard.getNumber(), is(notNullValue()));
 	}
 }

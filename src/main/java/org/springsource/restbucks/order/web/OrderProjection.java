@@ -15,7 +15,8 @@
  */
 package org.springsource.restbucks.order.web;
 
-import org.joda.time.DateTime;
+import java.time.LocalDateTime;
+
 import org.springframework.data.rest.core.config.Projection;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
@@ -32,7 +33,7 @@ public interface OrderProjection {
 	 * @see Order#getOrderedDate()
 	 * @return
 	 */
-	DateTime getOrderedDate();
+	LocalDateTime getOrderedDate();
 
 	/**
 	 * @see Order#getStatus()

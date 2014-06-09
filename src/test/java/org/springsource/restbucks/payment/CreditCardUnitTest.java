@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ package org.springsource.restbucks.payment;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Years;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
+
 import org.junit.Test;
 
 /**
@@ -35,9 +36,9 @@ public class CreditCardUnitTest {
 	@Test
 	public void discoversExpiredCreditCard() {
 
-		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Months.ELEVEN, Years.years(2016));
+		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.DECEMBER, Year.of(2016));
 
-		assertThat(creditCard.isValid(new LocalDate()), is(true));
-		assertThat(creditCard.isValid(new LocalDate(2016, 12, 1)), is(false));
+		assertThat(creditCard.isValid(LocalDate.now()), is(true));
+		assertThat(creditCard.isValid(LocalDate.of(2016, 12, 1)), is(false));
 	}
 }

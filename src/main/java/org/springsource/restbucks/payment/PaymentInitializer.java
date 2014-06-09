@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 package org.springsource.restbucks.payment;
 
+import java.time.Month;
+import java.time.Year;
+
 import lombok.extern.slf4j.Slf4j;
 
-import org.joda.time.Months;
-import org.joda.time.Years;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ class PaymentInitializer {
 		}
 
 		CreditCardNumber number = new CreditCardNumber("1234123412341234");
-		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Months.TWELVE, Years.years(2014));
+		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2014));
 
 		creditCard = repository.save(creditCard);
 
