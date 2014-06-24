@@ -16,12 +16,12 @@
 package org.springsource.restbucks;
 
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springsource.restbucks.Restbucks.ApplicationConfiguration;
 import org.springsource.restbucks.Restbucks.WebConfiguration;
 
 /**
@@ -29,17 +29,21 @@ import org.springsource.restbucks.Restbucks.WebConfiguration;
  * 
  * @author Oliver Gierke
  */
-public class ApplicationIntegrationTest extends AbstractIntegrationTest {
-
-	@Autowired ApplicationContext context;
+public class ApplicationIntegrationTest {
 
 	@Test
 	public void initializesRootApplicationContext() {
-		new Repositories(context);
+
+		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+
+			context.register(ApplicationConfiguration.class);
+			context.refresh();
+
+			new Repositories(context);
+		}
 	}
 
 	@Test
-	@DirtiesContext
 	public void initializesWebApplicationContext() {
 
 		try (AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext()) {
