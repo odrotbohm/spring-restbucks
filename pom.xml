@@ -16,7 +16,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<properties>
 		<spring-data-releasetrain.version>Evans-BUILD-SNAPSHOT</spring-data-releasetrain.version>
-		<spring-hateoas.version>0.13.0.BUILD-SNAPSHOT</spring-hateoas.version>
+		<spring-hateoas.version>0.14.0.BUILD-SNAPSHOT</spring-hateoas.version>
 	</properties>
 
 	<dependencies>
