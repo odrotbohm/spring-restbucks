@@ -18,12 +18,9 @@ package org.springsource.restbucks.payment;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
-import org.springsource.restbucks.core.MonetaryAmount;
-import org.springsource.restbucks.order.Item;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.OrderRepository;
@@ -36,20 +33,13 @@ import org.springsource.restbucks.order.OrderRepository;
 public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 
 	@Autowired PaymentService paymentService;
-
 	@Autowired OrderRepository orders;
 	@Autowired CreditCardRepository creditCards;
-
-	Order order;
-
-	@Before
-	public void setUp() {
-		order = orders.save(new Order(new Item("JavaChip", new MonetaryAmount(MonetaryAmount.EURO, 4.20))));
-	}
 
 	@Test
 	public void marksOrderAsPaid() {
 
+		Order order = orders.findOne(1L);
 		CreditCard creditCard = creditCards.findOne(1L);
 		CreditCardPayment payment = paymentService.pay(order, creditCard.getNumber());
 
@@ -60,6 +50,7 @@ public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void marksOrderAsTakenIfReceiptIsTaken() {
 
+		Order order = orders.findOne(1L);
 		order.markPaid();
 		order.markInPreparation();
 		order.markPrepared();
