@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,39 @@ package org.springsource.restbucks.payment;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
+import org.springsource.restbucks.core.MonetaryAmount;
+import org.springsource.restbucks.order.Item;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.OrderRepository;
 
 /**
+ * Integration tests for {@link PaymentServiceImpl}.
+ * 
  * @author Oliver Gierke
  */
 public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	PaymentService paymentService;
+	@Autowired PaymentService paymentService;
 
-	@Autowired
-	OrderRepository orderRepository;
-	@Autowired
-	CreditCardRepository creditCardRepository;
+	@Autowired OrderRepository orders;
+	@Autowired CreditCardRepository creditCards;
+
+	Order order;
+
+	@Before
+	public void setUp() {
+		order = orders.save(new Order(new Item("JavaChip", new MonetaryAmount(MonetaryAmount.EURO, 4.20))));
+	}
 
 	@Test
 	public void marksOrderAsPaid() {
 
-		Order order = orderRepository.findOne(1L);
-		CreditCard creditCard = creditCardRepository.findOne(1L);
-
+		CreditCard creditCard = creditCards.findOne(1L);
 		CreditCardPayment payment = paymentService.pay(order, creditCard.getNumber());
 
 		assertThat(paymentService.getPaymentFor(order), is((Payment) payment));
@@ -53,13 +60,13 @@ public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void marksOrderAsTakenIfReceiptIsTaken() {
 
-		Order order = orderRepository.findOne(1L);
 		order.markPaid();
 		order.markInPreparation();
 		order.markPrepared();
-		orderRepository.save(order);
+		orders.save(order);
 
 		paymentService.takeReceiptFor(order);
-		assertThat(orderRepository.findOne(1L).getStatus(), is(Status.TAKEN));
+
+		assertThat(orders.findOne(order.getId()).getStatus(), is(Status.TAKEN));
 	}
 }
