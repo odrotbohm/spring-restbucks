@@ -11,12 +11,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.1.5.RELEASE</version>
+		<version>1.1.6.RELEASE</version>
 	</parent>
 
 	<properties>
-		<spring-data-releasetrain.version>Evans-RC1</spring-data-releasetrain.version>
-		<tomcat.version>8.0.9</tomcat.version>
+		<spring.version>4.1.0.RELEASE</spring.version>
+		<tomcat.version>8.0.12</tomcat.version>
 		<java.version>1.8</java.version>
 	</properties>
 
@@ -71,7 +71,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.14.4</version>
+			<version>1.14.6</version>
 			<scope>provided</scope>
 		</dependency>
 
