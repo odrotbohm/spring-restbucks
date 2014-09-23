@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkDiscoverer;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -219,8 +220,10 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		log.info("Triggering payment…");
 
-		ResultActions action = mvc.perform(put(paymentLink.getHref()).content("\"1234123412341234\"").contentType(
-				MediaType.APPLICATION_JSON));
+		ResultActions action = mvc.perform(put(paymentLink.getHref()).//
+				content("\"1234123412341234\"").//
+				contentType(MediaType.APPLICATION_JSON).//
+				accept(MediaTypes.HAL_JSON));
 
 		MockHttpServletResponse result = action.andExpect(status().isCreated()). //
 				andExpect(linkWithRelIsPresent(ORDER_REL)). //
@@ -313,7 +316,9 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		log.info("Accessing receipt, got:" + receiptResponse.getContentAsString());
 		log.info("Taking receipt…");
 
-		return mvc.perform(delete(receiptLink.getHref())). //
+		return mvc.perform( //
+				delete(receiptLink.getHref()).//
+						accept(MediaTypes.HAL_JSON)). //
 				andExpect(status().isOk()). //
 				andReturn().getResponse();
 	}
