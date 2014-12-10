@@ -40,7 +40,7 @@ class PaymentInitializer {
 		}
 
 		CreditCardNumber number = new CreditCardNumber("1234123412341234");
-		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2014));
+		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2099));
 
 		creditCard = repository.save(creditCard);
 
