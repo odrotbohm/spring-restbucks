@@ -19,12 +19,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.hal.CurieProvider;
 import org.springframework.hateoas.hal.DefaultCurieProvider;
@@ -66,12 +68,12 @@ public class Restbucks extends SpringBootServletInitializer {
 	@Configuration
 	@EnableAsync
 	@Import(JacksonCustomizations.class)
+	@EntityScan(basePackageClasses = { Restbucks.class, Jsr310JpaConverters.class })
 	@EnableAutoConfiguration
 	@ComponentScan(includeFilters = @Filter(Service.class), useDefaultFilters = false)
 	static class ApplicationConfiguration {
 
-		@Bean
-		ApplicationEventMulticaster applicationEventMulticaster() {
+		public @Bean ApplicationEventMulticaster applicationEventMulticaster() {
 			return new TransactionAwareApplicationEventMulticaster();
 		}
 	}
@@ -86,8 +88,7 @@ public class Restbucks extends SpringBootServletInitializer {
 	@ComponentScan(excludeFilters = @Filter({ Service.class, Configuration.class }))
 	static class WebConfiguration {
 
-		@Bean
-		public CurieProvider curieProvider() {
+		public @Bean CurieProvider curieProvider() {
 			return new DefaultCurieProvider(CURIE_NAMESPACE, new UriTemplate("http://localhost:8080/alps/{rel}"));
 		}
 	}

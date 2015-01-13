@@ -38,13 +38,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<artifactId>spring-boot-starter-test</artifactId>
 		</dependency>
 
-		<!-- JDK 8 DateTime support for Hibernate -->
-
-		<dependency>
-			<groupId>org.jadira.usertype</groupId>
-			<artifactId>usertype.extended</artifactId>
-			<version>3.2.0.GA</version>
-		</dependency>
+		<!-- JDK 8 DateTime support for Jackson -->
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
