@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2013-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,49 +15,43 @@
  */
 package org.springsource.restbucks.order;
 
+import javax.money.MonetaryAmount;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import org.javamoney.moneta.Money;
 import org.springsource.restbucks.core.AbstractEntity;
-import org.springsource.restbucks.core.MonetaryAmount;
 
 /**
+ * A line item.
+ * 
  * @author Oliver Gierke
  */
-@Entity
 @Data
+@Entity
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Item extends AbstractEntity {
 
-	private String name;
-	private int quantity;
-	private Milk milk;
-	private Size size;
-	private MonetaryAmount price;
+	private final String name;
+	private final int quantity;
+	private final Milk milk;
+	private final Size size;
+	private final @Lob Money price;
 
 	protected Item() {
-
+		this(null, null);
 	}
 
-	public Item(String name, MonetaryAmount price) {
+	public Item(String name, Money price) {
 		this(name, 1, Milk.SEMI, Size.LARGE, price);
 	}
 
-	/**
-	 * @param name
-	 * @param quantity
-	 * @param milk
-	 * @param size
-	 * @param cost
-	 */
-	public Item(String name, int quantity, Milk milk, Size size, MonetaryAmount price) {
-
-		this.name = name;
-		this.quantity = quantity;
-		this.milk = milk;
-		this.size = size;
-		this.price = price;
+	public MonetaryAmount getPrice() {
+		return price;
 	}
 }

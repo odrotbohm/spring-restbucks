@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,16 @@ package org.springsource.restbucks.order;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.springsource.restbucks.core.MonetaryAmount.*;
+import static org.springsource.restbucks.core.Currencies.*;
 import static org.springsource.restbucks.order.Order.Status.*;
 
 import java.util.List;
 
 import org.hamcrest.Matchers;
+import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
-import org.springsource.restbucks.core.MonetaryAmount;
 
 /**
  * Integration tests for Spring Data based {@link OrderRepository}.
@@ -35,8 +35,7 @@ import org.springsource.restbucks.core.MonetaryAmount;
  */
 public class OrderRepositoryIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired
-	OrderRepository repository;
+	@Autowired OrderRepository repository;
 
 	@Test
 	public void findsAllOrders() {
@@ -48,7 +47,7 @@ public class OrderRepositoryIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void createsNewOrder() {
 
-		Order order = repository.save(new Order(new Item("English breakfast", new MonetaryAmount(EURO, 2.70))));
+		Order order = repository.save(new Order(new Item("English breakfast", Money.of(2.70, EURO))));
 
 		Iterable<Order> result = repository.findAll();
 		assertThat(result, is(Matchers.<Order> iterableWithSize(3)));

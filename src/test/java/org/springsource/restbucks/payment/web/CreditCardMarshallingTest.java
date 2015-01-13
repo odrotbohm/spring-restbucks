@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,13 @@ import java.time.Month;
 import java.time.Year;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.springsource.restbucks.JacksonTestUtils;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.jayway.jsonpath.JsonPath;
 
@@ -45,7 +46,10 @@ public class CreditCardMarshallingTest {
 
 	@Before
 	public void setUp() {
+
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		mapper.registerModule(new JSR310Module());
+		mapper.registerModules(JacksonTestUtils.getModules());
 	}
 
 	@Test
@@ -58,13 +62,12 @@ public class CreditCardMarshallingTest {
 
 		assertThat(JsonPath.<String> read(result, "$number"), is("1234123412341234"));
 		assertThat(JsonPath.<String> read(result, "$cardHolderName"), is("Oliver Gierke"));
-		assertThat(JsonPath.<Integer> read(result, "$expirationDate[0]"), is(2013));
-		assertThat(JsonPath.<Integer> read(result, "$expirationDate[1]"), is(11));
-		assertThat(JsonPath.<Integer> read(result, "$expirationDate[2]"), is(1));
+		assertThat(JsonPath.<String> read(result, "$expirationDate"), is("2013-11-01"));
+		assertThat(JsonPath.read(result, "$valid"), is(nullValue()));
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void deserializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
 
 		CreditCard creditCard = mapper.readValue(REFERENCE, CreditCard.class);

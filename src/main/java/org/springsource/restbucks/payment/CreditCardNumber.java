@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,7 @@ package org.springsource.restbucks.payment;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Value object to represent a {@link CreditCardNumber}.
@@ -30,14 +27,15 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class CreditCardNumber {
 
 	private static final String regex = "[0-9]{16}";
 
-	@Column(unique = true)
-	private String number;
+	private final @Column(unique = true) String number;
+
+	protected CreditCardNumber() {
+		this.number = null;
+	}
 
 	/**
 	 * Creates a new {@link CreditCardNumber}.

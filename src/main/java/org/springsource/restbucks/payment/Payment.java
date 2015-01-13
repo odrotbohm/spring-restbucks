@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
 
-import org.hibernate.annotations.Type;
 import org.springframework.util.Assert;
 import org.springsource.restbucks.core.AbstractEntity;
 import org.springsource.restbucks.order.Order;
@@ -43,15 +41,18 @@ import org.springsource.restbucks.order.Order;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Getter
 @ToString(callSuper = true)
-@NoArgsConstructor
 public abstract class Payment extends AbstractEntity {
 
 	@JoinColumn(name = "rborder")//
 	@OneToOne(cascade = CascadeType.MERGE)//
-	private Order order;
+	private final Order order;
+	private final LocalDateTime paymentDate;
 
-	@Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")//
-	private LocalDateTime paymentDate;
+	protected Payment() {
+
+		this.order = null;
+		this.paymentDate = null;
+	}
 
 	/**
 	 * Creates a new {@link Payment} referring to the given {@link Order}.
