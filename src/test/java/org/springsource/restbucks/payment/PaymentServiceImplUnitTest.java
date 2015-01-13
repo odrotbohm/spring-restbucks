@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,12 +57,12 @@ public class PaymentServiceImplUnitTest {
 		this.paymentService = new PaymentServiceImpl(creditCardRepository, paymentRepository, orderRepository, publisher);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void rejectsNullPaymentRepository() {
 		new PaymentServiceImpl(creditCardRepository, null, orderRepository, publisher);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void rejectsNullCreditCardRepository() {
 		new PaymentServiceImpl(null, paymentRepository, orderRepository, publisher);
 	}

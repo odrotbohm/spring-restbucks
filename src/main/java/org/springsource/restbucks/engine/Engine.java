@@ -68,7 +68,7 @@ class Engine implements ApplicationListener<OrderPaidEvent>, InProgressAware {
 
 		ordersInProgress.add(order);
 
-		log.info("Starting to process order {}.", order);
+		LOG.info("Starting to process order {}.", order);
 
 		try {
 			Thread.sleep(5000);
@@ -81,6 +81,6 @@ class Engine implements ApplicationListener<OrderPaidEvent>, InProgressAware {
 
 		ordersInProgress.remove(order);
 
-		log.info("Finished processing order {}.", order);
+		LOG.info("Finished processing order {}.", order);
 	}
 }
