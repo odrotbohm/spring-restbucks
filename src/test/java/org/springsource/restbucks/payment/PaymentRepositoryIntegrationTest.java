@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.OrderRepository;
 
 /**
@@ -45,17 +44,5 @@ public class PaymentRepositoryIntegrationTest extends AbstractIntegrationTest {
 		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCard, order));
 		assertThat(payment.getId(), is(notNullValue()));
 		assertThat(payments.findByOrder(order), is((Payment) payment));
-	}
-
-	@Test
-	public void savingCreditCardMergesChangesToOrder() {
-
-		CreditCard creditCard = creditCards.findOne(1L);
-		Order order = orders.findOne(1L);
-		order.markPaid();
-
-		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCard, order));
-		assertThat(payment.getId(), is(notNullValue()));
-		assertThat(orders.findOne(1L).getStatus(), is(Status.PAID));
 	}
 }
