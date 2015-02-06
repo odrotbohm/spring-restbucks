@@ -34,6 +34,7 @@ import org.springsource.restbucks.payment.Payment.Receipt;
  * {@link CreditCardRepository}.
  * 
  * @author Oliver Gierke
+ * @author Stéphane Nicoll
  */
 @Service
 @Transactional
@@ -74,7 +75,7 @@ class PaymentServiceImpl implements PaymentService {
 		order.markPaid();
 		CreditCardPayment payment = paymentRepository.save(new CreditCardPayment(creditCard, order));
 
-		publisher.publishEvent(new OrderPaidEvent(order.getId(), this));
+		publisher.publishEvent(new OrderPaidEvent(order.getId()));
 
 		return payment;
 	}
