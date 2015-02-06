@@ -24,23 +24,24 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionalEventListener;
+
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
 import org.springsource.restbucks.payment.OrderPaidEvent;
 
 /**
- * Simple {@link ApplicationListener} implementation that listens to {@link OrderPaidEvent}s marking the according
- * {@link Order} as in process, sleeping for 10 seconds and marking the order as processed right after that.
+ * Simple {@link OrderPaidEvent} listener marking the according {@link Order} as in process, sleeping for 10
+ * seconds and marking the order as processed right after that.
  * 
  * @author Oliver Gierke
  */
 @Slf4j
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-class Engine implements ApplicationListener<OrderPaidEvent>, InProgressAware {
+class Engine implements InProgressAware {
 
 	private final @NonNull OrderRepository repository;
 	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
@@ -54,13 +55,9 @@ class Engine implements ApplicationListener<OrderPaidEvent>, InProgressAware {
 		return ordersInProgress;
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
-	 */
 	@Async
-	@Override
-	public void onApplicationEvent(OrderPaidEvent event) {
+	@TransactionalEventListener
+	public void handleOrderPaidEvent(OrderPaidEvent event) {
 
 		Order order = repository.findOne(event.getOrderId());
 		order.markInPreparation();

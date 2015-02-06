@@ -69,7 +69,7 @@ class PaymentServiceImpl implements PaymentService {
 		order.markPaid();
 		CreditCardPayment payment = paymentRepository.save(new CreditCardPayment(creditCard, order));
 
-		publisher.publishEvent(new OrderPaidEvent(order.getId(), this));
+		publisher.publishEvent(new OrderPaidEvent(order.getId()));
 
 		return payment;
 	}
