@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package org.springsource.restbucks.payment;
+
+import java.util.Optional;
 
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.payment.Payment.Receipt;
@@ -38,9 +40,10 @@ public interface PaymentService {
 	 * Returns the {@link Payment} for the given {@link Order}.
 	 * 
 	 * @param order
-	 * @return the {@link Payment} for the given {@link Order} or {@literal null} if the Order hasn't been payed yet.
+	 * @return the {@link Payment} for the given {@link Order} or {@link Optional#empty()} if the Order hasn't been payed
+	 *         yet.
 	 */
-	Payment getPaymentFor(Order order);
+	Optional<Payment> getPaymentFor(Order order);
 
 	/**
 	 * Takes the receipt
@@ -48,5 +51,5 @@ public interface PaymentService {
 	 * @param order
 	 * @return
 	 */
-	Receipt takeReceiptFor(Order order);
+	Optional<Receipt> takeReceiptFor(Order order);
 }

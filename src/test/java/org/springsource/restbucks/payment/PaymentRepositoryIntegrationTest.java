@@ -18,6 +18,8 @@ package org.springsource.restbucks.payment;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.util.Optional;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
@@ -42,7 +44,8 @@ public class PaymentRepositoryIntegrationTest extends AbstractIntegrationTest {
 		Order order = orders.findOne(1L);
 
 		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCard, order));
+
 		assertThat(payment.getId(), is(notNullValue()));
-		assertThat(payments.findByOrder(order), is((Payment) payment));
+		assertThat(payments.findByOrder(order), is(Optional.of(payment)));
 	}
 }

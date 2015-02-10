@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package org.springsource.restbucks.payment;
+
+import java.util.Optional;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springsource.restbucks.order.Order;
@@ -31,5 +33,5 @@ interface PaymentRepository extends PagingAndSortingRepository<Payment, Long> {
 	 * @param order
 	 * @return
 	 */
-	Payment findByOrder(Order order);
+	Optional<Payment> findByOrder(Order order);
 }

@@ -96,13 +96,9 @@ public class PaymentController {
 			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
 		}
 
-		Payment payment = paymentService.getPaymentFor(order);
-
-		if (payment == null) {
-			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
-		}
-
-		return createReceiptResponse(payment.getReceipt());
+		return paymentService.getPaymentFor(order).//
+				map(payment -> createReceiptResponse(payment.getReceipt())).//
+				orElseGet(() -> new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND));
 	}
 
 	/**
@@ -118,7 +114,9 @@ public class PaymentController {
 			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
 		}
 
-		return createReceiptResponse(paymentService.takeReceiptFor(order));
+		return paymentService.takeReceiptFor(order).//
+				map(receipt -> createReceiptResponse(receipt)).//
+				orElseGet(() -> new ResponseEntity<Resource<Receipt>>(HttpStatus.METHOD_NOT_ALLOWED));
 	}
 
 	/**

@@ -20,6 +20,7 @@ import static org.mockito.Mockito.*;
 
 import java.time.Month;
 import java.time.Year;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -82,7 +83,7 @@ public class PaymentServiceImplUnitTest {
 	@Test
 	public void rejectsPaymentIfNoCreditCardFound() {
 
-		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(null);
+		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(Optional.empty());
 
 		exception.expect(PaymentException.class);
 		exception.expectMessage("credit card");
@@ -95,7 +96,7 @@ public class PaymentServiceImplUnitTest {
 	public void throwsOrderPaidEventOnPayment() {
 
 		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.JANUARY, Year.of(2016));
-		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(creditCard);
+		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(Optional.of(creditCard));
 
 		Order order = new Order();
 		ReflectionTestUtils.setField(order, "id", 1L);

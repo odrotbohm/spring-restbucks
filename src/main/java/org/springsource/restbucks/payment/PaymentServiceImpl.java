@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package org.springsource.restbucks.payment;
+
+import java.util.Optional;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -54,12 +56,15 @@ class PaymentServiceImpl implements PaymentService {
 			throw new PaymentException(order, "Order already paid!");
 		}
 
-		CreditCard creditCard = creditCardRepository.findByNumber(creditCardNumber);
+		// Using Optional.orElseThrow(…) doesn't work due to https://bugs.openjdk.java.net/browse/JDK-8054569
+		Optional<CreditCard> creditCardResult = creditCardRepository.findByNumber(creditCardNumber);
 
-		if (creditCard == null) {
+		if (!creditCardResult.isPresent()) {
 			throw new PaymentException(order, String.format("No credit card found for number: %s",
 					creditCardNumber.getNumber()));
 		}
+
+		CreditCard creditCard = creditCardResult.get();
 
 		if (!creditCard.isValid()) {
 			throw new PaymentException(order, String.format("Invalid credit card with number %s, expired %s!",
@@ -80,7 +85,7 @@ class PaymentServiceImpl implements PaymentService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Payment getPaymentFor(Order order) {
+	public Optional<Payment> getPaymentFor(Order order) {
 		return paymentRepository.findByOrder(order);
 	}
 
@@ -89,12 +94,11 @@ class PaymentServiceImpl implements PaymentService {
 	 * @see org.springsource.restbucks.payment.PaymentService#takeReceiptFor(org.springsource.restbucks.order.Order)
 	 */
 	@Override
-	public Receipt takeReceiptFor(Order order) {
+	public Optional<Receipt> takeReceiptFor(Order order) {
 
 		order.setStatus(Status.TAKEN);
 		orderRepository.save(order);
 
-		Payment payment = getPaymentFor(order);
-		return payment == null ? null : payment.getReceipt();
+		return getPaymentFor(order).map(Payment::getReceipt);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 
 import java.time.Month;
 import java.time.Year;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,11 @@ public class CreditCardRepositoryIntegrationTest extends AbstractIntegrationTest
 	public void createsCreditCard() {
 
 		CreditCardNumber number = new CreditCardNumber("4321432143214321");
-		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2014));
+		CreditCard creditCard = repository.save(new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2014)));
 
-		creditCard = repository.save(creditCard);
-		assertThat(repository.findByNumber(number), is(creditCard));
+		Optional<CreditCard> result = repository.findByNumber(number);
+
+		assertThat(result.isPresent(), is(true));
+		assertThat(result.get(), is(creditCard));
 	}
 }
