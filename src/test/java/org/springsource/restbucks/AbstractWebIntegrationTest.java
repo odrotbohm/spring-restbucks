@@ -33,7 +33,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
-import org.springsource.restbucks.Restbucks.WebConfiguration;
 
 /**
  * Base class to derive concrete web test classes from.
@@ -42,7 +41,7 @@ import org.springsource.restbucks.Restbucks.WebConfiguration;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@SpringApplicationConfiguration(classes = WebConfiguration.class)
+@SpringApplicationConfiguration(classes = Restbucks.class)
 public abstract class AbstractWebIntegrationTest {
 
 	protected @Autowired WebApplicationContext context;

@@ -38,12 +38,17 @@ public class CreditCardRepositoryIntegrationTest extends AbstractIntegrationTest
 	@Test
 	public void createsCreditCard() {
 
-		CreditCardNumber number = new CreditCardNumber("4321432143214321");
-		CreditCard creditCard = repository.save(new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2014)));
+		CreditCard creditCard = repository.save(createCreditCard());
 
-		Optional<CreditCard> result = repository.findByNumber(number);
+		Optional<CreditCard> result = repository.findByNumber(creditCard.getNumber());
 
 		assertThat(result.isPresent(), is(true));
 		assertThat(result.get(), is(creditCard));
+	}
+
+	public static CreditCard createCreditCard() {
+
+		CreditCardNumber number = new CreditCardNumber("4321432143214321");
+		return new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2020));
 	}
 }

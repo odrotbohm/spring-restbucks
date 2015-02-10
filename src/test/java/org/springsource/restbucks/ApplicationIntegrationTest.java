@@ -21,8 +21,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springsource.restbucks.Restbucks.ApplicationConfiguration;
-import org.springsource.restbucks.Restbucks.WebConfiguration;
 
 /**
  * Integration test to bootstrap the root {@link ApplicationContext}.
@@ -36,7 +34,7 @@ public class ApplicationIntegrationTest {
 
 		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
 
-			context.register(ApplicationConfiguration.class);
+			context.register(Restbucks.class);
 			context.refresh();
 
 			new Repositories(context);
@@ -48,7 +46,7 @@ public class ApplicationIntegrationTest {
 
 		try (AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext()) {
 
-			applicationContext.register(WebConfiguration.class);
+			applicationContext.register(Restbucks.class);
 			applicationContext.setServletContext(new MockServletContext());
 			applicationContext.refresh();
 		}

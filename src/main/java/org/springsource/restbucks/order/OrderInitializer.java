@@ -42,7 +42,9 @@ class OrderInitializer {
 
 		Assert.notNull(orders, "OrderRepository must not be null!");
 
-		orders.deleteAll();
+		if (orders.count() != 0) {
+			return;
+		}
 
 		Item javaChip = new Item("Java Chip", Money.of(4.20, EURO));
 		Item cappuchino = new Item("Cappuchino", Money.of(3.20, EURO));

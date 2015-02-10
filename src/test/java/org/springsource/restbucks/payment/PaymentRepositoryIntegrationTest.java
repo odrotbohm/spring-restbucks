@@ -17,6 +17,8 @@ package org.springsource.restbucks.payment;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.springsource.restbucks.order.OrderRepositoryIntegrationTest.*;
+import static org.springsource.restbucks.payment.CreditCardRepositoryIntegrationTest.*;
 
 import java.util.Optional;
 
@@ -40,8 +42,8 @@ public class PaymentRepositoryIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	public void savesCreditCardPayment() {
 
-		CreditCard creditCard = creditCards.findOne(1L);
-		Order order = orders.findOne(1L);
+		CreditCard creditCard = creditCards.save(createCreditCard());
+		Order order = orders.save(createOrder());
 
 		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCard, order));
 

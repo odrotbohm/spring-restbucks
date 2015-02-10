@@ -20,8 +20,6 @@ import static org.junit.Assert.*;
 import static org.springsource.restbucks.core.Currencies.*;
 import static org.springsource.restbucks.order.Order.Status.*;
 
-import java.util.List;
-
 import org.hamcrest.Matchers;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
@@ -41,30 +39,39 @@ public class OrderRepositoryIntegrationTest extends AbstractIntegrationTest {
 	public void findsAllOrders() {
 
 		Iterable<Order> orders = repository.findAll();
-		assertThat(orders, is(Matchers.<Order> iterableWithSize(2)));
+		assertThat(orders, is(not(emptyIterable())));
 	}
 
 	@Test
 	public void createsNewOrder() {
 
-		Order order = repository.save(new Order(new Item("English breakfast", Money.of(2.70, EURO))));
+		Long before = repository.count();
+
+		Order order = repository.save(createOrder());
 
 		Iterable<Order> result = repository.findAll();
-		assertThat(result, is(Matchers.<Order> iterableWithSize(3)));
+		assertThat(result, is(Matchers.<Order> iterableWithSize(before.intValue() + 1)));
 		assertThat(result, hasItem(order));
 	}
 
 	@Test
 	public void findsOrderByStatus() {
 
-		List<Order> result = repository.findByStatus(PAYMENT_EXPECTED);
-		assertThat(result, hasSize(2));
+		int paidBefore = repository.findByStatus(PAID).size();
+		int paymentExpectedBefore = repository.findByStatus(PAYMENT_EXPECTED).size();
 
-		Order order = result.get(0);
+		Order order = repository.save(createOrder());
+		assertThat(repository.findByStatus(PAYMENT_EXPECTED).size(), is(paymentExpectedBefore + 1));
+		assertThat(repository.findByStatus(PAID).size(), is(paidBefore));
+
 		order.markPaid();
 		order = repository.save(order);
 
-		assertThat(repository.findByStatus(PAYMENT_EXPECTED), hasSize(1));
-		assertThat(repository.findByStatus(PAID), hasSize(1));
+		assertThat(repository.findByStatus(PAYMENT_EXPECTED), hasSize(paymentExpectedBefore));
+		assertThat(repository.findByStatus(PAID), hasSize(paidBefore + 1));
+	}
+
+	public static Order createOrder() {
+		return new Order(new Item("English breakfast", Money.of(2.70, EURO)));
 	}
 }
