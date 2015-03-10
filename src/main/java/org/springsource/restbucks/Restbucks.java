@@ -21,7 +21,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.config.EnableEntityLinks;
@@ -38,8 +37,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @author Oliver Gierke
  */
 @SpringBootApplication
-// Apply Jackson customizations to tweak JSON rendering
-@Import(JacksonCustomizations.class)
 // Explicitly configure @EntityScan to enable the JSR-310 JPA 2.1 converters
 @EntityScan(basePackageClasses = { Restbucks.class, Jsr310JpaConverters.class })
 // Explicitly enable entity links as Boot fails to auto-configure them
