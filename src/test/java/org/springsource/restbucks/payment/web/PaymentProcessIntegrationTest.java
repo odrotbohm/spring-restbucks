@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.file.Files;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -51,14 +52,14 @@ import com.jayway.jsonpath.JsonPath;
 @Slf4j
 public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
-	private static final String FIRST_ORDER_EXPRESSION = "$_embedded.orders[0]";
-
 	private static final String ORDERS_REL = Restbucks.CURIE_NAMESPACE + ":orders";
 	private static final String ORDER_REL = Restbucks.CURIE_NAMESPACE + ":order";
 	private static final String RECEIPT_REL = Restbucks.CURIE_NAMESPACE + ":receipt";
 	private static final String CANCEL_REL = Restbucks.CURIE_NAMESPACE + ":cancel";
 	private static final String UPDATE_REL = Restbucks.CURIE_NAMESPACE + ":update";
 	private static final String PAYMENT_REL = Restbucks.CURIE_NAMESPACE + ":payment";
+
+	private static final String FIRST_ORDER_EXPRESSION = String.format("$._embedded.%s[0]", ORDERS_REL);
 
 	/**
 	 * Processes the first existing {@link Order} found.
@@ -185,7 +186,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	private MockHttpServletResponse accessFirstOrder(MockHttpServletResponse source) throws Exception {
 
 		String content = source.getContentAsString();
-		String order = JsonPath.read(content, FIRST_ORDER_EXPRESSION).toString();
+		String order = JsonPath.parse(content).read(JsonPath.compile(FIRST_ORDER_EXPRESSION), JSONObject.class).toString();
 		Link orderLink = getDiscovererFor(source).findLinkWithRel("self", order).expand();
 
 		LOG.info(String.format("Picking first order using JSONPath expression %s…", FIRST_ORDER_EXPRESSION));
@@ -339,7 +340,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				andExpect(linkWithRelIsNotPresent(UPDATE_REL)). //
 				andExpect(linkWithRelIsNotPresent(CANCEL_REL)). //
 				andExpect(linkWithRelIsNotPresent(PAYMENT_REL)). //
-				andExpect(jsonPath("$status", is("TAKEN"))). //
+				andExpect(jsonPath("$.status", is("TAKEN"))). //
 				andReturn().getResponse();
 
 		LOG.info("Final order state: " + orderResponse.getContentAsString());

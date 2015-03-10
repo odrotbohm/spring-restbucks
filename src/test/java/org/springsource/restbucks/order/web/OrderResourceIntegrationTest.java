@@ -42,6 +42,6 @@ public class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 				andDo(MockMvcResultHandlers.print()).//
 				andExpect(status().isOk()). //
 				andExpect(content().contentType(MediaTypes.HAL_JSON)). //
-				andExpect(jsonPath("$_links.restbucks:orders.href", notNullValue()));
+				andExpect(jsonPath("$._links.restbucks:orders.href", notNullValue()));
 	}
 }

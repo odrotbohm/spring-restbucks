@@ -31,7 +31,9 @@ import org.springsource.restbucks.payment.CreditCardNumber;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
 
 /**
  * Integration tests for marshalling of {@link CreditCard}.
@@ -60,14 +62,15 @@ public class CreditCardMarshallingTest {
 
 		String result = mapper.writeValueAsString(creditCard);
 
-		assertThat(JsonPath.<String> read(result, "$number"), is("1234123412341234"));
-		assertThat(JsonPath.<String> read(result, "$cardHolderName"), is("Oliver Gierke"));
-		assertThat(JsonPath.<String> read(result, "$expirationDate"), is("2013-11-01"));
-		assertThat(JsonPath.read(result, "$valid"), is(nullValue()));
+		assertThat(JsonPath.<String> read(result, "$.number"), is("1234123412341234"));
+		assertThat(JsonPath.<String> read(result, "$.cardHolderName"), is("Oliver Gierke"));
+		assertThat(JsonPath.<String> read(result, "$.expirationDate"), is("2013-11-01"));
+
+		Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
+		assertThat(JsonPath.compile("$.valid").read(result, configuration), is(nullValue()));
 	}
 
 	@Test
-	// @Ignore
 	public void deserializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
 
 		CreditCard creditCard = mapper.readValue(REFERENCE, CreditCard.class);
