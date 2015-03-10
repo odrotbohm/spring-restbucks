@@ -15,11 +15,11 @@ mvn clean package
 java -jar target/*.war
 ```
 
-The application ships with the [HAL browser](https://github.com/mikekelly/hal-browser) embedded, so simply browsing to [http://localhost:8080/browser/index.html](http://localhost:8080/browser/index.html) will allow you to explore the web service. 
+The application ships with the [HAL browser](https://github.com/mikekelly/hal-browser) embedded, so simply browsing to [http://localhost:8080/browser/index.html](http://localhost:8080/browser/index.html) will allow you to explore the web service.
 
 > Note, that the curie links in the representations are currently not backed by any documents served but they will be in the future. Imagine simple HTML pages being served documenting the individual relation types.
 
-## IDE setup 
+## IDE setup
 
 For the usage inside an IDE do the following:
 
@@ -29,18 +29,18 @@ For the usage inside an IDE do the following:
    2. Run the JAR (double click or `java -jar …`).
    3. Point it to your Eclipse installation, run the install.
    4. Restart Eclipse.
-   
+
 3. Import the checked out code through *File > Import > Existing Maven Project…*
 
 ## Project description
 
 The project uses:
 
-- [Spring Boot](http://github.com/spring-projects/spring-boot) - 1.1.0.M1
-- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.0.5.RELEASE
-- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.6.0.RELEASE
-- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.1.0.RELEASE
-- [Spring Hateoas](http://github.com/spring-projects/spring-hateoas) - 0.12.0.RELEASE
+- [Spring Boot](http://github.com/spring-projects/spring-boot) - 1.2.2.RELEASE
+- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.2.0.BUILD-SNAPSHOT
+- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.8.0.RC1
+- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.3.0.RC1
+- [Spring HATEOAS](http://github.com/spring-projects/spring-hateoas) - 0.17.0.RELEASE
 - [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 1.1.0.RELEASE
 
 The implementation consists of mainly two parts, the `order` and the `payment` part. The `Orders` are exposed as REST resources using Spring Data RESTs capability to automatically expose Spring Data JPA repositories contained in the application. The `Payment` process and the REST application protocol described in the book are implemented manually using a Spring MVC controller (`PaymentController`).
@@ -57,13 +57,13 @@ We're using Spring Data REST to expose the `OrderRepository` as REST resource wi
 
 ### Spring HATEOAS
 
-Spring Hateoas provides a generic `Resource` abstraction that we leverage to create hypermedia-driven representations. Spring Data REST also leverages this abstraction so that we can deploy `ResourceProcessor` implementations (e.g. `PaymentorderResourceProcessor`) to enrich the representations for `Order` instance with links to the `PaymentController`. Read more on that below in the Hypermedia section.
+Spring HATEOAS provides a generic `Resource` abstraction that we leverage to create hypermedia-driven representations. Spring Data REST also leverages this abstraction so that we can deploy `ResourceProcessor` implementations (e.g. `PaymentorderResourceProcessor`) to enrich the representations for `Order` instance with links to the `PaymentController`. Read more on that below in the Hypermedia section.
 
 The final important piece is the `EntityLinks` abstraction that allows to create `Link` instance in a type-safe manner avoiding the repetition of URI templates and parts all over the place. See `PaymentLinks` for example usage.
 
 ### Spring Plugin
 
-The Spring Plugin library provides means to collect Spring beans by type and exposing them for selection based on a selection criterion. It basically forms the foundation for the `EntityLinks` mechanism provided in Spring Hateoas and our custom extension `RestResourceEntityLinks`.
+The Spring Plugin library provides means to collect Spring beans by type and exposing them for selection based on a selection criterion. It basically forms the foundation for the `EntityLinks` mechanism provided in Spring HATEOAS and our custom extension `RestResourceEntityLinks`.
 
 ### Miscellaneous
 
