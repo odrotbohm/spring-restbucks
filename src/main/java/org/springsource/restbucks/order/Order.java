@@ -15,8 +15,6 @@
  */
 package org.springsource.restbucks.order;
 
-import static org.springsource.restbucks.core.Currencies.*;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -89,13 +87,9 @@ public class Order extends AbstractEntity {
 	 */
 	public MonetaryAmount getPrice() {
 
-		MonetaryAmount result = Money.of(0.0, EURO);
-
-		for (Item item : items) {
-			result = result.add(item.getPrice());
-		}
-
-		return result;
+		return items.stream().//
+				map(Item::getPrice).//
+				reduce(MonetaryAmount::add).orElse(Money.of(0.0, "EUR"));
 	}
 
 	/**
