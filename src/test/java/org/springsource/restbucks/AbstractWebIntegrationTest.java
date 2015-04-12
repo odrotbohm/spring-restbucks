@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 /**
  * Base class to derive concrete web test classes from.
@@ -50,10 +49,7 @@ public abstract class AbstractWebIntegrationTest {
 
 	@Before
 	public void setUp() {
-
-		mvc = MockMvcBuilders.webAppContextSetup(context). //
-				addFilter(new ShallowEtagHeaderFilter()). //
-				build();
+		mvc = MockMvcBuilders.webAppContextSetup(context).build();
 	}
 
 	/**
