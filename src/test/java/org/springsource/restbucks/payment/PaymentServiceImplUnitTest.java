@@ -15,7 +15,6 @@
  */
 package org.springsource.restbucks.payment;
 
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.time.Month;
@@ -28,6 +27,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -103,6 +103,6 @@ public class PaymentServiceImplUnitTest {
 
 		paymentService.pay(order, NUMBER);
 
-		verify(publisher).publishEvent(any((OrderPaidEvent.class)));
+		verify(publisher).publishEvent(Mockito.any((OrderPaidEvent.class)));
 	}
 }

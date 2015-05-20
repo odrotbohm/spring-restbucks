@@ -16,7 +16,7 @@
 package org.springsource.restbucks.core;
 
 import javax.money.CurrencyUnit;
-import javax.money.MonetaryCurrencies;
+import javax.money.Monetary;
 
 /**
  * Interface to contain {@link CurrencyUnit} constants.
@@ -25,5 +25,5 @@ import javax.money.MonetaryCurrencies;
  */
 public interface Currencies {
 
-	public static final CurrencyUnit EURO = MonetaryCurrencies.getCurrency("EUR");
+	public static final CurrencyUnit EURO = Monetary.getCurrency("EUR");
 }

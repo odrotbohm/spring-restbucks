@@ -18,7 +18,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<spring-data-releasetrain.version>Gosling-BUILD-SNAPSHOT</spring-data-releasetrain.version>
 		<java.version>1.8</java.version>
 		<spring.version>4.2.0.BUILD-SNAPSHOT</spring.version>
-		<spring-hateoas.version>0.17.0.RELEASE</spring-hateoas.version>
+		<spring-hateoas.version>0.18.0.BUILD-SNAPSHOT</spring-hateoas.version>
 		<json-path.version>1.2.0</json-path.version>
 	</properties>
 
@@ -61,13 +61,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.javamoney</groupId>
 			<artifactId>moneta</artifactId>
-			<version>1.0-RC3</version>
+			<version>1.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.2</version>
+			<version>1.16.4</version>
 			<scope>provided</scope>
 		</dependency>
 
