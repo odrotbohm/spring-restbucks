@@ -17,7 +17,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<properties>
 		<spring-data-releasetrain.version>Gosling-BUILD-SNAPSHOT</spring-data-releasetrain.version>
 		<java.version>1.8</java.version>
-		<spring.version>4.2.0.BUILD-SNAPSHOT</spring.version>
+		<spring.version>4.2.0.RC1</spring.version>
 		<spring-hateoas.version>0.18.0.BUILD-SNAPSHOT</spring-hateoas.version>
 		<json-path.version>1.2.0</json-path.version>
 	</properties>
