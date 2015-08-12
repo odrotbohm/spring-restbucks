@@ -37,7 +37,7 @@ For the usage inside an IDE do the following:
 The project uses:
 
 - [Spring Boot](http://github.com/spring-projects/spring-boot) - 1.2.2.RELEASE
-- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.2.0.BUILD-SNAPSHOT
+- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.2.0.RELEASE
 - [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.8.0.RC1
 - [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.3.0.RC1
 - [Spring HATEOAS](http://github.com/spring-projects/spring-hateoas) - 0.17.0.RELEASE
