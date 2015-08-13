@@ -11,15 +11,15 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.2.3.RELEASE</version>
+		<version>1.3.0.M3</version>
 	</parent>
 
 	<properties>
 		<spring-data-releasetrain.version>Gosling-BUILD-SNAPSHOT</spring-data-releasetrain.version>
 		<java.version>1.8</java.version>
-		<spring.version>4.2.0.RC1</spring.version>
-		<spring-hateoas.version>0.18.0.BUILD-SNAPSHOT</spring-hateoas.version>
-		<json-path.version>1.2.0</json-path.version>
+		<spring.version>4.2.0.RELEASE</spring.version>
+		<spring-hateoas.version>0.19.0.BUILD-SNAPSHOT</spring-hateoas.version>
+		<json-path.version>2.0.0</json-path.version>
 	</properties>
 
 	<dependencies>
