@@ -42,6 +42,8 @@ The project uses:
 - [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.3.0.RC1
 - [Spring HATEOAS](http://github.com/spring-projects/spring-hateoas) - 0.17.0.RELEASE
 - [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 1.1.0.RELEASE
+- [Spring Security](http://github.com/spring-projects/spring-security) - 4.0.2.RELEASE
+- [Spring Session](http://github.com/spring-projects/spring-session) - 1.0.2.RELEASE
 
 The implementation consists of mainly two parts, the `order` and the `payment` part. The `Orders` are exposed as REST resources using Spring Data RESTs capability to automatically expose Spring Data JPA repositories contained in the application. The `Payment` process and the REST application protocol described in the book are implemented manually using a Spring MVC controller (`PaymentController`).
 
@@ -64,6 +66,38 @@ The final important piece is the `EntityLinks` abstraction that allows to create
 ### Spring Plugin
 
 The Spring Plugin library provides means to collect Spring beans by type and exposing them for selection based on a selection criterion. It basically forms the foundation for the `EntityLinks` mechanism provided in Spring HATEOAS and our custom extension `RestResourceEntityLinks`.
+
+### Spring Security / Spring Session
+
+The `spring-session` branch contains additional configuration to secure the service using Spring Security, HTTP Basic authentication and Spring Session's HTTP header based session strategy to allow clients to obtain a security token via the `X-Auth-Token` header and using that for subsequent requests.
+
+If you check out the branch and run the sample you should be able to follow this interaction (I am using [HTTPie](https://github.com/jakubroztocil/httpie) here)
+
+```
+$ http :8080
+HTTP/1.1 401 Unauthorized
+…
+WWW-Authenticate: Basic realm="Spring RESTBucks"
+```
+
+You can now authenticate using the default credentials (the password `password` is configured in `application.properties`).
+
+```
+$ http :8080 --auth=user:password
+HTTP/1.1 200 OK
+Content-Type: application/hal+json;charset=UTF-8
+–
+X-Auth-Token: ef005d62-b69b-4675-b920-d340a238e857
+```
+
+Now you can use the presented auth token in further requests:
+
+```
+$ http :8080 X-Auth-Token:ef005d62-b69b-4675-b920-d340a238e857
+HTTP/1.1 200 OK
+Content-Type: application/hal+json;charset=UTF-8
+–
+```
 
 ### Miscellaneous
 
