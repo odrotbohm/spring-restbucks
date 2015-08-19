@@ -35,7 +35,7 @@ import org.springsource.restbucks.core.AbstractEntity;
 @Entity
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Item extends AbstractEntity {
+public class LineItem extends AbstractEntity {
 
 	private final String name;
 	private final int quantity;
@@ -43,11 +43,11 @@ public class Item extends AbstractEntity {
 	private final Size size;
 	private final @Lob Money price;
 
-	protected Item() {
+	protected LineItem() {
 		this(null, null);
 	}
 
-	public Item(String name, Money price) {
+	public LineItem(String name, Money price) {
 		this(name, 1, Milk.SEMI, Size.LARGE, price);
 	}
 

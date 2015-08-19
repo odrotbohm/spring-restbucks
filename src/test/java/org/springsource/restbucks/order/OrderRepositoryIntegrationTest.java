@@ -72,6 +72,6 @@ public class OrderRepositoryIntegrationTest extends AbstractIntegrationTest {
 	}
 
 	public static Order createOrder() {
-		return new Order(new Item("English breakfast", Money.of(2.70, EURO)));
+		return new Order(new LineItem("English breakfast", Money.of(2.70, EURO)));
 	}
 }

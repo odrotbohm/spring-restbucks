@@ -46,8 +46,8 @@ class OrderInitializer {
 			return;
 		}
 
-		Item javaChip = new Item("Java Chip", Money.of(4.20, EURO));
-		Item cappuchino = new Item("Cappuchino", Money.of(3.20, EURO));
+		LineItem javaChip = new LineItem("Java Chip", Money.of(4.20, EURO));
+		LineItem cappuchino = new LineItem("Cappuchino", Money.of(3.20, EURO));
 
 		Order javaChipOrder = new Order(javaChip);
 		Order cappuchinoOrder = new Order(cappuchino);

@@ -16,19 +16,31 @@
 package org.springsource.restbucks;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
+import javax.money.MonetaryAmount;
 import javax.money.format.MonetaryAmountFormat;
 import javax.money.format.MonetaryFormats;
 
 import org.javamoney.moneta.Money;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
+import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
+import org.springframework.data.util.TypeInformation;
+import org.springsource.restbucks.order.LineItem;
+import org.springsource.restbucks.order.Location;
 import org.springsource.restbucks.order.Order;
+import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -65,9 +77,16 @@ class JacksonCustomizations {
 			setMixInAnnotation(CreditCardNumber.class, CreditCardNumberMixin.class);
 		}
 
-		@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
-				isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-		static abstract class OrderMixin {}
+		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
+		static abstract class OrderMixin {
+
+			@JsonCreator
+			public OrderMixin(@JsonProperty("lineItems") Collection<LineItem> lineItems, //
+					@JsonProperty("location") Location location) {}
+
+			@JsonProperty(access = Access.READ_ONLY)
+			abstract Status getStatus();
+		}
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 		static abstract class CreditCardMixin {
@@ -82,34 +101,68 @@ class JacksonCustomizations {
 	@SuppressWarnings("serial")
 	static class MoneyModule extends SimpleModule {
 
-		private static final MonetaryAmountFormat FORMAT = MonetaryFormats.getAmountFormat(Locale.ROOT);
+		private static final MonetaryAmountFormat FORMAT = MonetaryFormats.getAmountFormat(Locale.US);
 
 		public MoneyModule() {
-			addSerializer(Money.class, new MoneySerializer());
+			addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer());
 			addValueInstantiator(Money.class, new MoneyInstantiator());
 		}
 
-		static class MoneySerializer extends ToStringSerializer {
+		/**
+		 * A dedicated serializer to render {@link MonetaryAmount} instances as formatted {@link String}. Also implements
+		 * {@link JsonSchemaPropertyCustomizer} to expose the different rendering to the schema exposed by Spring Data REST.
+		 *
+		 * @author Oliver Gierke
+		 */
+		static class MonetaryAmountSerializer extends ToStringSerializer implements JsonSchemaPropertyCustomizer {
 
+			private static final Pattern MONEY_PATTERN = Pattern
+					.compile("(?=.)^[A-Z]{3}?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)?(\\.[0-9]{1,2})?$");
+
+			/*
+			 * (non-Javadoc)
+			 * @see com.fasterxml.jackson.databind.ser.std.ToStringSerializer#serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)
+			 */
 			@Override
-			public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider) throws IOException,
-					JsonGenerationException {
-				jgen.writeString(FORMAT.format((Money) value));
+			public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider)
+					throws IOException, JsonGenerationException {
+				jgen.writeString(FORMAT.format((MonetaryAmount) value));
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * @see org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer#customize(org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty, org.springframework.data.util.TypeInformation)
+			 */
+			@Override
+			public JsonSchemaProperty customize(JsonSchemaProperty property, TypeInformation<?> type) {
+				return property.withType(String.class).withPattern(MONEY_PATTERN);
 			}
 		}
 
 		static class MoneyInstantiator extends ValueInstantiator {
 
+			/*
+			 * (non-Javadoc)
+			 * @see com.fasterxml.jackson.databind.deser.ValueInstantiator#getValueTypeDesc()
+			 */
 			@Override
 			public String getValueTypeDesc() {
 				return Money.class.toString();
 			}
 
+			/*
+			 * (non-Javadoc)
+			 * @see com.fasterxml.jackson.databind.deser.ValueInstantiator#canCreateFromString()
+			 */
 			@Override
 			public boolean canCreateFromString() {
 				return true;
 			}
 
+			/*
+			 * (non-Javadoc)
+			 * @see com.fasterxml.jackson.databind.deser.ValueInstantiator#createFromString(com.fasterxml.jackson.databind.DeserializationContext, java.lang.String)
+			 */
 			@Override
 			public Object createFromString(DeserializationContext ctxt, String value) throws IOException {
 				return Money.parse(value, FORMAT);

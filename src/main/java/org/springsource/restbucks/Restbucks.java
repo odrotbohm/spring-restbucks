@@ -49,7 +49,7 @@ public class Restbucks extends SpringBootServletInitializer {
 	public static String CURIE_NAMESPACE = "restbucks";
 
 	public @Bean CurieProvider curieProvider() {
-		return new DefaultCurieProvider(CURIE_NAMESPACE, new UriTemplate("http://localhost:8080/alps/{rel}"));
+		return new DefaultCurieProvider(CURIE_NAMESPACE, new UriTemplate("http://localhost:8080/profile/{rel}"));
 	}
 
 	/**

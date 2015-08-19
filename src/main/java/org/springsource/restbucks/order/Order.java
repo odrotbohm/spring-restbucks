@@ -15,6 +15,10 @@
  */
 package org.springsource.restbucks.order;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,10 +31,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import org.javamoney.moneta.Money;
 import org.springsource.restbucks.core.AbstractEntity;
 
@@ -42,7 +42,7 @@ import org.springsource.restbucks.core.AbstractEntity;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = "items")
+@ToString(exclude = "lineItems")
 @Table(name = "RBOrder")
 public class Order extends AbstractEntity {
 
@@ -50,34 +50,34 @@ public class Order extends AbstractEntity {
 	private final LocalDateTime orderedDate;
 	private Status status;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)//
-	private final Set<Item> items = new HashSet<Item>();
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //
+	private final Set<LineItem> lineItems = new HashSet<LineItem>();
 
 	/**
-	 * Creates a new {@link Order} for the given {@link Item}s and {@link Location}.
+	 * Creates a new {@link Order} for the given {@link LineItem}s and {@link Location}.
 	 * 
-	 * @param items must not be {@literal null}.
+	 * @param lineItems must not be {@literal null}.
 	 * @param location
 	 */
-	public Order(Collection<Item> items, Location location) {
+	public Order(Collection<LineItem> lineItems, Location location) {
 
 		this.location = location == null ? Location.TAKE_AWAY : location;
 		this.status = Status.PAYMENT_EXPECTED;
-		this.items.addAll(items);
+		this.lineItems.addAll(lineItems);
 		this.orderedDate = LocalDateTime.now();
 	}
 
 	/**
-	 * Creates a new {@link Order} containing the given {@link Item}s.
+	 * Creates a new {@link Order} containing the given {@link LineItem}s.
 	 * 
 	 * @param items must not be {@literal null}.
 	 */
-	public Order(Item... items) {
+	public Order(LineItem... items) {
 		this(Arrays.asList(items), null);
 	}
 
 	public Order() {
-		this(new Item[0]);
+		this(new LineItem[0]);
 	}
 
 	/**
@@ -87,8 +87,8 @@ public class Order extends AbstractEntity {
 	 */
 	public MonetaryAmount getPrice() {
 
-		return items.stream().//
-				map(Item::getPrice).//
+		return lineItems.stream().//
+				map(LineItem::getPrice).//
 				reduce(MonetaryAmount::add).orElse(Money.of(0.0, "EUR"));
 	}
 
@@ -110,8 +110,8 @@ public class Order extends AbstractEntity {
 	public void markInPreparation() {
 
 		if (this.status != Status.PAID) {
-			throw new IllegalStateException(String.format("Order must be in state payed to start preparation! "
-					+ "Current status: %s", this.status));
+			throw new IllegalStateException(
+					String.format("Order must be in state payed to start preparation! " + "Current status: %s", this.status));
 		}
 
 		this.status = Status.PREPARING;
@@ -123,8 +123,8 @@ public class Order extends AbstractEntity {
 	public void markPrepared() {
 
 		if (this.status != Status.PREPARING) {
-			throw new IllegalStateException(String.format("Cannot mark Order prepared that is currently not "
-					+ "preparing! Current status: %s.", this.status));
+			throw new IllegalStateException(String
+					.format("Cannot mark Order prepared that is currently not " + "preparing! Current status: %s.", this.status));
 		}
 
 		this.status = Status.READY;
