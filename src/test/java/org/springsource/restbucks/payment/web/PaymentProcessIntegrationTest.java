@@ -20,10 +20,10 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.nio.file.Files;
-
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
+
+import java.nio.file.Files;
 
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -340,7 +340,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				andExpect(linkWithRelIsNotPresent(UPDATE_REL)). //
 				andExpect(linkWithRelIsNotPresent(CANCEL_REL)). //
 				andExpect(linkWithRelIsNotPresent(PAYMENT_REL)). //
-				andExpect(jsonPath("$.status", is("TAKEN"))). //
+				andExpect(jsonPath("$.status", is("Taken"))). //
 				andReturn().getResponse();
 
 		LOG.info("Final order state: " + orderResponse.getContentAsString());

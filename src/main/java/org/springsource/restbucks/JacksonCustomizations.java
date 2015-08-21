@@ -32,15 +32,15 @@ import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
 import org.springframework.data.util.TypeInformation;
 import org.springsource.restbucks.order.LineItem;
 import org.springsource.restbucks.order.Location;
+import org.springsource.restbucks.order.Milk;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.Order.Status;
+import org.springsource.restbucks.order.Size;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -50,6 +50,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.ValueInstantiator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 /**
  * Configures custom serialization and deserialization of {@link Money} instances
@@ -67,12 +68,17 @@ class JacksonCustomizations {
 		return new RestbucksModule();
 	}
 
+	public @Bean Module parameterNameModule() {
+		return new ParameterNamesModule(Mode.DELEGATING);
+	}
+
 	@SuppressWarnings("serial")
 	static class RestbucksModule extends SimpleModule {
 
 		public RestbucksModule() {
 
 			setMixInAnnotation(Order.class, RestbucksModule.OrderMixin.class);
+			setMixInAnnotation(LineItem.class, LineItemMixin.class);
 			setMixInAnnotation(CreditCard.class, CreditCardMixin.class);
 			setMixInAnnotation(CreditCardNumber.class, CreditCardNumberMixin.class);
 		}
@@ -81,11 +87,13 @@ class JacksonCustomizations {
 		static abstract class OrderMixin {
 
 			@JsonCreator
-			public OrderMixin(@JsonProperty("lineItems") Collection<LineItem> lineItems, //
-					@JsonProperty("location") Location location) {}
+			public OrderMixin(Collection<LineItem> lineItems, Location location) {}
+		}
 
-			@JsonProperty(access = Access.READ_ONLY)
-			abstract Status getStatus();
+		static abstract class LineItemMixin {
+
+			@JsonCreator
+			public LineItemMixin(String name, int amount, Milk milk, Size size, Money price) {}
 		}
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
@@ -116,8 +124,20 @@ class JacksonCustomizations {
 		 */
 		static class MonetaryAmountSerializer extends ToStringSerializer implements JsonSchemaPropertyCustomizer {
 
-			private static final Pattern MONEY_PATTERN = Pattern
-					.compile("(?=.)^[A-Z]{3}?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)?(\\.[0-9]{1,2})?$");
+			private static final Pattern MONEY_PATTERN;
+
+			static {
+
+				StringBuilder builder = new StringBuilder();
+
+				builder.append("(?=.)^"); // Start
+				builder.append("[A-Z]{3}?"); // 3-digit currency code
+				builder.append("\\s"); // single whitespace character
+				builder.append("(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)?"); // digits with optional grouping by "," every 3)
+				builder.append("(\\.[0-9]{1,2})?$"); // End with a dot and two digits
+
+				MONEY_PATTERN = Pattern.compile(builder.toString());
+			}
 
 			/*
 			 * (non-Javadoc)

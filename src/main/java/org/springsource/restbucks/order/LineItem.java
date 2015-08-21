@@ -15,13 +15,13 @@
  */
 package org.springsource.restbucks.order;
 
-import javax.money.MonetaryAmount;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.money.MonetaryAmount;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 import org.javamoney.moneta.Money;
 import org.springsource.restbucks.core.AbstractEntity;

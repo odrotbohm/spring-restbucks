@@ -16,7 +16,6 @@
 package org.springsource.restbucks.order;
 
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
 
 /**
@@ -36,7 +35,7 @@ public class TestUtils {
 	public static Order createExistingOrderWithStatus(Status status) {
 
 		Order order = createExistingOrder();
-		order.setStatus(status);
+		ReflectionTestUtils.setField(order, "status", status);
 		return order;
 	}
 }

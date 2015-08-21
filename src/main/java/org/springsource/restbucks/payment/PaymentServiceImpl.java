@@ -15,17 +15,16 @@
  */
 package org.springsource.restbucks.payment;
 
-import java.util.Optional;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.OrderRepository;
 import org.springsource.restbucks.payment.Payment.Receipt;
 
@@ -38,7 +37,7 @@ import org.springsource.restbucks.payment.Payment.Receipt;
  */
 @Service
 @Transactional
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired) )
 class PaymentServiceImpl implements PaymentService {
 
 	private final @NonNull CreditCardRepository creditCardRepository;
@@ -61,8 +60,8 @@ class PaymentServiceImpl implements PaymentService {
 		Optional<CreditCard> creditCardResult = creditCardRepository.findByNumber(creditCardNumber);
 
 		if (!creditCardResult.isPresent()) {
-			throw new PaymentException(order, String.format("No credit card found for number: %s",
-					creditCardNumber.getNumber()));
+			throw new PaymentException(order,
+					String.format("No credit card found for number: %s", creditCardNumber.getNumber()));
 		}
 
 		CreditCard creditCard = creditCardResult.get();
@@ -97,7 +96,7 @@ class PaymentServiceImpl implements PaymentService {
 	@Override
 	public Optional<Receipt> takeReceiptFor(Order order) {
 
-		order.setStatus(Status.TAKEN);
+		order.markTaken();
 		orderRepository.save(order);
 
 		return getPaymentFor(order).map(Payment::getReceipt);

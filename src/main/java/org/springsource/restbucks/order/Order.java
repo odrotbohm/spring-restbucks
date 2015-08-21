@@ -16,7 +16,6 @@
 package org.springsource.restbucks.order;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -41,7 +40,6 @@ import org.springsource.restbucks.core.AbstractEntity;
  */
 @Entity
 @Getter
-@Setter
 @ToString(exclude = "lineItems")
 @Table(name = "RBOrder")
 public class Order extends AbstractEntity {
@@ -111,7 +109,7 @@ public class Order extends AbstractEntity {
 
 		if (this.status != Status.PAID) {
 			throw new IllegalStateException(
-					String.format("Order must be in state payed to start preparation! " + "Current status: %s", this.status));
+					String.format("Order must be in state payed to start preparation! Current status: %s", this.status));
 		}
 
 		this.status = Status.PREPARING;
@@ -124,10 +122,20 @@ public class Order extends AbstractEntity {
 
 		if (this.status != Status.PREPARING) {
 			throw new IllegalStateException(String
-					.format("Cannot mark Order prepared that is currently not " + "preparing! Current status: %s.", this.status));
+					.format("Cannot mark Order prepared that is currently not preparing! Current status: %s.", this.status));
 		}
 
 		this.status = Status.READY;
+	}
+
+	public void markTaken() {
+
+		if (this.status != Status.READY) {
+			throw new IllegalStateException(
+					String.format("Cannot mark Order taken that is currently not paid! Current status: %s.", this.status));
+		}
+
+		this.status = Status.TAKEN;
 	}
 
 	/**
