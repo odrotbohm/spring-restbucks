@@ -1,6 +1,9 @@
 target/
+bin/
+build/
 .settings/
 .project
 .classpath
 .springBeans
 *.log
+.gradle/

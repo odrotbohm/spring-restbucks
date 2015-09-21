@@ -1,0 +1,67 @@
+buildscript {
+    ext {
+        springBootVersion = '1.3.0.M5'
+    }
+
+    repositories {
+        jcenter()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+group = 'org.springsource.restbucks'
+version = '1.0.0.BUILD-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+
+    compile 'org.springframework.boot:spring-boot-starter-data-rest'
+	runtime 'org.springframework.data:spring-data-rest-hal-browser'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+	compile "com.fasterxml.jackson.module:jackson-module-parameter-names"
+
+    runtime 'org.hsqldb:hsqldb'
+
+	compile 'org.javamoney:moneta:1.0'
+	compile 'org.projectlombok:lombok:1.16.2'
+	
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'com.jayway.jsonpath:json-path:2.0.0'
+}
+
+eclipse {
+    classpath {
+        containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+        containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+    }
+}
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs << "-parameters"
+}
+
+wrapper {
+    gradleVersion = '2.7'
+}
