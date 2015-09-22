@@ -13,7 +13,7 @@ import org.javamoney.moneta.Money;
 @Converter(autoApply = true)
 public class MoneyPersistenceConverter implements AttributeConverter<MonetaryAmount, String> {
 
-    private static final MonetaryAmountFormat FORMAT = MonetaryFormats.getAmountFormat(Locale.ROOT);
+    private static final MonetaryAmountFormat FORMAT = MonetaryFormats.getAmountFormat(Locale.US);
 
     @Override
     public String convertToDatabaseColumn(MonetaryAmount attribute) {
