@@ -45,7 +45,7 @@ dependencies {
     runtime 'org.hsqldb:hsqldb'
 
     compile 'org.javamoney:moneta:1.0'
-    compile 'org.projectlombok:lombok:1.16.2'
+    compile 'org.projectlombok:lombok:1.16.6'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'com.jayway.jsonpath:json-path:2.0.0'
