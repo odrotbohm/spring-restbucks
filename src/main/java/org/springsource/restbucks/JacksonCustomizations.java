@@ -77,7 +77,7 @@ class JacksonCustomizations {
 
 		public RestbucksModule() {
 
-			setMixInAnnotation(Order.class, RestbucksModule.OrderMixin.class);
+			setMixInAnnotation(Order.class, OrderMixin.class);
 			setMixInAnnotation(LineItem.class, LineItemMixin.class);
 			setMixInAnnotation(CreditCard.class, CreditCardMixin.class);
 			setMixInAnnotation(CreditCardNumber.class, CreditCardNumberMixin.class);
@@ -93,7 +93,7 @@ class JacksonCustomizations {
 		static abstract class LineItemMixin {
 
 			@JsonCreator
-			public LineItemMixin(String name, int amount, Milk milk, Size size, Money price) {}
+			public LineItemMixin(String name, int quantity, Milk milk, Size size, MonetaryAmount price) {}
 		}
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
@@ -113,7 +113,7 @@ class JacksonCustomizations {
 
 		public MoneyModule() {
 			addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer());
-			addValueInstantiator(Money.class, new MoneyInstantiator());
+			addValueInstantiator(MonetaryAmount.class, new MoneyInstantiator());
 		}
 
 		/**
