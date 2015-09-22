@@ -36,18 +36,18 @@ targetCompatibility = 1.8
 dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
-	runtime 'org.springframework.data:spring-data-rest-hal-browser'
+    runtime 'org.springframework.data:spring-data-rest-hal-browser'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-	compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-	compile "com.fasterxml.jackson.module:jackson-module-parameter-names"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compile "com.fasterxml.jackson.module:jackson-module-parameter-names"
 
     runtime 'org.hsqldb:hsqldb'
 
-	compile 'org.javamoney:moneta:1.0'
-	compile 'org.projectlombok:lombok:1.16.2'
-	
-	testCompile 'org.springframework.boot:spring-boot-starter-test'
+    compile 'org.javamoney:moneta:1.0'
+    compile 'org.projectlombok:lombok:1.16.2'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'com.jayway.jsonpath:json-path:2.0.0'
 }
 
@@ -59,7 +59,7 @@ eclipse {
 }
 
 tasks.withType(JavaCompile) {
-	options.compilerArgs << "-parameters"
+    options.compilerArgs << "-parameters"
 }
 
 wrapper {
