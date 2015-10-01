@@ -317,9 +317,11 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		LOG.info("Accessing receipt, got:" + receiptResponse.getContentAsString());
 		LOG.info("Taking receipt…");
 
-		return mvc.perform( //
-				delete(receiptLink.getHref()).//
-						accept(MediaTypes.HAL_JSON)). //
+		return mvc
+				.perform( //
+						delete(receiptLink.getHref()).//
+								accept(MediaTypes.HAL_JSON))
+				. //
 				andExpect(status().isOk()). //
 				andReturn().getResponse();
 	}
@@ -340,7 +342,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				andExpect(linkWithRelIsNotPresent(UPDATE_REL)). //
 				andExpect(linkWithRelIsNotPresent(CANCEL_REL)). //
 				andExpect(linkWithRelIsNotPresent(PAYMENT_REL)). //
-				andExpect(jsonPath("$.status", is("Taken"))). //
+				andExpect(jsonPath("$.status", is("Delivered"))). //
 				andReturn().getResponse();
 
 		LOG.info("Final order state: " + orderResponse.getContentAsString());
