@@ -40,7 +40,6 @@ import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -50,7 +49,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.ValueInstantiator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 /**
  * Configures custom serialization and deserialization of {@link Money} instances
@@ -66,10 +64,6 @@ class JacksonCustomizations {
 
 	public @Bean Module restbucksModule() {
 		return new RestbucksModule();
-	}
-
-	public @Bean Module parameterNameModule() {
-		return new ParameterNamesModule(Mode.DELEGATING);
 	}
 
 	@SuppressWarnings("serial")
@@ -112,6 +106,7 @@ class JacksonCustomizations {
 		private static final MonetaryAmountFormat FORMAT = MonetaryFormats.getAmountFormat(Locale.US);
 
 		public MoneyModule() {
+
 			addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer());
 			addValueInstantiator(Money.class, new MoneyInstantiator());
 		}
