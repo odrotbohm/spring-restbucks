@@ -17,12 +17,12 @@ package org.springsource.restbucks.payment.web;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
-import javax.money.MonetaryAmount;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
+import javax.money.MonetaryAmount;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.support.DomainClassConverter;
@@ -53,7 +53,7 @@ import org.springsource.restbucks.payment.PaymentService;
 @Controller
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired) )
 public class PaymentController {
 
 	private final @NonNull PaymentService paymentService;
@@ -65,14 +65,14 @@ public class PaymentController {
 	 * @param order the {@link Order} to process the payment for. Retrieved from the path variable and converted into an
 	 *          {@link Order} instance by Spring Data's {@link DomainClassConverter}. Will be {@literal null} in case no
 	 *          {@link Order} with the given id could be found.
-	 * @param number the {@link CreditCardNumber} unmarshalled from the request payload.
+	 * @param number the {@link CreditCardNumber} unmarshaled from the request payload.
 	 * @return
 	 */
-	@RequestMapping(value = PaymentLinks.PAYMENT, method = PUT)
-	ResponseEntity<PaymentResource> submitPayment(@PathVariable("id") Order order, @RequestBody CreditCardNumber number) {
+	@RequestMapping(path = PaymentLinks.PAYMENT, method = PUT)
+	ResponseEntity<?> submitPayment(@PathVariable("id") Order order, @RequestBody CreditCardNumber number) {
 
 		if (order == null || order.isPaid()) {
-			return new ResponseEntity<PaymentResource>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 
 		CreditCardPayment payment = paymentService.pay(order, number);
@@ -80,7 +80,7 @@ public class PaymentController {
 		PaymentResource resource = new PaymentResource(order.getPrice(), payment.getCreditCard());
 		resource.add(entityLinks.linkToSingleResource(order));
 
-		return new ResponseEntity<PaymentResource>(resource, HttpStatus.CREATED);
+		return new ResponseEntity<>(resource, HttpStatus.CREATED);
 	}
 
 	/**
@@ -89,16 +89,16 @@ public class PaymentController {
 	 * @param order
 	 * @return
 	 */
-	@RequestMapping(value = PaymentLinks.RECEIPT, method = GET)
-	HttpEntity<Resource<Receipt>> showReceipt(@PathVariable("id") Order order) {
+	@RequestMapping(path = PaymentLinks.RECEIPT, method = GET)
+	HttpEntity<?> showReceipt(@PathVariable("id") Order order) {
 
 		if (order == null || !order.isPaid() || order.isTaken()) {
-			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 
 		return paymentService.getPaymentFor(order).//
 				map(payment -> createReceiptResponse(payment.getReceipt())).//
-				orElseGet(() -> new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND));
+				orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	/**
@@ -107,16 +107,16 @@ public class PaymentController {
 	 * @param order
 	 * @return
 	 */
-	@RequestMapping(value = PaymentLinks.RECEIPT, method = DELETE)
-	HttpEntity<Resource<Receipt>> takeReceipt(@PathVariable("id") Order order) {
+	@RequestMapping(path = PaymentLinks.RECEIPT, method = DELETE)
+	HttpEntity<?> takeReceipt(@PathVariable("id") Order order) {
 
 		if (order == null || !order.isPaid()) {
-			return new ResponseEntity<Resource<Receipt>>(HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
 
 		return paymentService.takeReceiptFor(order).//
 				map(receipt -> createReceiptResponse(receipt)).//
-				orElseGet(() -> new ResponseEntity<Resource<Receipt>>(HttpStatus.METHOD_NOT_ALLOWED));
+				orElseGet(() -> new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED));
 	}
 
 	/**
@@ -130,14 +130,14 @@ public class PaymentController {
 
 		Order order = receipt.getOrder();
 
-		Resource<Receipt> resource = new Resource<Receipt>(receipt);
+		Resource<Receipt> resource = new Resource<>(receipt);
 		resource.add(entityLinks.linkToSingleResource(order));
 
 		if (!order.isTaken()) {
 			resource.add(entityLinks.linkForSingleResource(order).slash("receipt").withSelfRel());
 		}
 
-		return new ResponseEntity<Resource<Receipt>>(resource, HttpStatus.OK);
+		return ResponseEntity.ok(resource);
 	}
 
 	/**
