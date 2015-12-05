@@ -15,13 +15,13 @@
  */
 package org.springsource.restbucks.engine;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -40,20 +40,11 @@ import org.springsource.restbucks.payment.OrderPaidEvent;
  */
 @Slf4j
 @Service
-@AllArgsConstructor(onConstructor = @__(@Autowired))
-class Engine implements InProgressAware {
+@AllArgsConstructor(onConstructor = @__(@Autowired) )
+class Engine {
 
 	private final @NonNull OrderRepository repository;
 	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springsource.restbucks.engine.InProgressAware#getOrders()
-	 */
-	@Override
-	public Set<Order> getOrders() {
-		return ordersInProgress;
-	}
 
 	@Async
 	@TransactionalEventListener

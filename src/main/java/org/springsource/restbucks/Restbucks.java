@@ -39,9 +39,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EntityScan(basePackageClasses = { Restbucks.class, Jsr310JpaConverters.class })
 // Explicitly enable entity links as Boot fails to auto-configure them
 @EnableEntityLinks
-// Example CGLib proxies for @Async methods to let {@link Engine#handleOrderPaidEvent} work although {@link Engine}
-// implements an interface
-@EnableAsync(proxyTargetClass = true)
+@EnableAsync
 public class Restbucks {
 
 	public static String CURIE_NAMESPACE = "restbucks";
