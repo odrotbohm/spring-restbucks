@@ -4,3 +4,4 @@ target/
 .classpath
 .springBeans
 *.log
+bin/
