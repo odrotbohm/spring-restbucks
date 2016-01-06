@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springsource.restbucks.AbstractIntegrationTest;
 
 /**
@@ -31,6 +32,7 @@ import org.springsource.restbucks.AbstractIntegrationTest;
  * 
  * @author Oliver Gierke
  */
+@DirtiesContext
 public class CreditCardRepositoryIntegrationTest extends AbstractIntegrationTest {
 
 	@Autowired CreditCardRepository repository;

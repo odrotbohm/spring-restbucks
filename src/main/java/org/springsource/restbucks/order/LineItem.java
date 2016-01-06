@@ -15,16 +15,14 @@
  */
 package org.springsource.restbucks.order;
 
+import javax.money.MonetaryAmount;
+import javax.persistence.Entity;
+
+import org.springsource.restbucks.core.AbstractEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.money.MonetaryAmount;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-
-import org.javamoney.moneta.Money;
-import org.springsource.restbucks.core.AbstractEntity;
 
 /**
  * A line item.
@@ -41,13 +39,13 @@ public class LineItem extends AbstractEntity {
 	private final int quantity;
 	private final Milk milk;
 	private final Size size;
-	private final @Lob Money price;
+	private final MonetaryAmount price;
 
 	protected LineItem() {
 		this(null, null);
 	}
 
-	public LineItem(String name, Money price) {
+	public LineItem(String name, MonetaryAmount price) {
 		this(name, 1, Milk.SEMI, Size.LARGE, price);
 	}
 

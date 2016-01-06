@@ -5,3 +5,4 @@ target/
 .springBeans
 *.log
 bin/
+.idea/

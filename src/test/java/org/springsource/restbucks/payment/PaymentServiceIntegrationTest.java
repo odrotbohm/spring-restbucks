@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springsource.restbucks.AbstractIntegrationTest;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
@@ -34,6 +35,7 @@ import org.springsource.restbucks.order.OrderRepository;
  * 
  * @author Oliver Gierke
  */
+@DirtiesContext
 public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 
 	@Autowired PaymentService paymentService;

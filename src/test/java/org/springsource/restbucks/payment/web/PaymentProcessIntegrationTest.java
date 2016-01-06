@@ -34,6 +34,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springsource.restbucks.AbstractWebIntegrationTest;
 import org.springsource.restbucks.Restbucks;
@@ -50,6 +51,7 @@ import com.jayway.jsonpath.JsonPath;
  * @author Oliver Gierke
  */
 @Slf4j
+@DirtiesContext
 public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 	private static final String ORDERS_REL = Restbucks.CURIE_NAMESPACE + ":orders";
