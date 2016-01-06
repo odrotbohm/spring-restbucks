@@ -36,14 +36,14 @@ For the usage inside an IDE do the following:
 
 The project uses:
 
-- [Spring Boot](http://github.com/spring-projects/spring-boot) - 1.2.2.RELEASE
-- [Spring (MVC)](http://github.com/spring-projects/spring-framework) - 4.2.0.BUILD-SNAPSHOT
-- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa) - 1.8.0.RC1
-- [Spring Data REST](http://github.com/spring-projects/spring-data-rest) - 2.3.0.RC1
-- [Spring HATEOAS](http://github.com/spring-projects/spring-hateoas) - 0.17.0.RELEASE
-- [Spring Plugin](http://github.com/spring-projects/spring-plugin) - 1.1.0.RELEASE
-- [Spring Security](http://github.com/spring-projects/spring-security) - 4.0.2.RELEASE
-- [Spring Session](http://github.com/spring-projects/spring-session) - 1.0.2.RELEASE
+- [Spring Boot](http://github.com/spring-projects/spring-boot)
+- [Spring (MVC)](http://github.com/spring-projects/spring-framework)
+- [Spring Data JPA](http://github.com/spring-projects/spring-data-jpa)
+- [Spring Data REST](http://github.com/spring-projects/spring-data-rest)
+- [Spring HATEOAS](http://github.com/spring-projects/spring-hateoas)
+- [Spring Plugin](http://github.com/spring-projects/spring-plugin)
+- [Spring Security](http://github.com/spring-projects/spring-security)
+- [Spring Session](http://github.com/spring-projects/spring-session)
 
 The implementation consists of mainly two parts, the `order` and the `payment` part. The `Orders` are exposed as REST resources using Spring Data RESTs capability to automatically expose Spring Data JPA repositories contained in the application. The `Payment` process and the REST application protocol described in the book are implemented manually using a Spring MVC controller (`PaymentController`).
 

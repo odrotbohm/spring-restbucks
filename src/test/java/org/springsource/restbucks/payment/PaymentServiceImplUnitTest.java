@@ -95,7 +95,7 @@ public class PaymentServiceImplUnitTest {
 	@Test
 	public void throwsOrderPaidEventOnPayment() {
 
-		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.JANUARY, Year.of(2016));
+		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.JANUARY, Year.of(2037));
 		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(Optional.of(creditCard));
 
 		Order order = new Order();

@@ -87,7 +87,7 @@ class JacksonCustomizations {
 		static abstract class LineItemMixin {
 
 			@JsonCreator
-			public LineItemMixin(String name, int amount, Milk milk, Size size, Money price) {}
+			public LineItemMixin(String name, int quantity, Milk milk, Size size, MonetaryAmount price) {}
 		}
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
@@ -108,7 +108,7 @@ class JacksonCustomizations {
 		public MoneyModule() {
 
 			addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer());
-			addValueInstantiator(Money.class, new MoneyInstantiator());
+			addValueInstantiator(MonetaryAmount.class, new MoneyInstantiator());
 		}
 
 		/**
@@ -141,7 +141,7 @@ class JacksonCustomizations {
 			@Override
 			public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider)
 					throws IOException, JsonGenerationException {
-				jgen.writeString(FORMAT.format((MonetaryAmount) value));
+    			jgen.writeString(MonetaryFormats.getAmountFormat(Locale.ROOT).format((MonetaryAmount) value));
 			}
 
 			/*
