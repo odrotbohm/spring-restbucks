@@ -85,7 +85,7 @@ class JacksonCustomizations {
 		static abstract class LineItemMixin {
 
 			@JsonCreator
-			public LineItemMixin(String name, int amount, Milk milk, Size size, Money price) {}
+			public LineItemMixin(String name, int quantity, Milk milk, Size size, MonetaryAmount price) {}
 		}
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
@@ -105,7 +105,6 @@ class JacksonCustomizations {
 
 			addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer());
 			addValueInstantiator(MonetaryAmount.class, new MoneyInstantiator());
-			addValueInstantiator(Money.class, new MoneyInstantiator());
 		}
 
 		/**
@@ -142,7 +141,11 @@ class JacksonCustomizations {
 			 */
 			@Override
 			public void serialize(MonetaryAmount value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-				jgen.writeString(MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale()).format(value));
+if(value != null) {
+					jgen.writeString(String.valueOf(value));
+				} else {
+					jgen.writeNull();
+				}
 			}
 
 			/*
@@ -163,7 +166,7 @@ class JacksonCustomizations {
 			 */
 			@Override
 			public String getValueTypeDesc() {
-				return Money.class.toString();
+				return MonetaryAmount.class.toString();
 			}
 
 			/*
