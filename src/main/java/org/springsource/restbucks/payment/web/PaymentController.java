@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 
 import javax.money.MonetaryAmount;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -53,7 +52,7 @@ import org.springsource.restbucks.payment.PaymentService;
 @Controller
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired) )
+@RequiredArgsConstructor
 public class PaymentController {
 
 	private final @NonNull PaymentService paymentService;

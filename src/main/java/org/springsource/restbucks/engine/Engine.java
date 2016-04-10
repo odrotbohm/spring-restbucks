@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -40,7 +39,7 @@ import org.springsource.restbucks.payment.OrderPaidEvent;
  */
 @Slf4j
 @Service
-@AllArgsConstructor(onConstructor = @__(@Autowired) )
+@AllArgsConstructor
 class Engine {
 
 	private final @NonNull OrderRepository repository;
