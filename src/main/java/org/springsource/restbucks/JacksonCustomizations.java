@@ -87,7 +87,7 @@ class JacksonCustomizations {
 		static abstract class LineItemMixin {
 
 			@JsonCreator
-			public LineItemMixin(String name, int amount, Milk milk, Size size, Money price) {}
+			public LineItemMixin(String name, int quantity, Milk milk, Size size, Money price) {}
 		}
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
