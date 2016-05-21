@@ -17,28 +17,21 @@ package org.springsource.restbucks;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.hateoas.UriTemplate;
-import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.hateoas.hal.CurieProvider;
 import org.springframework.hateoas.hal.DefaultCurieProvider;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * Central application class containing both general application and web configuration as well as a main-method to
- * bootstrap the app using Spring Boot.
+ * bootstrap the application using Spring Boot.
  * 
  * @see #main(String[])
  * @see SpringApplication
  * @author Oliver Gierke
  */
 @SpringBootApplication
-// Explicitly configure @EntityScan to enable the JSR-310 JPA 2.1 converters
-@EntityScan(basePackageClasses = { Restbucks.class, Jsr310JpaConverters.class })
-// Explicitly enable entity links as Boot fails to auto-configure them
-@EnableEntityLinks
 @EnableAsync
 public class Restbucks {
 

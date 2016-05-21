@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,12 +31,13 @@ import org.springsource.restbucks.payment.CreditCardNumber;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 
 /**
- * Integration tests for marshalling of {@link CreditCard}.
+ * Integration tests for marshaling of {@link CreditCard}.
  * 
  * @author Oliver Gierke
  */
@@ -51,6 +52,7 @@ public class CreditCardMarshallingTest {
 
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		mapper.registerModule(new JavaTimeModule());
+		mapper.registerModule(new ParameterNamesModule());
 		mapper.registerModules(JacksonTestUtils.getModules());
 	}
 
