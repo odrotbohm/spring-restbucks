@@ -26,7 +26,6 @@ import org.springframework.hateoas.LinkDiscoverer;
 import org.springframework.hateoas.LinkDiscoverers;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -39,7 +38,6 @@ import org.springframework.web.context.WebApplicationContext;
  * @author Oliver Gierke
  */
 @RunWith(SpringRunner.class)
-@WebAppConfiguration
 @SpringBootTest
 public abstract class AbstractWebIntegrationTest {
 
