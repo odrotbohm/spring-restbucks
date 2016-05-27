@@ -148,10 +148,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				andExpect(header().string("Location", is(notNullValue()))). //
 				andReturn().getResponse();
 
-		return mvc.perform(get(result.getHeader("Location"))).
-				andExpect(jsonPath("$.lineItems[0].quantity", is(1))). //
-				andExpect(jsonPath("$.lineItems[0].price", is("EUR 4.20"))). //
-				andReturn().getResponse();
+		return mvc.perform(get(result.getHeader("Location"))).andReturn().getResponse();
 	}
 
 	/**

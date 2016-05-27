@@ -17,16 +17,15 @@ package org.springsource.restbucks;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 import javax.money.MonetaryAmount;
-import javax.money.format.MonetaryAmountFormat;
 import javax.money.format.MonetaryFormats;
 
 import org.javamoney.moneta.Money;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
 import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
 import org.springframework.data.util.TypeInformation;
@@ -41,14 +40,13 @@ import org.springsource.restbucks.payment.CreditCardNumber;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.deser.ValueInstantiator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
  * Configures custom serialization and deserialization of {@link Money} instances
@@ -103,11 +101,10 @@ class JacksonCustomizations {
 	@SuppressWarnings("serial")
 	static class MoneyModule extends SimpleModule {
 
-		private static final MonetaryAmountFormat FORMAT = MonetaryFormats.getAmountFormat(Locale.ROOT);
-
 		public MoneyModule() {
 
 			addSerializer(MonetaryAmount.class, new MonetaryAmountSerializer());
+			addValueInstantiator(MonetaryAmount.class, new MoneyInstantiator());
 			addValueInstantiator(Money.class, new MoneyInstantiator());
 		}
 
@@ -117,7 +114,8 @@ class JacksonCustomizations {
 		 *
 		 * @author Oliver Gierke
 		 */
-		static class MonetaryAmountSerializer extends ToStringSerializer implements JsonSchemaPropertyCustomizer {
+		static class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount>
+				implements JsonSchemaPropertyCustomizer {
 
 			private static final Pattern MONEY_PATTERN;
 
@@ -134,14 +132,17 @@ class JacksonCustomizations {
 				MONEY_PATTERN = Pattern.compile(builder.toString());
 			}
 
-			/*
+			public MonetaryAmountSerializer() {
+				super(MonetaryAmount.class);
+			}
+
+			/* 
 			 * (non-Javadoc)
-			 * @see com.fasterxml.jackson.databind.ser.std.ToStringSerializer#serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)
+			 * @see com.fasterxml.jackson.databind.ser.std.StdSerializer#serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)
 			 */
 			@Override
-			public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider)
-					throws IOException, JsonGenerationException {
-				jgen.writeString(FORMAT.format((MonetaryAmount) value));
+			public void serialize(MonetaryAmount value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+				jgen.writeString(MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale()).format(value));
 			}
 
 			/*
@@ -179,8 +180,8 @@ class JacksonCustomizations {
 			 * @see com.fasterxml.jackson.databind.deser.ValueInstantiator#createFromString(com.fasterxml.jackson.databind.DeserializationContext, java.lang.String)
 			 */
 			@Override
-			public Object createFromString(DeserializationContext ctxt, String value) throws IOException {
-				return Money.parse(value, FORMAT);
+			public Object createFromString(DeserializationContext context, String value) throws IOException {
+				return Money.parse(value, MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale()));
 			}
 		}
 	}
