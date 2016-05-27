@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2015 the original author or authors.
+ * Copyright 2013-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,15 @@
  */
 package org.springsource.restbucks.order;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import javax.money.MonetaryAmount;
 import javax.persistence.Entity;
 
 import org.springsource.restbucks.core.AbstractEntity;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * A line item.
@@ -31,6 +32,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @Entity
+@NoArgsConstructor(force = true)
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class LineItem extends AbstractEntity {
@@ -40,10 +42,6 @@ public class LineItem extends AbstractEntity {
 	private final Milk milk;
 	private final Size size;
 	private final MonetaryAmount price;
-
-	protected LineItem() {
-		this(null, null);
-	}
 
 	public LineItem(String name, MonetaryAmount price) {
 		this(name, 1, Milk.SEMI, Size.LARGE, price);

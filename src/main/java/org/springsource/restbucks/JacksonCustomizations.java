@@ -141,8 +141,9 @@ class JacksonCustomizations {
 			 */
 			@Override
 			public void serialize(MonetaryAmount value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-if(value != null) {
-					jgen.writeString(String.valueOf(value));
+
+				if (value != null) {
+					jgen.writeString(MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale()).format(value));
 				} else {
 					jgen.writeNull();
 				}
