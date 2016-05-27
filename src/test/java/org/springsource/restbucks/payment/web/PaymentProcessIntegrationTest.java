@@ -126,8 +126,8 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 	/**
 	 * Creates a new {@link Order} by looking up the orders link from the source and posting the content of
-	 * {@code orders.json} to it. Verifies we get receive a {@code 201 Created} and a {@code Location} header. Follows the
-	 * location header to retrieve the {@link Order} just created.
+	 * {@code orders.json} to it. Verifies we receive a {@code 201 Created} and a {@code Location} header. Follows the
+	 * location header to retrieve and verify the {@link Order} just created.
 	 * 
 	 * @param source
 	 * @return
@@ -148,7 +148,10 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				andExpect(header().string("Location", is(notNullValue()))). //
 				andReturn().getResponse();
 
-		return mvc.perform(get(result.getHeader("Location"))).andReturn().getResponse();
+		return mvc.perform(get(result.getHeader("Location"))).
+				andExpect(jsonPath("$.lineItems[0].quantity", is(1))). //
+				andExpect(jsonPath("$.lineItems[0].price", is("EUR 4.20"))). //
+				andReturn().getResponse();
 	}
 
 	/**

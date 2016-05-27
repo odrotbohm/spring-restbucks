@@ -103,7 +103,7 @@ class JacksonCustomizations {
 	@SuppressWarnings("serial")
 	static class MoneyModule extends SimpleModule {
 
-		private static final MonetaryAmountFormat FORMAT = MonetaryFormats.getAmountFormat(Locale.US);
+		private static final MonetaryAmountFormat FORMAT = MonetaryFormats.getAmountFormat(Locale.ROOT);
 
 		public MoneyModule() {
 
