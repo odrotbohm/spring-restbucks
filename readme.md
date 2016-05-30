@@ -11,13 +11,21 @@ From the command line do:
 ```
 git clone https://github.com/olivergierke/spring-restbucks.git
 cd spring-restbucks
-mvn clean package
-java -jar target/*.war
+./mvnw clean package
+java -jar target/*.jar
 ```
 
 The application ships with the [HAL browser](https://github.com/mikekelly/hal-browser) embedded, so simply browsing to [http://localhost:8080/browser/index.html](http://localhost:8080/browser/index.html) will allow you to explore the web service.
 
 > Note, that the curie links in the representations are currently not backed by any documents served but they will be in the future. Imagine simple HTML pages being served documenting the individual relation types.
+
+## Running via Docker
+
+Spring Restbucks is available on docker hub (at the moment in only as inofficial docker image). You can execute it by running the following command.
+
+```
+docker run -p 8080:8080 otrosien/spring-restbucks:latest
+```
 
 ## IDE setup
 
