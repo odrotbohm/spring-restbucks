@@ -12,7 +12,7 @@ From the command line do:
 git clone https://github.com/olivergierke/spring-restbucks.git
 cd spring-restbucks
 mvn clean package
-java -jar target/*.war
+java -jar target/*.jar
 ```
 
 The application ships with the [HAL browser](https://github.com/mikekelly/hal-browser) embedded, so simply browsing to [http://localhost:8080/browser/index.html](http://localhost:8080/browser/index.html) will allow you to explore the web service.
