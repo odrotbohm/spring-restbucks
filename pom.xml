@@ -18,7 +18,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<properties>
 		<java.version>1.8</java.version>
 		<json-path.version>2.0.0</json-path.version>
-		<spring-hateoas.version>0.20.0.BUILD-SNAPSHOT</spring-hateoas.version>
+		<spring-hateoas.version>0.20.0.RELEASE</spring-hateoas.version>
 	</properties>
 
 	<dependencies>
