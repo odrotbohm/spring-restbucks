@@ -16,6 +16,7 @@
 package org.springsource.restbucks.order.web;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,7 +35,7 @@ public class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 	@Test
 	public void exposesOrdersResourceViaRootResource() throws Exception {
 
-		mvc.perform(get("/")).//
+		mvc.perform(get("/").accept(HAL_JSON)).//
 				andDo(MockMvcResultHandlers.print()).//
 				andExpect(status().isOk()). //
 				andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)). //

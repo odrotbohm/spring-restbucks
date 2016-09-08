@@ -17,6 +17,7 @@ package org.springsource.restbucks.payment.web;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.springframework.hateoas.MediaTypes.HAL_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -116,8 +117,8 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		LOG.info("Accessing root resource…");
 
-		MockHttpServletResponse response = mvc.perform(get("/")). //
-				andExpect(status().isOk()). //
+		MockHttpServletResponse response = mvc.perform(get("/").accept(HAL_JSON)). //
+                andExpect(status().isOk()). //
 				andExpect(linkWithRelIsPresent(ORDERS_REL)). //
 				andReturn().getResponse();
 
@@ -224,7 +225,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		ResultActions action = mvc.perform(put(paymentLink.getHref()).//
 				content("\"1234123412341234\"").//
 				contentType(MediaType.APPLICATION_JSON).//
-				accept(MediaTypes.HAL_JSON));
+				accept(HAL_JSON));
 
 		MockHttpServletResponse result = action.andExpect(status().isCreated()). //
 				andExpect(linkWithRelIsPresent(ORDER_REL)). //
@@ -320,7 +321,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		return mvc
 				.perform( //
 						delete(receiptLink.getHref()).//
-								accept(MediaTypes.HAL_JSON))
+								accept(HAL_JSON))
 				. //
 				andExpect(status().isOk()). //
 				andReturn().getResponse();
