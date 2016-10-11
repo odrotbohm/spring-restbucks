@@ -126,7 +126,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 							<goal>analyze</goal>
 						</goals>
 						<configuration>
-							<failOnViolations>true</failOnViolations>
+							<failOnViolations>false</failOnViolations>
+							<severity>info</severity>
 							<groups>
 								<group>spring-boot:Strict</group>
 							</groups>
