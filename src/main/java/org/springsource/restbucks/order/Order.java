@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,17 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.money.MonetaryAmount;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.javamoney.moneta.Money;
@@ -48,8 +50,10 @@ public class Order extends AbstractEntity {
 	private final LocalDateTime orderedDate;
 	private Status status;
 
+	@OrderColumn //
+	@Column(unique = true) //
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //
-	private final Set<LineItem> lineItems = new HashSet<LineItem>();
+	private final List<LineItem> lineItems = new ArrayList<>();
 
 	/**
 	 * Creates a new {@link Order} for the given {@link LineItem}s and {@link Location}.
