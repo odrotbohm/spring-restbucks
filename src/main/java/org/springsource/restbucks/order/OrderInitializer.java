@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,15 @@ package org.springsource.restbucks.order;
 
 import static org.springsource.restbucks.core.Currencies.*;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Arrays;
 
 import org.javamoney.moneta.Money;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 /**
  * Initializer to set up two {@link Order}s.
@@ -30,17 +33,18 @@ import org.springframework.util.Assert;
  * @author Oliver Gierke
  */
 @Service
+@RequiredArgsConstructor
 class OrderInitializer {
+
+	private final @NonNull OrderRepository orders;
 
 	/**
 	 * Creates two orders and persists them using the given {@link OrderRepository}.
 	 * 
 	 * @param orders must not be {@literal null}.
 	 */
-	@Autowired
-	public OrderInitializer(OrderRepository orders) {
-
-		Assert.notNull(orders, "OrderRepository must not be null!");
+	@EventListener
+	public void init(ApplicationReadyEvent event) {
 
 		if (orders.count() != 0) {
 			return;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,30 @@
  */
 package org.springsource.restbucks.payment;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.Month;
 import java.time.Year;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 /**
- * Initializing component to creade a default {@link CreditCard} in the system.
+ * Initializing component to create a default {@link CreditCard} in the system.
  * 
  * @author Oliver Gierke
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 class PaymentInitializer {
 
-	@Autowired
-	public PaymentInitializer(CreditCardRepository repository) {
+	private final CreditCardRepository repository;
+
+	@EventListener
+	public void init(ApplicationReadyEvent event) {
 
 		if (repository.count() > 0) {
 			return;
