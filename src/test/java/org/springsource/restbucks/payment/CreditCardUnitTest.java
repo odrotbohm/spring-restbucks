@@ -15,14 +15,14 @@
  */
 package org.springsource.restbucks.payment;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link CreditCard}.
@@ -38,7 +38,7 @@ public class CreditCardUnitTest {
 
 		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.DECEMBER, Year.of(2016));
 
-		assertThat(creditCard.isValid(LocalDate.now()), is(true));
+		assertThat(creditCard.isValid(LocalDate.of(2016, 1, 1)), is(true));
 		assertThat(creditCard.isValid(LocalDate.of(2016, 12, 1)), is(false));
 	}
 }
