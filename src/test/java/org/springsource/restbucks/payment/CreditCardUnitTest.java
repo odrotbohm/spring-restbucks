@@ -26,7 +26,7 @@ import org.junit.Test;
 
 /**
  * Unit tests for {@link CreditCard}.
- * 
+ *
  * @author Oliver Gierke
  */
 public class CreditCardUnitTest {
@@ -35,10 +35,11 @@ public class CreditCardUnitTest {
 
 	@Test
 	public void discoversExpiredCreditCard() {
+		LocalDate futuredate = LocalDate.now().plusYears(1);
 
-		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.DECEMBER, Year.of(2016));
+		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", futuredate.getMonth(), Year.of(futuredate.getYear()));
 
 		assertThat(creditCard.isValid(LocalDate.now()), is(true));
-		assertThat(creditCard.isValid(LocalDate.of(2016, 12, 1)), is(false));
+		assertThat(creditCard.isValid(futuredate.plusDays(1)), is(false));
 	}
 }
