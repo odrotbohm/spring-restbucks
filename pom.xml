@@ -100,6 +100,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<configuration>
 					<executable>true</executable>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.springframework.boot.experimental</groupId>
+						<artifactId>spring-boot-thin-layout</artifactId>
+						<version>1.0.5.RELEASE</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 
 			<plugin>
