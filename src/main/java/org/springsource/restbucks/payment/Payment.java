@@ -15,6 +15,10 @@
  */
 package org.springsource.restbucks.payment;
 
+import lombok.Getter;
+import lombok.ToString;
+import lombok.Value;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
@@ -23,10 +27,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-
-import lombok.Getter;
-import lombok.ToString;
-import lombok.Value;
 
 import org.springframework.util.Assert;
 import org.springsource.restbucks.core.AbstractEntity;
@@ -43,8 +43,8 @@ import org.springsource.restbucks.order.Order;
 @ToString(callSuper = true)
 public abstract class Payment extends AbstractEntity {
 
-	@JoinColumn(name = "rborder")//
-	@OneToOne(cascade = CascadeType.MERGE)//
+	@JoinColumn(name = "rborder") //
+	@OneToOne(cascade = CascadeType.MERGE) //
 	private final Order order;
 	private final LocalDateTime paymentDate;
 
@@ -61,7 +61,8 @@ public abstract class Payment extends AbstractEntity {
 	 */
 	public Payment(Order order) {
 
-		Assert.notNull(order);
+		Assert.notNull(order, "Order must not be null!");
+
 		this.order = order;
 		this.paymentDate = LocalDateTime.now();
 	}

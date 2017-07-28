@@ -28,10 +28,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
-import org.springsource.restbucks.payment.OrderPaidEvent;
+import org.springsource.restbucks.payment.OrderPaid;
 
 /**
- * Simple {@link OrderPaidEvent} listener marking the according {@link Order} as in process, sleeping for 10 seconds and
+ * Simple {@link OrderPaid} listener marking the according {@link Order} as in process, sleeping for 10 seconds and
  * marking the order as processed right after that.
  * 
  * @author Oliver Gierke
@@ -47,11 +47,10 @@ class Engine {
 
 	@Async
 	@TransactionalEventListener
-	public void handleOrderPaidEvent(OrderPaidEvent event) {
+	public void handleOrderPaidEvent(OrderPaid event) {
 
 		Order order = repository.findOne(event.getOrderId());
-		order.markInPreparation();
-		order = repository.save(order);
+		order = repository.save(order.markInPreparation());
 
 		ordersInProgress.add(order);
 
@@ -63,8 +62,7 @@ class Engine {
 			throw new RuntimeException(e);
 		}
 
-		order.markPrepared();
-		repository.save(order);
+		order = repository.save(order.markPrepared());
 
 		ordersInProgress.remove(order);
 

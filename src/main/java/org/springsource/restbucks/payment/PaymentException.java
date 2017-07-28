@@ -33,7 +33,8 @@ public class PaymentException extends RuntimeException {
 
 		super(message);
 
-		Assert.notNull(order);
+		Assert.notNull(order, "Order must not be null!");
+
 		this.order = order;
 	}
 }

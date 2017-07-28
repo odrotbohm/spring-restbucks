@@ -33,7 +33,8 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.javamoney.moneta.Money;
-import org.springsource.restbucks.core.AbstractEntity;
+import org.springsource.restbucks.core.AbstractAggregateRoot;
+import org.springsource.restbucks.payment.OrderPaid;
 
 /**
  * An order.
@@ -44,7 +45,7 @@ import org.springsource.restbucks.core.AbstractEntity;
 @Getter
 @ToString(exclude = "lineItems")
 @Table(name = "RBOrder")
-public class Order extends AbstractEntity {
+public class Order extends AbstractAggregateRoot {
 
 	private final Location location;
 	private final LocalDateTime orderedDate;
@@ -78,7 +79,7 @@ public class Order extends AbstractEntity {
 		this(Arrays.asList(items), null);
 	}
 
-	public Order() {
+	Order() {
 		this(new LineItem[0]);
 	}
 
@@ -97,19 +98,23 @@ public class Order extends AbstractEntity {
 	/**
 	 * Marks the {@link Order} as payed.
 	 */
-	public void markPaid() {
+	public Order markPaid() {
 
 		if (isPaid()) {
 			throw new IllegalStateException("Already paid order cannot be paid again!");
 		}
 
 		this.status = Status.PAID;
+
+		registerEvent(new OrderPaid(getId()));
+
+		return this;
 	}
 
 	/**
 	 * Marks the {@link Order} as in preparation.
 	 */
-	public void markInPreparation() {
+	public Order markInPreparation() {
 
 		if (this.status != Status.PAID) {
 			throw new IllegalStateException(
@@ -117,12 +122,14 @@ public class Order extends AbstractEntity {
 		}
 
 		this.status = Status.PREPARING;
+
+		return this;
 	}
 
 	/**
 	 * Marks the {@link Order} as prepared.
 	 */
-	public void markPrepared() {
+	public Order markPrepared() {
 
 		if (this.status != Status.PREPARING) {
 			throw new IllegalStateException(String
@@ -130,9 +137,11 @@ public class Order extends AbstractEntity {
 		}
 
 		this.status = Status.READY;
+
+		return this;
 	}
 
-	public void markTaken() {
+	public Order markTaken() {
 
 		if (this.status != Status.READY) {
 			throw new IllegalStateException(
@@ -140,6 +149,8 @@ public class Order extends AbstractEntity {
 		}
 
 		this.status = Status.TAKEN;
+
+		return this;
 	}
 
 	/**

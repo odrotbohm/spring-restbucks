@@ -30,16 +30,16 @@ import org.springsource.restbucks.order.Order;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class OrderPaidEvent {
+public class OrderPaid {
 
 	private final long orderId;
 
 	/**
-	 * Creates a new {@link OrderPaidEvent}
+	 * Creates a new {@link OrderPaid}
 	 * 
 	 * @param orderId the id of the order that just has been payed
 	 */
-	public OrderPaidEvent(long orderId) {
+	public OrderPaid(long orderId) {
 		this.orderId = orderId;
 	}
 }
