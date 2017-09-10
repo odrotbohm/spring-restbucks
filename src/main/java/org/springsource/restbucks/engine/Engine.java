@@ -31,7 +31,7 @@ import org.springsource.restbucks.order.OrderRepository;
 import org.springsource.restbucks.payment.OrderPaid;
 
 /**
- * Simple {@link OrderPaid} listener marking the according {@link Order} as in process, sleeping for 10 seconds and
+ * Simple {@link OrderPaid} listener marking the according {@link Order} as in process, sleeping for 5 seconds and
  * marking the order as processed right after that.
  * 
  * @author Oliver Gierke
