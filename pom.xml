@@ -17,7 +17,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<properties>
 		<java.version>1.8</java.version>
-		<camunda.version>7.8.0-alpha6-ee</camunda.version>
+		<camunda.version>7.8.0-alpha6</camunda.version>
 		<camundaSpringBoot.version>2.3.0-alpha2</camundaSpringBoot.version>
 	</properties>
 
