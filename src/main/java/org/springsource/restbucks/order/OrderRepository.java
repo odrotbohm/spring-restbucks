@@ -20,7 +20,6 @@ import java.util.List;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.web.OrderProjection;
 
 /**
@@ -32,10 +31,10 @@ import org.springsource.restbucks.order.web.OrderProjection;
 public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
 
 	/**
-	 * Returns all {@link Order}s with the given {@link Status}.
+	 * Returns all {@link Order}s with the given status.
 	 * 
 	 * @param status must not be {@literal null}.
 	 * @return
 	 */
-	List<Order> findByStatus(@Param("status") Status status);
+	List<Order> findByStatus(@Param("status") String status);
 }

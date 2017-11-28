@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
 class OrderInitializer {
 
 	private final @NonNull OrderRepository orders;
+	private final @NonNull OrderService orderService;
 
 	/**
 	 * Creates two orders and persists them using the given {@link OrderRepository}.
@@ -56,6 +57,7 @@ class OrderInitializer {
 		Order javaChipOrder = new Order(javaChip);
 		Order cappuchinoOrder = new Order(cappuchino);
 
-		orders.saveAll(Arrays.asList(javaChipOrder, cappuchinoOrder));
+		orderService.createNewOrder(javaChipOrder);
+		orderService.createNewOrder(cappuchinoOrder);		
 	}
 }

@@ -20,10 +20,12 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
+import org.springsource.restbucks.order.OrderService;
 import org.springsource.restbucks.payment.Payment.Receipt;
 
 /**
@@ -41,6 +43,8 @@ class PaymentServiceImpl implements PaymentService {
 	private final @NonNull CreditCardRepository creditCardRepository;
 	private final @NonNull PaymentRepository paymentRepository;
 	private final @NonNull OrderRepository orderRepository;
+  @Autowired
+  private OrderService orderService;
 
 	/* 
 	 * (non-Javadoc)
@@ -48,10 +52,12 @@ class PaymentServiceImpl implements PaymentService {
 	 */
 	@Override
 	public CreditCardPayment pay(Order order, CreditCardNumber creditCardNumber) {
-
-		if (order.isPaid()) {
-			throw new PaymentException(order, "Order already paid!");
-		}
+	  // Would throw exception if not ready to take payment
+	  orderService.markPaid(order);
+//
+//		if (order.isPaid()) {
+//			throw new PaymentException(order, "Order already paid!");
+//		}
 
 		// Using Optional.orElseThrow(…) doesn't work due to https://bugs.openjdk.java.net/browse/JDK-8054569
 		Optional<CreditCard> creditCardResult = creditCardRepository.findByNumber(creditCardNumber);
@@ -70,7 +76,7 @@ class PaymentServiceImpl implements PaymentService {
 
 		CreditCardPayment payment = paymentRepository.save(new CreditCardPayment(creditCard, order));
 
-		orderRepository.save(order.markPaid());
+		orderRepository.save(order);
 
 		return payment;
 	}
@@ -91,9 +97,10 @@ class PaymentServiceImpl implements PaymentService {
 	 */
 	@Override
 	public Optional<Receipt> takeReceiptFor(Order order) {
+	  orderService.markReceiptTaken(order);
 
-		Order result = orderRepository.save(order.markTaken());
+//		Order result = orderRepository.save(order.markTaken());
 
-		return getPaymentFor(result).map(Payment::getReceipt);
+		return getPaymentFor(order).map(Payment::getReceipt);
 	}
 }

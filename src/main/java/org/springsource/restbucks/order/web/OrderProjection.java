@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.rest.core.config.Projection;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.Order.Status;
 
 /**
  * Projection interface to render {@link Order} summaries.
@@ -39,5 +38,5 @@ public interface OrderProjection {
 	 * @see Order#getStatus()
 	 * @return
 	 */
-	Status getStatus();
+	String getStatus();
 }

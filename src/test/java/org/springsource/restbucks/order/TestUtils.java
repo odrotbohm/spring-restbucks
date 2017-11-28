@@ -16,7 +16,6 @@
 package org.springsource.restbucks.order;
 
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springsource.restbucks.order.Order.Status;
 
 /**
  * Utility methods for testing.
@@ -32,10 +31,14 @@ public class TestUtils {
 		return order;
 	}
 
-	public static Order createExistingOrderWithStatus(Status status) {
-
-		Order order = createExistingOrder();
-		ReflectionTestUtils.setField(order, "status", status);
-		return order;
-	}
+//	public static Order createExistingOrderWithStatus(Status status) {
+//		Order order = createExistingOrder();
+//		String processInstanceId = order.getAssociatedProcessInstanceId();
+//		
+//		ProcessEngines.getDefaultProcessEngine()
+//		  .getRuntimeService().createProcessInstanceModification(processInstanceId);
+//		
+//		ReflectionTestUtils.setField(order, "status", status);
+//		return order;
+//	}
 }
