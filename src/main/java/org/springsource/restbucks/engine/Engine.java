@@ -49,7 +49,10 @@ class Engine {
 	@TransactionalEventListener
 	public void handleOrderPaidEvent(OrderPaid event) {
 
-		Order order = repository.findOne(event.getOrderId());
+		long id = event.getOrderId();
+		Order order = repository.findById(id) //
+				.orElseThrow(() -> new IllegalStateException(String.format("No order found for identifier %s!", id)));
+
 		order = repository.save(order.markInPreparation());
 
 		ordersInProgress.add(order);

@@ -59,6 +59,6 @@ public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 
 		paymentService.takeReceiptFor(order);
 
-		assertThat(orders.findOne(order.getId()).getStatus()).isEqualTo(Status.TAKEN);
+		assertThat(orders.findById(order.getId())).map(Order::getStatus).hasValue(Status.TAKEN);
 	}
 }
