@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.springsource.restbucks.payment.web;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -217,7 +217,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		LOG.info(String.format("Discovered payment link pointing to %s…", paymentLink));
 
-		assertThat(paymentLink, not(nullValue()));
+		assertThat(paymentLink).isNotNull();
 
 		LOG.info("Triggering payment…");
 
@@ -317,10 +317,9 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		LOG.info("Accessing receipt, got:" + receiptResponse.getContentAsString());
 		LOG.info("Taking receipt…");
 
-		return mvc
-				.perform( //
-						delete(receiptLink.getHref()).//
-								accept(MediaTypes.HAL_JSON))
+		return mvc.perform( //
+				delete(receiptLink.getHref()).//
+						accept(MediaTypes.HAL_JSON))
 				. //
 				andExpect(status().isOk()). //
 				andReturn().getResponse();

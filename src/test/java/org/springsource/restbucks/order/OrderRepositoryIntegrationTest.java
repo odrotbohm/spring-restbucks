@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,10 @@
  */
 package org.springsource.restbucks.order;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springsource.restbucks.core.Currencies.*;
 import static org.springsource.restbucks.order.Order.Status.*;
 
-import org.hamcrest.Matchers;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,7 @@ public class OrderRepositoryIntegrationTest extends AbstractIntegrationTest {
 	public void findsAllOrders() {
 
 		Iterable<Order> orders = repository.findAll();
-		assertThat(orders, is(not(emptyIterable())));
+		assertThat(orders).isNotEmpty();
 	}
 
 	@Test
@@ -50,8 +48,9 @@ public class OrderRepositoryIntegrationTest extends AbstractIntegrationTest {
 		Order order = repository.save(createOrder());
 
 		Iterable<Order> result = repository.findAll();
-		assertThat(result, is(Matchers.<Order> iterableWithSize(before.intValue() + 1)));
-		assertThat(result, hasItem(order));
+
+		assertThat(result).hasSize(before.intValue() + 1);
+		assertThat(result).contains(order);
 	}
 
 	@Test
@@ -61,14 +60,14 @@ public class OrderRepositoryIntegrationTest extends AbstractIntegrationTest {
 		int paymentExpectedBefore = repository.findByStatus(PAYMENT_EXPECTED).size();
 
 		Order order = repository.save(createOrder());
-		assertThat(repository.findByStatus(PAYMENT_EXPECTED).size(), is(paymentExpectedBefore + 1));
-		assertThat(repository.findByStatus(PAID).size(), is(paidBefore));
+		assertThat(repository.findByStatus(PAYMENT_EXPECTED)).hasSize(paymentExpectedBefore + 1);
+		assertThat(repository.findByStatus(PAID)).hasSize(paidBefore);
 
 		order.markPaid();
 		order = repository.save(order);
 
-		assertThat(repository.findByStatus(PAYMENT_EXPECTED), hasSize(paymentExpectedBefore));
-		assertThat(repository.findByStatus(PAID), hasSize(paidBefore + 1));
+		assertThat(repository.findByStatus(PAYMENT_EXPECTED)).hasSize(paymentExpectedBefore);
+		assertThat(repository.findByStatus(PAID)).hasSize(paidBefore + 1);
 	}
 
 	public static Order createOrder() {

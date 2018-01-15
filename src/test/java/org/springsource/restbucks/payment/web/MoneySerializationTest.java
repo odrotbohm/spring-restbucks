@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  */
 package org.springsource.restbucks.payment.web;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Locale;
 
@@ -54,7 +53,7 @@ public class MoneySerializationTest {
 	 */
 	@Test
 	public void serializesMonetaryAmount() throws Exception {
-		assertThat(mapper.writeValueAsString(Money.of(4.20, Currencies.EURO)), is("\"EUR 4.20\""));
+		assertThat(mapper.writeValueAsString(Money.of(4.20, Currencies.EURO))).isEqualTo("\"EUR 4.20\"");
 	}
 
 	/**
@@ -62,6 +61,6 @@ public class MoneySerializationTest {
 	 */
 	@Test
 	public void deserializesMonetaryAmount() throws Exception {
-		assertThat(mapper.readValue("\"EUR 4.20\"", MonetaryAmount.class), is(Money.of(4.20, Currencies.EURO)));
+		assertThat(mapper.readValue("\"EUR 4.20\"", MonetaryAmount.class)).isEqualTo(Money.of(4.20, Currencies.EURO));
 	}
 }

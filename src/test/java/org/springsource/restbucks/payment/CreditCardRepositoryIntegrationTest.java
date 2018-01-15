@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  */
 package org.springsource.restbucks.payment;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.Month;
 import java.time.Year;
@@ -42,8 +41,8 @@ public class CreditCardRepositoryIntegrationTest extends AbstractIntegrationTest
 
 		Optional<CreditCard> result = repository.findByNumber(creditCard.getNumber());
 
-		assertThat(result.isPresent(), is(true));
-		assertThat(result.get(), is(creditCard));
+		assertThat(result.isPresent()).isTrue();
+		assertThat(result.get()).isEqualTo(creditCard);
 	}
 
 	public static CreditCard createCreditCard() {

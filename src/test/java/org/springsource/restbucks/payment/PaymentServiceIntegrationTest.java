@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,9 @@
  */
 package org.springsource.restbucks.payment;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springsource.restbucks.order.OrderRepositoryIntegrationTest.*;
 import static org.springsource.restbucks.payment.CreditCardRepositoryIntegrationTest.*;
-
-import java.util.Optional;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +44,8 @@ public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 		CreditCard creditCard = creditCards.save(createCreditCard());
 		CreditCardPayment payment = paymentService.pay(order, creditCard.getNumber());
 
-		assertThat(paymentService.getPaymentFor(order), is(Optional.of(payment)));
-		assertThat(order.isPaid(), is(true));
+		assertThat(paymentService.getPaymentFor(order)).hasValue(payment);
+		assertThat(order.isPaid()).isTrue();
 	}
 
 	@Test
@@ -62,6 +59,6 @@ public class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 
 		paymentService.takeReceiptFor(order);
 
-		assertThat(orders.findOne(order.getId()).getStatus(), is(Status.TAKEN));
+		assertThat(orders.findOne(order.getId()).getStatus()).isEqualTo(Status.TAKEN);
 	}
 }

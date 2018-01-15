@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  */
 package org.springsource.restbucks.payment.web;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -64,12 +63,14 @@ public class CreditCardMarshallingTest {
 
 		String result = mapper.writeValueAsString(creditCard);
 
-		assertThat(JsonPath.<String> read(result, "$.number"), is("1234123412341234"));
-		assertThat(JsonPath.<String> read(result, "$.cardHolderName"), is("Oliver Gierke"));
-		assertThat(JsonPath.<String> read(result, "$.expirationDate"), is("2013-11-01"));
+		assertThat(JsonPath.<String> read(result, "$.number")).isEqualTo("1234123412341234");
+		assertThat(JsonPath.<String> read(result, "$.cardHolderName")).isEqualTo("Oliver Gierke");
+		assertThat(JsonPath.<String> read(result, "$.expirationDate")).isEqualTo("2013-11-01");
 
 		Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
-		assertThat(JsonPath.compile("$.valid").read(result, configuration), is(nullValue()));
+
+		Object read = JsonPath.compile("$.valid").read(result, configuration);
+		assertThat(read).isNull();
 	}
 
 	@Test
@@ -77,8 +78,8 @@ public class CreditCardMarshallingTest {
 
 		CreditCard creditCard = mapper.readValue(REFERENCE, CreditCard.class);
 
-		assertThat(creditCard.getId(), is(nullValue()));
-		assertThat(creditCard.getExpirationDate(), is(LocalDate.of(2013, 11, 1)));
-		assertThat(creditCard.getNumber(), is(notNullValue()));
+		assertThat(creditCard.getId()).isNull();
+		assertThat(creditCard.getExpirationDate()).isEqualTo(LocalDate.of(2013, 11, 1));
+		assertThat(creditCard.getNumber()).isNotNull();
 	}
 }

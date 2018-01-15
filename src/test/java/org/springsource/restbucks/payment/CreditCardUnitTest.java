@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2014 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package org.springsource.restbucks.payment;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 /**
  * Unit tests for {@link CreditCard}.
@@ -38,7 +37,7 @@ public class CreditCardUnitTest {
 
 		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.DECEMBER, Year.of(2016));
 
-		assertThat(creditCard.isValid(LocalDate.of(2016, 1, 1)), is(true));
-		assertThat(creditCard.isValid(LocalDate.of(2016, 12, 1)), is(false));
+		assertThat(creditCard.isValid(LocalDate.of(2016, 1, 1))).isTrue();
+		assertThat(creditCard.isValid(LocalDate.of(2016, 12, 1))).isFalse();
 	}
 }

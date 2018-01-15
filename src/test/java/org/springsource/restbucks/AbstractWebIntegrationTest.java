@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 the original author or authors.
+ * Copyright 2013-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  */
 package org.springsource.restbucks;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Locale;
 
@@ -102,7 +101,7 @@ public abstract class AbstractWebIntegrationTest {
 			String content = response.getContentAsString();
 			LinkDiscoverer discoverer = links.getLinkDiscovererFor(response.getContentType());
 
-			assertThat(discoverer.findLinkWithRel(rel, content), is(present ? notNullValue() : nullValue()));
+			assertThat(discoverer.findLinkWithRel(rel, content)).matches(it -> present == (it != null));
 		}
 	}
 }

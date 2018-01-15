@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2015 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  */
 package org.springsource.restbucks.payment.web;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springsource.restbucks.order.Order.Status.*;
 
@@ -77,7 +76,7 @@ public class PaymentOrderResourceProcessorUnitTest {
 			Order order = TestUtils.createExistingOrderWithStatus(status);
 			Resource<Order> resource = processor.process(new Resource<Order>(order));
 
-			assertThat(resource.hasLinks(), is(false));
+			assertThat(resource.hasLinks()).isFalse();
 		}
 	}
 
@@ -87,7 +86,7 @@ public class PaymentOrderResourceProcessorUnitTest {
 		Order order = TestUtils.createExistingOrder();
 
 		Resource<Order> resource = processor.process(new Resource<Order>(order));
-		assertThat(resource.getLink(PaymentLinks.PAYMENT_REL), is(paymentLink));
+		assertThat(resource.getLink(PaymentLinks.PAYMENT_REL)).isEqualTo(paymentLink);
 	}
 
 	@Test
@@ -99,6 +98,6 @@ public class PaymentOrderResourceProcessorUnitTest {
 		order.markPrepared();
 
 		Resource<Order> resource = processor.process(new Resource<Order>(order));
-		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL), is(receiptLink));
+		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL)).isEqualTo(receiptLink);
 	}
 }
