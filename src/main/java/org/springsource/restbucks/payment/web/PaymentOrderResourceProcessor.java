@@ -19,18 +19,18 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
-import org.springframework.hateoas.EntityModel;
 
+import org.glassfish.jersey.server.internal.scanning.ResourceProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderService;
 
 /**
- * {@link ResourceProcessor} to enrich {@link Order} {@link Resource}s with links to the {@link PaymentController}.
- * 
+ * {@link ResourceProcessor} to enrich {@link Order} {@link EntityModel}s with links to the {@link PaymentController}.
+ *
  * @author Oliver Gierke
  */
 @Component
@@ -38,11 +38,10 @@ import org.springsource.restbucks.order.OrderService;
 class PaymentOrderResourceProcessor implements RepresentationModelProcessor<EntityModel<Order>> {
 
 	private final @NonNull PaymentLinks paymentLinks;
-	
-  @Autowired
-  private OrderService orderService;
 
-	/* 
+	@Autowired private OrderService orderService;
+
+	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.hateoas.server.RepresentationModelProcessor#process(org.springframework.hateoas.RepresentationModel)
 	 */
@@ -50,7 +49,7 @@ class PaymentOrderResourceProcessor implements RepresentationModelProcessor<Enti
 	public EntityModel<Order> process(EntityModel<Order> resource) {
 
 		Order order = resource.getContent();
-		
+
 		Collection<String> links = orderService.getPossibleLinks(order, "PAYMENT");
 
 		if (links.contains("pay")) {

@@ -20,8 +20,6 @@ import static org.springsource.restbucks.core.Currencies.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Arrays;
-
 import org.javamoney.moneta.Money;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -37,7 +35,6 @@ import org.springframework.stereotype.Service;
 class OrderInitializer {
 
 	private final @NonNull OrderRepository orders;
-	private final @NonNull OrderService orderService;
 
 	/**
 	 * Creates two orders and persists them using the given {@link OrderRepository}.
@@ -57,7 +54,7 @@ class OrderInitializer {
 		Order javaChipOrder = new Order(javaChip);
 		Order cappuchinoOrder = new Order(cappuchino);
 
-		orderService.createNewOrder(javaChipOrder);
-		orderService.createNewOrder(cappuchinoOrder);		
+		orders.save(javaChipOrder);
+		orders.save(cappuchinoOrder);
 	}
 }

@@ -17,7 +17,6 @@ package org.springsource.restbucks.payment.web;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.money.MonetaryAmount;
@@ -28,10 +27,12 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.ExposesResourceFor;
+import org.springframework.hateoas.server.TypedEntityLinks;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,6 @@ import org.springsource.restbucks.payment.CreditCardPayment;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
 import org.springsource.restbucks.payment.PaymentService;
-import org.springsource.restbucks.payment.web.PaymentController.PaymentModel;
 
 /**
  * Spring MVC controller to handle payments for an {@link Order}.
@@ -59,11 +59,19 @@ import org.springsource.restbucks.payment.web.PaymentController.PaymentModel;
 @RequiredArgsConstructor
 public class PaymentController {
 
-	private final @NonNull PaymentService paymentService;
-	private final @NonNull EntityLinks entityLinks;
-	
-  @Autowired
-  private OrderService orderService;
+	private final PaymentService paymentService;
+	private final TypedEntityLinks<Order> entityLinks;
+
+	@Autowired private OrderService orderService;
+
+	public PaymentController(PaymentService paymentService, EntityLinks entityLinks) {
+
+		Assert.notNull(paymentService, "PaymentService must not be null!");
+		Assert.notNull(entityLinks, "EntityLinks must not be null!");
+
+		this.paymentService = paymentService;
+		this.entityLinks = entityLinks.forType(Order::getId);
+	}
 
 	/**
 	 * Accepts a payment for an {@link Order}
@@ -77,15 +85,15 @@ public class PaymentController {
 	@PutMapping(path = PaymentLinks.PAYMENT)
 	ResponseEntity<?> submitPayment(@PathVariable("id") Order order, @RequestBody CreditCardNumber number) {
 
-//		if (order == null || order.isPaid()) {
-//			return ResponseEntity.notFound().build();
-//		}
-	  // Let's assume the payment service takes care of this hisself correctly
+		// if (order == null || order.isPaid()) {
+		// return ResponseEntity.notFound().build();
+		// }
+		// Let's assume the payment service takes care of this hisself correctly
 
 		CreditCardPayment payment = paymentService.pay(order, number);
 
 		PaymentModel model = new PaymentModel(order.getPrice(), payment.getCreditCard())//
-				.add(entityLinks.linkToItemResource(Order.class, order.getId()));
+				.add(entityLinks.linkToItemResource(order));
 
 		return new ResponseEntity<>(model, HttpStatus.CREATED);
 	}
@@ -99,10 +107,10 @@ public class PaymentController {
 	@GetMapping(path = PaymentLinks.RECEIPT)
 	HttpEntity<?> showReceipt(@PathVariable("id") Order order) {
 
-	  // Do we really need this differentiation? Wouldn't just a "no payment there" be sufficient?
-//		if (order == null || !order.isPaid() || order.isTaken()) {
-//			return ResponseEntity.notFound().build();
-//		}
+		// Do we really need this differentiation? Wouldn't just a "no payment there" be sufficient?
+		// if (order == null || !order.isPaid() || order.isTaken()) {
+		// return ResponseEntity.notFound().build();
+		// }
 
 		return paymentService.getPaymentFor(order).//
 				map(payment -> createReceiptResponse(payment.getReceipt())).//
@@ -118,11 +126,11 @@ public class PaymentController {
 	@DeleteMapping(path = PaymentLinks.RECEIPT)
 	HttpEntity<?> takeReceipt(@PathVariable("id") Order order) {
 
-//		if (order == null || !order.isPaid()) {
-//			return ResponseEntity.notFound().build();
-//		}
+		// if (order == null || !order.isPaid()) {
+		// return ResponseEntity.notFound().build();
+		// }
 
-	  // the service only works well if in right state!
+		// the service only works well if in right state!
 		return paymentService.takeReceiptFor(order).//
 				map(receipt -> createReceiptResponse(receipt)).//
 				orElseGet(() -> new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED));
@@ -140,7 +148,7 @@ public class PaymentController {
 		Order order = receipt.getOrder();
 
 		EntityModel<Receipt> resource = new EntityModel<>(receipt);
-		resource.add(entityLinks.linkToItemResource(Order.class, order.getId()));
+		resource.add(entityLinks.linkToItemResource(order));
 
 		if (orderService.getPossibleLinks(order, "PAYMENT").contains("receipt")) {
 			resource.add(entityLinks.linkForItemResource(order).slash("receipt").withSelfRel());

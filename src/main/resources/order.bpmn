@@ -2,9 +2,6 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.9.0">
   <bpmn:process id="order" name="Order" isExecutable="true">
     <bpmn:receiveTask id="Task_06i2myw" name="Payment expected" messageRef="Message_1n9l023">
-      <bpmn:extensionElements>
-        <camunda:executionListener delegateExpression="#{setOrderStatus}" event="start" />
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_08lijcl</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0u26e8h</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0q2jvhf</bpmn:outgoing>
@@ -24,9 +21,6 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_08ydveu" sourceRef="BoundaryEvent_165zdg0" targetRef="EndEvent_1w3ynuz" />
     <bpmn:receiveTask id="Task_1qs4yon" name="Ready" messageRef="Message_143027u">
-      <bpmn:extensionElements>
-        <camunda:executionListener delegateExpression="#{setOrderStatus}" event="start" />
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0motra0</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_09iyi48</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1l4iu8a</bpmn:outgoing>
@@ -36,33 +30,21 @@
       <bpmn:messageEventDefinition messageRef="Message_0vv3iys" />
     </bpmn:boundaryEvent>
     <bpmn:endEvent id="EndEvent_0gzxj2z" name="Delivered">
-      <bpmn:extensionElements>
-        <camunda:executionListener delegateExpression="#{setOrderStatus}" event="start" />
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1l4iu8a</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1l4iu8a" sourceRef="Task_1qs4yon" targetRef="EndEvent_0gzxj2z" />
     <bpmn:receiveTask id="Task_1ku6r5h" name="Preparing" messageRef="Message_0gjq6na">
-      <bpmn:extensionElements>
-        <camunda:executionListener delegateExpression="#{setOrderStatus}" event="start" />
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0gh67ez</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_09iyi48</bpmn:outgoing>
     </bpmn:receiveTask>
     <bpmn:sequenceFlow id="SequenceFlow_09iyi48" sourceRef="Task_1ku6r5h" targetRef="Task_1qs4yon" />
     <bpmn:sequenceFlow id="SequenceFlow_0gh67ez" sourceRef="Task_14frdhq" targetRef="Task_1ku6r5h" />
     <bpmn:receiveTask id="Task_14frdhq" name="Paid" messageRef="Message_11kp2i7">
-      <bpmn:extensionElements>
-        <camunda:executionListener delegateExpression="#{setOrderStatus}" event="start" />
-      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0q2jvhf</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0gh67ez</bpmn:outgoing>
     </bpmn:receiveTask>
     <bpmn:sequenceFlow id="SequenceFlow_0motra0" sourceRef="Task_1qrdn87" targetRef="Task_1qs4yon" />
     <bpmn:receiveTask id="Task_1qrdn87" name="?? I though there is an additional state here..." messageRef="Message_01puqtf">
-      <bpmn:extensionElements>
-        <camunda:executionListener delegateExpression="#{setOrderStatus}" event="start" />
-      </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_0motra0</bpmn:outgoing>
     </bpmn:receiveTask>
     <bpmn:textAnnotation id="TextAnnotation_01te98p">    <bpmn:text>Wait for receipt to be taken</bpmn:text>

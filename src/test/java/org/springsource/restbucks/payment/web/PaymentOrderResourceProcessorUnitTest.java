@@ -17,7 +17,6 @@ package org.springsource.restbucks.payment.web;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.springsource.restbucks.order.Order.Status.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +32,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.TestUtils;
 
 /**
@@ -64,28 +62,22 @@ public class PaymentOrderResourceProcessorUnitTest {
 		when(paymentLinks.getReceiptLink(Mockito.any(Order.class))).thenReturn(receiptLink);
 	}
 
-//	@Test
-//	public void doesNotAddLinksForNeitherFreshNorUnfinishedOrders() {
-//
-//		for (Status status : Status.values()) {
-//
-//			if (status == READY || status == PAYMENT_EXPECTED) {
-//				continue;
-//			}
-//
-//			Order order = TestUtils.createExistingOrderWithStatus(status);
-//			Resource<Order> resource = processor.process(new Resource<Order>(order));
-//
-//			assertThat(resource.hasLinks(), is(false));
-//		}
-//	}
-
-			Order order = TestUtils.createExistingOrderWithStatus(status);
-			EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
-
-			assertThat(resource.hasLinks()).isFalse();
-		}
-	}
+	// @Test
+	// public void doesNotAddLinksForNeitherFreshNorUnfinishedOrders() {
+	//
+	// for (Status status : Status.values()) {
+	//
+	// if (status == READY || status == PAYMENT_EXPECTED) {
+	// continue;
+	// }
+	//
+	// Order order = TestUtils.createExistingOrderWithStatus(status);
+	// Resource<Order> resource = processor.process(new Resource<Order>(order));
+	//
+	// assertThat(resource.hasLinks(), is(false));
+	// }
+	// }
+	// }
 
 	@Test
 	public void addsPaymentLinkForFreshOrder() {

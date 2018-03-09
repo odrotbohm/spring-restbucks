@@ -59,6 +59,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>2.2.0.DATACMNS-1266-SNAPSHOT</version>
+		</dependency>
+
 		<!-- JDK 8 DateTime support for Jackson -->
 
 		<dependency>
@@ -83,16 +89,16 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<artifactId>hsqldb</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-	 -->	
+	 -->
 		<!-- State machine -->
-		
-	
+
+
 	    <dependency>
 	      <groupId>org.camunda.bpm.springboot</groupId>
 	      <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
 	      <version>${camundaSpringBoot.version}</version>
 	    </dependency>
-		
+
 
 		<!-- Misc -->
 

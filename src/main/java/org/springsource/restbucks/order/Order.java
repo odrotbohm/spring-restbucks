@@ -17,14 +17,13 @@ package org.springsource.restbucks.order;
 
 import lombok.Getter;
 import lombok.ToString;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import javax.money.MonetaryAmount;
 import javax.persistence.CascadeType;
@@ -33,15 +32,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.runtime.ActivityInstance;
-import org.camunda.bpm.engine.runtime.EventSubscription;
-import org.camunda.bpm.engine.runtime.Execution;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.javamoney.moneta.Money;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.core.AbstractAggregateRoot;
 import org.springsource.restbucks.payment.OrderPaid;
 
@@ -58,11 +50,7 @@ public class Order extends AbstractAggregateRoot {
 
 	private final Location location;
 	private final LocalDateTime orderedDate;
-
-	/**
-	 * read-only attribute to cary informal representation of current status
-	 */
-	private String status;
+	private Status status;
 
 	@OrderColumn //
 	@Column(unique = true) //
@@ -76,9 +64,13 @@ public class Order extends AbstractAggregateRoot {
 	 * @param location
 	 */
 	public Order(Collection<LineItem> lineItems, Location location) {
+
 		this.location = location == null ? Location.TAKE_AWAY : location;
 		this.lineItems.addAll(lineItems);
-		this.orderedDate = LocalDateTime.now();		
+		this.orderedDate = LocalDateTime.now();
+		this.status = Status.PAYMENT_EXPECTED;
+
+		registerEvent(new OrderCreated(this));
 	}
 
 	/**
@@ -92,6 +84,7 @@ public class Order extends AbstractAggregateRoot {
 
 	Order() {
 		this(new LineItem[0]);
+		clearDomainEvents();
 	}
 
 	/**
@@ -105,78 +98,126 @@ public class Order extends AbstractAggregateRoot {
 				map(LineItem::getPrice).//
 				reduce(MonetaryAmount::add).orElse(Money.of(0.0, "EUR"));
 	}
-	
-	
-	public String getStatus() {
-	  // Todo: Maybe set a read-only status from the flow for simplicity of reading
-	  // a senseful state probably being different from the exact workflow state
-	  return status;
+
+	public Status getStatus() {
+		return status;
 	}
 
-  public void raiseOrderPaid() {
-    // TODO: Implement differently
-    registerEvent(new OrderPaid(getId()));
-  }
+	/**
+	 * Marks the {@link Order} as payed.
+	 */
+	public Order markPaid() {
 
-  public void setStatus(String status) {
-    this.status = status;
-  }
+		if (isPaid()) {
+			throw new IllegalStateException("Already paid order cannot be paid again!");
+		}
 
- 
-	
-//
-//	/**
-//	 * Returns whether the {@link Order} has been paid already.
-//	 * 
-//	 * @return
-//	 */
-//	public boolean isPaid() {
-//		return !this.status.equals(Status.PAYMENT_EXPECTED);
-//	}
-//
-//	/**
-//	 * Returns if the {@link Order} is ready to be taken.
-//	 * 
-//	 * @return
-//	 */
-//	public boolean isReady() {
-//		return this.status.equals(Status.READY);
-//	}
-//
-//	public boolean isTaken() {
-//		return this.status.equals(Status.TAKEN);
-//	}
+		this.status = Status.PAID;
 
-//	/**
-//	 * Enumeration for all the statuses an {@link Order} can be in.
-//	 * 
-//	 * @author Oliver Gierke
-//	 */
-//	public static enum Status {
-//
-//		/**
-//		 * Placed, but not payed yet. Still changeable.
-//		 */
-//		PAYMENT_EXPECTED,
-//
-//		/**
-//		 * {@link Order} was payed. No changes allowed to it anymore.
-//		 */
-//		PAID,
-//
-//		/**
-//		 * The {@link Order} is currently processed.
-//		 */
-//		PREPARING,
-//
-//		/**
-//		 * The {@link Order} is ready to be picked up by the customer.
-//		 */
-//		READY,
-//
-//		/**
-//		 * The {@link Order} was completed.
-//		 */
-//		TAKEN;
-//	}
+		registerEvent(new OrderPaid(getId()));
+
+		return this;
+	}
+
+	/**
+	 * Marks the {@link Order} as in preparation.
+	 */
+	public Order markInPreparation() {
+
+		if (this.status != Status.PAID) {
+			throw new IllegalStateException(
+					String.format("Order must be in state payed to start preparation! Current status: %s", this.status));
+		}
+
+		this.status = Status.PREPARING;
+
+		return this;
+	}
+
+	/**
+	 * Marks the {@link Order} as prepared.
+	 */
+	public Order markPrepared() {
+
+		if (this.status != Status.PREPARING) {
+			throw new IllegalStateException(String
+					.format("Cannot mark Order prepared that is currently not preparing! Current status: %s.", this.status));
+		}
+
+		this.status = Status.READY;
+
+		return this;
+	}
+
+	public Order markTaken() {
+
+		if (this.status != Status.READY) {
+			throw new IllegalStateException(
+					String.format("Cannot mark Order taken that is currently not paid! Current status: %s.", this.status));
+		}
+
+		this.status = Status.TAKEN;
+
+		return this;
+	}
+
+	/**
+	 * Returns whether the {@link Order} has been paid already.
+	 *
+	 * @return
+	 */
+	public boolean isPaid() {
+		return !this.status.equals(Status.PAYMENT_EXPECTED);
+	}
+
+	/**
+	 * Returns if the {@link Order} is ready to be taken.
+	 *
+	 * @return
+	 */
+	public boolean isReady() {
+		return this.status.equals(Status.READY);
+	}
+
+	public boolean isTaken() {
+		return this.status.equals(Status.TAKEN);
+	}
+
+	/**
+	 * Enumeration for all the statuses an {@link Order} can be in.
+	 * 
+	 * @author Oliver Gierke
+	 */
+	public static enum Status {
+
+		/**
+		 * Placed, but not payed yet. Still changeable.
+		 */
+		PAYMENT_EXPECTED,
+
+		/**
+		 * {@link Order} was payed. No changes allowed to it anymore.
+		 */
+		PAID,
+
+		/**
+		 * The {@link Order} is currently processed.
+		 */
+		PREPARING,
+
+		/**
+		 * The {@link Order} is ready to be picked up by the customer.
+		 */
+		READY,
+
+		/**
+		 * The {@link Order} was completed.
+		 */
+		TAKEN;
+	}
+
+	@Value
+	public static class OrderCreated {
+		Order order;
+	}
 }

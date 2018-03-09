@@ -28,9 +28,8 @@ import org.springsource.restbucks.order.OrderService;
  */
 @Component
 class OrderControllerEventListener extends AbstractRepositoryEventListener<Order> {
-  
-  @Autowired
-  private OrderService orderService;
+
+	@Autowired private OrderService orderService;
 
 	/* 
 	 * (non-Javadoc)
@@ -38,6 +37,9 @@ class OrderControllerEventListener extends AbstractRepositoryEventListener<Order
 	 */
 	@Override
 	protected void onBeforeDelete(Order order) {
-	  orderService.markDeleted(order);
+
+		if (!orderService.getPossibleLinks(order, "ORDER").contains("cancel")) {
+			throw new OrderAlreadyPaidException();
+		}
 	}
 }
