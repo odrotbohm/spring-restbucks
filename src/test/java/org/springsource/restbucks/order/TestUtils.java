@@ -20,7 +20,7 @@ import org.springsource.restbucks.order.Order.Status;
 
 /**
  * Utility methods for testing.
- * 
+ *
  * @author Oliver Gierke
  */
 public class TestUtils {

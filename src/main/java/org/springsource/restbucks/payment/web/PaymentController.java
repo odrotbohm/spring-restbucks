@@ -15,8 +15,6 @@
  */
 package org.springsource.restbucks.payment.web;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -25,15 +23,18 @@ import lombok.RequiredArgsConstructor;
 import javax.money.MonetaryAmount;
 
 import org.springframework.data.repository.support.DomainClassConverter;
-import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.EntityLinks;
+import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springsource.restbucks.order.Order;
@@ -43,10 +44,11 @@ import org.springsource.restbucks.payment.CreditCardPayment;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
 import org.springsource.restbucks.payment.PaymentService;
+import org.springsource.restbucks.payment.web.PaymentController.PaymentModel;
 
 /**
  * Spring MVC controller to handle payments for an {@link Order}.
- * 
+ *
  * @author Oliver Gierke
  */
 @Controller
@@ -60,14 +62,14 @@ public class PaymentController {
 
 	/**
 	 * Accepts a payment for an {@link Order}
-	 * 
+	 *
 	 * @param order the {@link Order} to process the payment for. Retrieved from the path variable and converted into an
 	 *          {@link Order} instance by Spring Data's {@link DomainClassConverter}. Will be {@literal null} in case no
 	 *          {@link Order} with the given id could be found.
 	 * @param number the {@link CreditCardNumber} unmarshaled from the request payload.
 	 * @return
 	 */
-	@RequestMapping(path = PaymentLinks.PAYMENT, method = PUT)
+	@PutMapping(path = PaymentLinks.PAYMENT)
 	ResponseEntity<?> submitPayment(@PathVariable("id") Order order, @RequestBody CreditCardNumber number) {
 
 		if (order == null || order.isPaid()) {
@@ -76,19 +78,19 @@ public class PaymentController {
 
 		CreditCardPayment payment = paymentService.pay(order, number);
 
-		PaymentResource resource = new PaymentResource(order.getPrice(), payment.getCreditCard());
-		resource.add(entityLinks.linkToSingleResource(order));
+		PaymentModel model = new PaymentModel(order.getPrice(), payment.getCreditCard())//
+				.add(entityLinks.linkToItemResource(Order.class, order.getId()));
 
-		return new ResponseEntity<>(resource, HttpStatus.CREATED);
+		return new ResponseEntity<>(model, HttpStatus.CREATED);
 	}
 
 	/**
 	 * Shows the {@link Receipt} for the given order.
-	 * 
+	 *
 	 * @param order
 	 * @return
 	 */
-	@RequestMapping(path = PaymentLinks.RECEIPT, method = GET)
+	@GetMapping(path = PaymentLinks.RECEIPT)
 	HttpEntity<?> showReceipt(@PathVariable("id") Order order) {
 
 		if (order == null || !order.isPaid() || order.isTaken()) {
@@ -102,11 +104,11 @@ public class PaymentController {
 
 	/**
 	 * Takes the {@link Receipt} for the given {@link Order} and thus completes the process.
-	 * 
+	 *
 	 * @param order
 	 * @return
 	 */
-	@RequestMapping(path = PaymentLinks.RECEIPT, method = DELETE)
+	@DeleteMapping(path = PaymentLinks.RECEIPT)
 	HttpEntity<?> takeReceipt(@PathVariable("id") Order order) {
 
 		if (order == null || !order.isPaid()) {
@@ -121,32 +123,32 @@ public class PaymentController {
 	/**
 	 * Renders the given {@link Receipt} including links to the associated {@link Order} as well as a self link in case
 	 * the {@link Receipt} is still available.
-	 * 
+	 *
 	 * @param receipt
 	 * @return
 	 */
-	private HttpEntity<Resource<Receipt>> createReceiptResponse(Receipt receipt) {
+	private HttpEntity<EntityModel<Receipt>> createReceiptResponse(Receipt receipt) {
 
 		Order order = receipt.getOrder();
 
-		Resource<Receipt> resource = new Resource<>(receipt);
-		resource.add(entityLinks.linkToSingleResource(order));
+		EntityModel<Receipt> resource = new EntityModel<>(receipt);
+		resource.add(entityLinks.linkToItemResource(Order.class, order.getId()));
 
 		if (!order.isTaken()) {
-			resource.add(entityLinks.linkForSingleResource(order).slash("receipt").withSelfRel());
+			resource.add(entityLinks.linkForItemResource(Order.class, order.getId()).slash("receipt").withSelfRel());
 		}
 
 		return ResponseEntity.ok(resource);
 	}
 
 	/**
-	 * Resource implementation for payment results.
-	 * 
+	 * EntityModel implementation for payment results.
+	 *
 	 * @author Oliver Gierke
 	 */
 	@Data
 	@EqualsAndHashCode(callSuper = true)
-	static class PaymentResource extends ResourceSupport {
+	static class PaymentModel extends RepresentationModel<PaymentModel> {
 
 		private final MonetaryAmount amount;
 		private final CreditCard creditCard;

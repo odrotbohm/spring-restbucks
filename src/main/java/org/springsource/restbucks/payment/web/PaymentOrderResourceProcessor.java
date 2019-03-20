@@ -18,8 +18,8 @@ package org.springsource.restbucks.payment.web;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.ResourceProcessor;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 import org.springsource.restbucks.order.Order;
 
@@ -30,16 +30,16 @@ import org.springsource.restbucks.order.Order;
  */
 @Component
 @RequiredArgsConstructor
-class PaymentOrderResourceProcessor implements ResourceProcessor<Resource<Order>> {
+class PaymentOrderResourceProcessor implements RepresentationModelProcessor<EntityModel<Order>> {
 
 	private final @NonNull PaymentLinks paymentLinks;
 
 	/* 
 	 * (non-Javadoc)
-	 * @see org.springframework.hateoas.ResourceProcessor#process(org.springframework.hateoas.ResourceSupport)
+	 * @see org.springframework.hateoas.server.RepresentationModelProcessor#process(org.springframework.hateoas.RepresentationModel)
 	 */
 	@Override
-	public Resource<Order> process(Resource<Order> resource) {
+	public EntityModel<Order> process(EntityModel<Order> resource) {
 
 		Order order = resource.getContent();
 

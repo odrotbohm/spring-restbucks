@@ -23,8 +23,9 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.hateoas.LinkDiscoverer;
-import org.springframework.hateoas.LinkDiscoverers;
+import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.client.LinkDiscoverer;
+import org.springframework.hateoas.client.LinkDiscoverers;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,7 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Base class to derive concrete web test classes from.
- * 
+ *
  * @author Oliver Gierke
  */
 @RunWith(SpringRunner.class)
@@ -58,39 +59,40 @@ public abstract class AbstractWebIntegrationTest {
 
 	/**
 	 * Creates a {@link ResultMatcher} that checks for the presence of a link with the given rel.
-	 * 
+	 *
 	 * @param rel
 	 * @return
 	 */
-	protected ResultMatcher linkWithRelIsPresent(final String rel) {
+	protected ResultMatcher linkWithRelIsPresent(LinkRelation rel) {
 		return new LinkWithRelMatcher(rel, true);
 	}
 
 	/**
 	 * Creates a {@link ResultMatcher} that checks for the non-presence of a link with the given rel.
-	 * 
+	 *
 	 * @param rel
 	 * @return
 	 */
-	protected ResultMatcher linkWithRelIsNotPresent(String rel) {
+	protected ResultMatcher linkWithRelIsNotPresent(LinkRelation rel) {
 		return new LinkWithRelMatcher(rel, false);
 	}
 
 	protected LinkDiscoverer getDiscovererFor(MockHttpServletResponse response) {
-		return links.getLinkDiscovererFor(response.getContentType());
+		return links.getRequiredLinkDiscovererFor(response.getContentType());
 	}
 
 	private class LinkWithRelMatcher implements ResultMatcher {
 
-		private final String rel;
+		private final LinkRelation rel;
 		private final boolean present;
 
-		public LinkWithRelMatcher(String rel, boolean present) {
+		public LinkWithRelMatcher(LinkRelation rel, boolean present) {
+
 			this.rel = rel;
 			this.present = present;
 		}
 
-		/* 
+		/*
 		 * (non-Javadoc)
 		 * @see org.springframework.test.web.servlet.ResultMatcher#match(org.springframework.test.web.servlet.MvcResult)
 		 */
@@ -99,9 +101,9 @@ public abstract class AbstractWebIntegrationTest {
 
 			MockHttpServletResponse response = result.getResponse();
 			String content = response.getContentAsString();
-			LinkDiscoverer discoverer = links.getLinkDiscovererFor(response.getContentType());
+			LinkDiscoverer discoverer = links.getRequiredLinkDiscovererFor(response.getContentType());
 
-			assertThat(discoverer.findLinkWithRel(rel, content)).matches(it -> present == (it != null));
+			assertThat(discoverer.findLinkWithRel(rel, content)).matches(it -> it.isPresent() == present);
 		}
 	}
 }

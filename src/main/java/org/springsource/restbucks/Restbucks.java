@@ -19,14 +19,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.UriTemplate;
-import org.springframework.hateoas.hal.CurieProvider;
-import org.springframework.hateoas.hal.DefaultCurieProvider;
+import org.springframework.hateoas.mediatype.hal.CurieProvider;
+import org.springframework.hateoas.mediatype.hal.DefaultCurieProvider;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * Central application class containing both general application and web configuration as well as a main-method to
  * bootstrap the application using Spring Boot.
- * 
+ *
  * @see #main(String[])
  * @see SpringApplication
  * @author Oliver Gierke
@@ -43,7 +43,7 @@ public class Restbucks {
 
 	/**
 	 * Bootstraps the application in standalone mode (i.e. java -jar).
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {

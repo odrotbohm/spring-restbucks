@@ -27,8 +27,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -38,7 +38,7 @@ import org.springsource.restbucks.order.TestUtils;
 
 /**
  * Unit test for {@link PaymentOrderResourceProcessorUnitTest}.
- * 
+ *
  * @author Oliver Gierke
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -74,7 +74,7 @@ public class PaymentOrderResourceProcessorUnitTest {
 			}
 
 			Order order = TestUtils.createExistingOrderWithStatus(status);
-			Resource<Order> resource = processor.process(new Resource<Order>(order));
+			EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
 
 			assertThat(resource.hasLinks()).isFalse();
 		}
@@ -85,8 +85,8 @@ public class PaymentOrderResourceProcessorUnitTest {
 
 		Order order = TestUtils.createExistingOrder();
 
-		Resource<Order> resource = processor.process(new Resource<Order>(order));
-		assertThat(resource.getLink(PaymentLinks.PAYMENT_REL)).isEqualTo(paymentLink);
+		EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
+		assertThat(resource.getLink(PaymentLinks.PAYMENT_REL)).hasValue(paymentLink);
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class PaymentOrderResourceProcessorUnitTest {
 		order.markInPreparation();
 		order.markPrepared();
 
-		Resource<Order> resource = processor.process(new Resource<Order>(order));
-		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL)).isEqualTo(receiptLink);
+		EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
+		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL)).hasValue(receiptLink);
 	}
 }
