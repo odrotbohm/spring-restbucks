@@ -155,7 +155,7 @@ In our sample the core spot these challenges occur is the `payment` subsystem an
 
 ### ALPS
 
-The repository currently contains an `alps` branch that is based on a feature branch of Spring Data REST to automatically expose resources that server [ALPS](http://alps.io) metadata for teh resources exposed.
+The repository currently contains an `alps` branch that is based on a feature branch of Spring Data REST to automatically expose resources that server [ALPS](http://alps.io) metadata for the resources exposed.
 
 ```
 git checkout alps
