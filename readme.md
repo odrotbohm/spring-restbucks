@@ -1,6 +1,6 @@
 # Spring Restbucks
 
-[![Build Status](https://travis-ci.org/olivergierke/spring-restbucks.png?branch=master)](https://travis-ci.org/olivergierke/spring-restbucks)
+[![Build Status](https://travis-ci.org/odrotbohm/spring-restbucks.png?branch=master)](https://travis-ci.org/odrotbohm/spring-restbucks)
 
 This project is a sample implementation of the Restbucks application described in the book [REST in Practice](http://shop.oreilly.com/product/9780596805838.do) by Jim Webber, Savas Parastatidis and Ian Robinson. It's a showcase for bringing different Spring eco-system technologies together to implement a REST web service. The application uses [HAL](http://stateless.co/hal_specification.html) as the primary representation format.
 
@@ -9,7 +9,7 @@ This project is a sample implementation of the Restbucks application described i
 From the command line do:
 
 ```
-git clone https://github.com/olivergierke/spring-restbucks.git
+git clone https://github.com/odrotbohm/spring-restbucks.git
 cd spring-restbucks
 mvn clean package
 java -jar target/*.jar
@@ -126,7 +126,7 @@ Content-Type: application/hal+json;charset=UTF-8
 
 ### Documentation / Client Stub Generation
 
-The [`restdocs`](https://github.com/olivergierke/spring-restbucks/tree/restdocs) branch contains the test for the order payment process augmented with setup to generate Asciidoctor snippets documenting the executed requests and expectations on the responses.
+The [`restdocs`](https://github.com/odrotbohm/spring-restbucks/tree/restdocs) branch contains the test for the order payment process augmented with setup to generate Asciidoctor snippets documenting the executed requests and expectations on the responses.
 These snippets are included from the general Asciidoctor documents in `src/main/asciidoc`, turned into HTML and packaged into the application itself during the build (run `mvn clean package`).
 The docs are then pointed to by a CURIE link in the HAL response (see `Restbucks.curieProvider()`) so that they appear in the `docs` column in the HAL browser (run `mvn spring-boot:run` and browse to http://localhost:8080) the service ships.
 
