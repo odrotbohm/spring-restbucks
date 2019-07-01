@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/odrotbohm/spring-restbucks.png?branch=master)](https://travis-ci.org/odrotbohm/spring-restbucks)
 
-This project is a sample implementation of the Restbucks application described in the book [REST in Practice](http://shop.oreilly.com/product/9780596805838.do) by Jim Webber, Savas Parastatidis and Ian Robinson. It's a showcase for bringing different Spring eco-system technologies together to implement a REST web service. The application uses [HAL](http://stateless.co/hal_specification.html) as the primary representation format.
+This project is a sample implementation of the Restbucks application described in the book [REST in Practice](http://shop.oreilly.com/product/9780596805838.do) by Jim Webber, Savas Parastatidis and Ian Robinson. It's a showcase for bringing different Spring eco-system technologies together to implement a REST web service. The application uses [HAL](http://stateless.co/hal_specification.html) as the primary representation format. The server implementation is accompanied by a hypermedia-aware Android client that adapts to changes on the server dynamically.
 
 ## Quickstart
 
@@ -10,7 +10,7 @@ From the command line do:
 
 ```
 git clone https://github.com/odrotbohm/spring-restbucks.git
-cd spring-restbucks
+cd spring-restbucks/server
 mvn clean package
 java -jar target/*.jar
 ```
@@ -177,5 +177,41 @@ This will return:
 ```
 
 You can then follow the `profile` link to access all available ALPS resources, such as the one for `orders`, a link relation also listed in the response for the root resource.
+
+## The Android client
+
+The Android sample client can be found in `android-client` and is a most rudimentary implementation of a client application that leverages hypermedia elements to avoid strong coupling to the server.
+
+### Quickstart
+
+1. Have Android Studio installed.
+2. Import the project from `android-studio`.
+3. Make sure the server runs.
+4. In Android Studio, run the application in the simulator.
+5. In the application, browse existing orders, trigger payments and cancellations.
+
+The main abstraction working with hypermedia elements is `HypermediaRemoteResource`.
+It allows to define client behavior conditionally based on the presence of links in the representations.
+For example, see this snippet from `OrderDetailsActivity`:
+
+```kotlin
+resource.ifPresent("restbucks:cancel") {
+
+  with(cancel_button) {
+
+    visibility = View.VISIBLE
+
+    setOnClickListener {
+
+      CancelOrder(Link(selfUri)).execute().get()
+
+      it.context.startActivity(Intent(it.context, MainActivity::class.java))
+    }
+  }
+}
+```
+
+The closure is only executed if the link with a relation `restbucks:cancel` is actually present.
+It then enables the button and registers `CancelOrder` action for execution on invocation.
 
 TODO - complete
