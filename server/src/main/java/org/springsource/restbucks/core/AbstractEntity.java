@@ -38,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @EqualsAndHashCode
 public class AbstractEntity {
 
-	private final @Id @GeneratedValue(strategy = GenerationType.AUTO) @JsonIgnore Long id;
+	private @Id @GeneratedValue(strategy = GenerationType.AUTO) @JsonIgnore Long id;
 	private @Version Long version;
 
 	protected AbstractEntity() {

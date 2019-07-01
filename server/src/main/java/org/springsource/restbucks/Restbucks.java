@@ -38,7 +38,7 @@ public class Restbucks {
 	public static String CURIE_NAMESPACE = "restbucks";
 
 	public @Bean CurieProvider curieProvider() {
-		return new DefaultCurieProvider(CURIE_NAMESPACE, new UriTemplate("/docs/{rel}.html"));
+		return new DefaultCurieProvider(CURIE_NAMESPACE, UriTemplate.of("/docs/{rel}.html"));
 	}
 
 	/**

@@ -25,7 +25,7 @@ import org.springsource.restbucks.order.web.OrderProjection;
 
 /**
  * Repository to manage {@link Order} instances.
- * 
+ *
  * @author Oliver Gierke
  */
 @RepositoryRestResource(excerptProjection = OrderProjection.class)
@@ -33,7 +33,7 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
 
 	/**
 	 * Returns all {@link Order}s with the given {@link Status}.
-	 * 
+	 *
 	 * @param status must not be {@literal null}.
 	 * @return
 	 */
