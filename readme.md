@@ -67,31 +67,6 @@ The final important piece is the `EntityLinks` abstraction that allows to create
 
 The Spring Plugin library provides means to collect Spring beans by type and exposing them for selection based on a selection criterion. It basically forms the foundation for the `EntityLinks` mechanism provided in Spring HATEOAS and our custom extension `RestResourceEntityLinks`.
 
-### Spring Boot's Thin Launcher
-
-Spring Boot's default way of packaging creates an uber-JAR containing all dependencies to run the app standalone. This usually doesn't matter much but if you're continuously building your application and deploy them to a repository, this can easily add up a lot of space as you re-package the same dependencies over and over.
-
-The [Thin Launcher](https://github.com/dsyer/spring-boot-thin-launcher) extension to the Spring Boot Maven plugin changes that to just write an index file of the dependencies needed and resolving them via Maven Central on first application run. This allows the artifact size to reduce dramatically, ~65kB for RESTBucks. To see how this works, do the following:
-
-```
-$ git checkout thin-launcher
-$ mvn clean package
-```
-
-You should see the JAR file be created in `target` and see that it's under 100kB in size. The app can now be run as usual:
-
-```
-$ java -jar target/*.jar
-```
-
-The dependencies are resolved at first run and installed into your local Maven repository by default. Read more about various flags to tweak that behaviour in the [Thin Launcher's readme](https://github.com/dsyer/spring-boot-thin-launcher#getting-started). An easy way to just list the classpath is running this command.
-
-```
-$ java -jar --thin.classpath target/*.jar
-```
-
-This will print the classpath instead of running the application.
-
 ### Spring Security / Spring Session
 
 The `spring-session` branch contains additional configuration to secure the service using Spring Security, HTTP Basic authentication and Spring Session's HTTP header based session strategy to allow clients to obtain a security token via the `X-Auth-Token` header and using that for subsequent requests.
