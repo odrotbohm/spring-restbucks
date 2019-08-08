@@ -6,3 +6,4 @@ target/
 .idea
 .springBeans
 *.log
+.factorypath
