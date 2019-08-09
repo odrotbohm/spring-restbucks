@@ -16,7 +16,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</parent>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 	</properties>
 
 	<dependencies>
@@ -67,11 +67,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 		<!-- Misc -->
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-devtools</artifactId> -->
-<!-- 			<optional>true</optional> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
 
 		<dependency>
 			<groupId>org.javamoney.moneta</groupId>
@@ -93,25 +93,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<build>
 		<plugins>
-
-			<plugin>
-				<groupId>org.hibernate.orm.tooling</groupId>
-				<artifactId>hibernate-enhance-maven-plugin</artifactId>
-				<version>${hibernate.version}</version>
-				<executions>
-					<execution>
-						<configuration>
-							<failOnError>true</failOnError>
-							<enableLazyInitialization>true</enableLazyInitialization>
-							<enableDirtyTracking>true</enableDirtyTracking>
-							<enableAssociationManagement>true</enableAssociationManagement>
-						</configuration>
-						<goals>
-							<goal>enhance</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
