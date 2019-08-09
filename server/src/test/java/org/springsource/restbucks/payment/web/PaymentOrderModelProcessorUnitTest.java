@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -37,16 +37,16 @@ import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.TestUtils;
 
 /**
- * Unit test for {@link PaymentOrderResourceProcessorUnitTest}.
+ * Unit test for {@link PaymentOrderModelProcessorUnitTest}.
  *
  * @author Oliver Gierke
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PaymentOrderResourceProcessorUnitTest {
+public class PaymentOrderModelProcessorUnitTest {
 
 	@Mock PaymentLinks paymentLinks;
 
-	PaymentOrderResourceProcessor processor;
+	PaymentOrderModelProcessor processor;
 	Link paymentLink, receiptLink;
 
 	@Before
@@ -59,7 +59,7 @@ public class PaymentOrderResourceProcessorUnitTest {
 		paymentLink = new Link("payment", PaymentLinks.PAYMENT_REL);
 		receiptLink = new Link("receipt", PaymentLinks.RECEIPT_REL);
 
-		processor = new PaymentOrderResourceProcessor(paymentLinks);
+		processor = new PaymentOrderModelProcessor(paymentLinks);
 		when(paymentLinks.getPaymentLink(Mockito.any(Order.class))).thenReturn(paymentLink);
 		when(paymentLinks.getReceiptLink(Mockito.any(Order.class))).thenReturn(receiptLink);
 	}

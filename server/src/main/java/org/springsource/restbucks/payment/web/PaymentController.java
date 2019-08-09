@@ -20,13 +20,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.net.URI;
+
 import javax.money.MonetaryAmount;
 
 import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.ExposesResourceFor;
+import org.springframework.hateoas.server.TypedEntityLinks;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,6 @@ import org.springsource.restbucks.payment.CreditCardPayment;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
 import org.springsource.restbucks.payment.PaymentService;
-import org.springsource.restbucks.payment.web.PaymentController.PaymentModel;
 
 /**
  * Spring MVC controller to handle payments for an {@link Order}.
@@ -58,7 +59,7 @@ import org.springsource.restbucks.payment.web.PaymentController.PaymentModel;
 public class PaymentController {
 
 	private final @NonNull PaymentService paymentService;
-	private final @NonNull EntityLinks entityLinks;
+	private final @NonNull PaymentLinks paymentLinks;
 
 	/**
 	 * Accepts a payment for an {@link Order}
@@ -79,9 +80,11 @@ public class PaymentController {
 		CreditCardPayment payment = paymentService.pay(order, number);
 
 		PaymentModel model = new PaymentModel(order.getPrice(), payment.getCreditCard())//
-				.add(entityLinks.linkToItemResource(Order.class, order.getId()));
+				.add(paymentLinks.getOrderLinks().linkToItemResource(order));
+		
+		URI paymentUri = paymentLinks.getPaymentLink(order).toUri();
 
-		return new ResponseEntity<>(model, HttpStatus.CREATED);
+		return ResponseEntity.created(paymentUri).body(model);
 	}
 
 	/**
@@ -97,9 +100,10 @@ public class PaymentController {
 			return ResponseEntity.notFound().build();
 		}
 
-		return paymentService.getPaymentFor(order).//
-				map(payment -> createReceiptResponse(payment.getReceipt())).//
-				orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return paymentService.getPaymentFor(order) //
+				.map(Payment::getReceipt) //
+				.map(this::createReceiptResponse)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**
@@ -115,9 +119,9 @@ public class PaymentController {
 			return ResponseEntity.notFound().build();
 		}
 
-		return paymentService.takeReceiptFor(order).//
-				map(receipt -> createReceiptResponse(receipt)).//
-				orElseGet(() -> new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED));
+		return paymentService.takeReceiptFor(order) //
+				.map(this::createReceiptResponse) //
+				.orElseGet(() -> new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED));
 	}
 
 	/**
@@ -129,13 +133,14 @@ public class PaymentController {
 	 */
 	private HttpEntity<EntityModel<Receipt>> createReceiptResponse(Receipt receipt) {
 
+		TypedEntityLinks<Order> orderLinks = paymentLinks.getOrderLinks();
 		Order order = receipt.getOrder();
 
 		EntityModel<Receipt> resource = new EntityModel<>(receipt);
-		resource.add(entityLinks.linkToItemResource(Order.class, order.getId()));
+		resource.add(orderLinks.linkToItemResource(order));
 
 		if (!order.isTaken()) {
-			resource.add(entityLinks.linkForItemResource(Order.class, order.getId()).slash("receipt").withSelfRel());
+			resource.add(orderLinks.linkForItemResource(order).slash("receipt").withSelfRel());
 		}
 
 		return ResponseEntity.ok(resource);

@@ -27,6 +27,8 @@ import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
 
+import lombok.Getter;
+
 /**
  * Helper component to create links to the {@link Payment} and {@link Receipt}.
  *
@@ -40,13 +42,18 @@ class PaymentLinks {
 	static final LinkRelation PAYMENT_REL = HalLinkRelation.curied(Restbucks.CURIE_NAMESPACE, "payment");
 	static final LinkRelation RECEIPT_REL = HalLinkRelation.curied(Restbucks.CURIE_NAMESPACE, "receipt");
 
-	private final TypedEntityLinks<Order> entityLinks;
+	private final @Getter TypedEntityLinks<Order> orderLinks;
 
-	public PaymentLinks(EntityLinks entityLinks) {
+	/**
+	 * Creates a new {@link PaymentLinks} for the given {@link EntityLinks}.
+	 * 
+	 * @param entityLinks must not be {@literal null}.
+	 */
+	PaymentLinks(EntityLinks entityLinks) {
 
 		Assert.notNull(entityLinks, "EntityLinks must not be null!");
 
-		this.entityLinks = entityLinks.forType(Order::getId);
+		this.orderLinks = entityLinks.forType(Order::getId);
 	}
 
 	/**
@@ -56,7 +63,7 @@ class PaymentLinks {
 	 * @return
 	 */
 	Link getPaymentLink(Order order) {
-		return entityLinks.linkForItemResource(order).slash(PAYMENT).withRel(PAYMENT_REL);
+		return orderLinks.linkForItemResource(order).slash(PAYMENT).withRel(PAYMENT_REL);
 	}
 
 	/**
@@ -66,6 +73,6 @@ class PaymentLinks {
 	 * @return
 	 */
 	Link getReceiptLink(Order order) {
-		return entityLinks.linkForItemResource(order).slash(RECEIPT).withRel(RECEIPT_REL);
+		return orderLinks.linkForItemResource(order).slash(RECEIPT).withRel(RECEIPT_REL);
 	}
 }

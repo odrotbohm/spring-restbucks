@@ -293,7 +293,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				receiptLink = discoverer.findLinkWithRel(RECEIPT_REL, pollResponse.getContentAsString());
 
 			} else if (status == HttpStatus.NO_CONTENT.value()) {
-				action.andExpect(content().string(isEmptyOrNullString()));
+				action.andExpect(content().string(is(emptyOrNullString())));
 			}
 
 			if (!receiptLink.isPresent()) {

@@ -30,7 +30,7 @@ import org.springsource.restbucks.order.Order;
  */
 @Component
 @RequiredArgsConstructor
-class PaymentOrderResourceProcessor implements RepresentationModelProcessor<EntityModel<Order>> {
+class PaymentOrderModelProcessor implements RepresentationModelProcessor<EntityModel<Order>> {
 
 	private final @NonNull PaymentLinks paymentLinks;
 
