@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import static org.springsource.restbucks.order.Order.Status.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -34,23 +34,24 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
-import org.springsource.restbucks.order.TestUtils;
+import org.springsource.restbucks.order.OrderTestUtils;
 
 /**
  * Unit test for {@link PaymentOrderModelProcessorUnitTest}.
  *
  * @author Oliver Gierke
  */
-@RunWith(MockitoJUnitRunner.class)
-public class PaymentOrderModelProcessorUnitTest {
+@ExtendWith(MockitoExtension.class)
+class PaymentOrderModelProcessorUnitTest {
 
-	@Mock PaymentLinks paymentLinks;
+	@Mock(lenient = true) //
+	PaymentLinks paymentLinks;
 
 	PaymentOrderModelProcessor processor;
 	Link paymentLink, receiptLink;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 
 		HttpServletRequest request = new MockHttpServletRequest();
 		ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
@@ -65,7 +66,7 @@ public class PaymentOrderModelProcessorUnitTest {
 	}
 
 	@Test
-	public void doesNotAddLinksForNeitherFreshNorUnfinishedOrders() {
+	void doesNotAddLinksForNeitherFreshNorUnfinishedOrders() {
 
 		for (Status status : Status.values()) {
 
@@ -73,7 +74,7 @@ public class PaymentOrderModelProcessorUnitTest {
 				continue;
 			}
 
-			Order order = TestUtils.createExistingOrderWithStatus(status);
+			Order order = OrderTestUtils.createExistingOrderWithStatus(status);
 			EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
 
 			assertThat(resource.hasLinks()).isFalse();
@@ -81,18 +82,18 @@ public class PaymentOrderModelProcessorUnitTest {
 	}
 
 	@Test
-	public void addsPaymentLinkForFreshOrder() {
+	void addsPaymentLinkForFreshOrder() {
 
-		Order order = TestUtils.createExistingOrder();
+		Order order = OrderTestUtils.createExistingOrder();
 
 		EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
 		assertThat(resource.getLink(PaymentLinks.PAYMENT_REL)).hasValue(paymentLink);
 	}
 
 	@Test
-	public void addsReceiptLinkForPaidOrder() {
+	void addsReceiptLinkForPaidOrder() {
 
-		Order order = TestUtils.createExistingOrder();
+		Order order = OrderTestUtils.createExistingOrder();
 		order.markPaid();
 		order.markInPreparation();
 		order.markPrepared();

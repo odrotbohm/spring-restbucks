@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,19 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link CreditCard}.
  * 
  * @author Oliver Gierke
  */
-public class CreditCardUnitTest {
+class CreditCardUnitTest {
 
 	static final CreditCardNumber NUMBER = new CreditCardNumber("1234123412341234");
 
 	@Test
-	public void discoversExpiredCreditCard() {
+	void discoversExpiredCreditCard() {
 
 		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.DECEMBER, Year.of(2016));
 

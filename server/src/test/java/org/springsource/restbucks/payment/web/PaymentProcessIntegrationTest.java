@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import net.minidev.json.JSONObject;
 import java.nio.file.Files;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
@@ -55,7 +55,7 @@ import com.jayway.jsonpath.JsonPath;
  * @author Oliver Gierke
  */
 @Slf4j
-public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
+class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 	private static final HalLinkRelationBuilder BUILDER = HalLinkRelation.curieBuilder(Restbucks.CURIE_NAMESPACE);
 
@@ -72,7 +72,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	 * Processes the first existing {@link Order} found.
 	 */
 	@Test
-	public void processExistingOrder() throws Exception {
+	void processExistingOrder() throws Exception {
 
 		MockHttpServletResponse response = accessRootResource();
 
@@ -89,7 +89,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	 * Creates a new {@link Order} and processes that one.
 	 */
 	@Test
-	public void processNewOrder() throws Exception {
+	void processNewOrder() throws Exception {
 
 		MockHttpServletResponse response = accessRootResource();
 
@@ -105,7 +105,7 @@ public class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	 * Creates a new {@link Order} and cancels it right away.
 	 */
 	@Test
-	public void cancelOrderBeforePayment() throws Exception {
+	void cancelOrderBeforePayment() throws Exception {
 
 		MockHttpServletResponse response = accessRootResource();
 

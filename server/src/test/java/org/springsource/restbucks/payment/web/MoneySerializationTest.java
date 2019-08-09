@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 the original author or authors.
+ * Copyright 2016-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import java.util.Locale;
 import javax.money.MonetaryAmount;
 
 import org.javamoney.moneta.Money;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springsource.restbucks.JacksonTestUtils;
 import org.springsource.restbucks.core.Currencies;
@@ -35,12 +35,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * @author Oliver Gierke
  */
-public class MoneySerializationTest {
+class MoneySerializationTest {
 
 	ObjectMapper mapper;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 
 		this.mapper = new ObjectMapper();
 		this.mapper.registerModules(JacksonTestUtils.getModules());
@@ -52,7 +52,7 @@ public class MoneySerializationTest {
 	 * @see #50
 	 */
 	@Test
-	public void serializesMonetaryAmount() throws Exception {
+	void serializesMonetaryAmount() throws Exception {
 		assertThat(mapper.writeValueAsString(Money.of(4.20, Currencies.EURO))).isEqualTo("\"EUR 4.20\"");
 	}
 
@@ -60,7 +60,7 @@ public class MoneySerializationTest {
 	 * @see #50
 	 */
 	@Test
-	public void deserializesMonetaryAmount() throws Exception {
+	void deserializesMonetaryAmount() throws Exception {
 		assertThat(mapper.readValue("\"EUR 4.20\"", MonetaryAmount.class)).isEqualTo(Money.of(4.20, Currencies.EURO));
 	}
 }

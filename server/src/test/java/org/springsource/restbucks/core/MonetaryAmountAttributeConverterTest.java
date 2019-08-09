@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 the original author or authors.
+ * Copyright 2016-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.springsource.restbucks.core;
 import static org.assertj.core.api.Assertions.*;
 
 import org.javamoney.moneta.Money;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link MonetaryAmountAttributeConverter}
@@ -26,7 +26,7 @@ import org.junit.Test;
  * @author Oliver Trosien
  * @author Oliver Gierke
  */
-public class MonetaryAmountAttributeConverterTest {
+class MonetaryAmountAttributeConverterTest {
 
 	MonetaryAmountAttributeConverter converter = new MonetaryAmountAttributeConverter();
 
@@ -34,7 +34,7 @@ public class MonetaryAmountAttributeConverterTest {
 	 * @see #51
 	 */
 	@Test
-	public void handlesNullValues() {
+	void handlesNullValues() {
 
 		assertThat(converter.convertToDatabaseColumn(null)).isNull();
 		assertThat(converter.convertToEntityAttribute(null)).isNull();
@@ -44,7 +44,7 @@ public class MonetaryAmountAttributeConverterTest {
 	 * @see #51
 	 */
 	@Test
-	public void handlesSimpleValue() {
+	void handlesSimpleValue() {
 
 		assertThat(converter.convertToDatabaseColumn(Money.of(1.23, "EUR"))).isEqualTo("EUR 1.23");
 		assertThat(converter.convertToEntityAttribute("EUR 1.23")).isEqualTo(Money.of(1.23, "EUR"));
@@ -54,7 +54,7 @@ public class MonetaryAmountAttributeConverterTest {
 	 * @see #51
 	 */
 	@Test
-	public void handlesNegativeValues() {
+	void handlesNegativeValues() {
 
 		assertThat(converter.convertToDatabaseColumn(Money.of(-1.20, "USD"))).isEqualTo("USD -1.2");
 		assertThat(converter.convertToEntityAttribute("USD -1.2")).isEqualTo(Money.of(-1.20, "USD"));
@@ -64,7 +64,7 @@ public class MonetaryAmountAttributeConverterTest {
 	 * @see #51
 	 */
 	@Test
-	public void doesNotRoundValues() {
+	void doesNotRoundValues() {
 		assertThat(converter.convertToDatabaseColumn(Money.of(1.23456, "EUR"))).isEqualTo("EUR 1.23456");
 	}
 
@@ -72,7 +72,7 @@ public class MonetaryAmountAttributeConverterTest {
 	 * @see #51
 	 */
 	@Test
-	public void doesNotFormatLargeValues() {
+	void doesNotFormatLargeValues() {
 		assertThat(converter.convertToDatabaseColumn(Money.of(123456, "EUR"))).isEqualTo("EUR 123456");
 	}
 
@@ -80,7 +80,7 @@ public class MonetaryAmountAttributeConverterTest {
 	 * @see #51
 	 */
 	@Test
-	public void deserializesFormattedValues() {
+	void deserializesFormattedValues() {
 		assertThat(converter.convertToEntityAttribute("EUR 123,456.78")).isEqualTo(Money.of(123456.78, "EUR"));
 	}
 }

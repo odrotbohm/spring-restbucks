@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 the original author or authors.
+ * Copyright 2013-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,13 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.client.LinkDiscoverer;
 import org.springframework.hateoas.client.LinkDiscoverers;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -35,12 +33,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Base class to derive concrete web test classes from.
  *
  * @author Oliver Gierke
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public abstract class AbstractWebIntegrationTest {
 
@@ -49,8 +48,8 @@ public abstract class AbstractWebIntegrationTest {
 
 	protected MockMvc mvc;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 
 		mvc = MockMvcBuilders.webAppContextSetup(context).//
 				defaultRequest(MockMvcRequestBuilders.get("/").locale(Locale.US)).//
@@ -81,16 +80,11 @@ public abstract class AbstractWebIntegrationTest {
 		return links.getRequiredLinkDiscovererFor(response.getContentType());
 	}
 
+	@RequiredArgsConstructor
 	private class LinkWithRelMatcher implements ResultMatcher {
 
 		private final LinkRelation rel;
 		private final boolean present;
-
-		public LinkWithRelMatcher(LinkRelation rel, boolean present) {
-
-			this.rel = rel;
-			this.present = present;
-		}
 
 		/*
 		 * (non-Javadoc)

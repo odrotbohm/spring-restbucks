@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springsource.restbucks.JacksonTestUtils;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
@@ -40,14 +40,14 @@ import com.jayway.jsonpath.Option;
  * 
  * @author Oliver Gierke
  */
-public class CreditCardMarshallingTest {
+class CreditCardMarshallingTest {
 
 	static final String REFERENCE = "{\"number\":\"1234123412341234\",\"cardHolderName\":\"Oliver Gierke\",\"expirationDate\":[2013,11,1]}";
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		mapper.registerModule(new JavaTimeModule());
@@ -56,7 +56,7 @@ public class CreditCardMarshallingTest {
 	}
 
 	@Test
-	public void serializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
+	void serializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
 
 		CreditCard creditCard = new CreditCard(new CreditCardNumber("1234123412341234"), "Oliver Gierke", Month.NOVEMBER,
 				Year.of(2013));
@@ -74,7 +74,7 @@ public class CreditCardMarshallingTest {
 	}
 
 	@Test
-	public void deserializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
+	void deserializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
 
 		CreditCard creditCard = mapper.readValue(REFERENCE, CreditCard.class);
 

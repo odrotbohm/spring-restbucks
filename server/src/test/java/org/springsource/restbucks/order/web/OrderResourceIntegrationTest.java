@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 the original author or authors.
+ * Copyright 2013-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springsource.restbucks.AbstractWebIntegrationTest;
@@ -29,10 +29,10 @@ import org.springsource.restbucks.AbstractWebIntegrationTest;
  * 
  * @author Oliver Gierke
  */
-public class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
+class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 
 	@Test
-	public void exposesOrdersResourceViaRootResource() throws Exception {
+	void exposesOrdersResourceViaRootResource() throws Exception {
 
 		mvc.perform(get("/")).//
 				andDo(MockMvcResultHandlers.print()).//

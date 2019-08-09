@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,27 @@
  */
 package org.springsource.restbucks.payment;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
-import org.springsource.restbucks.order.TestUtils;
+import org.springsource.restbucks.order.OrderTestUtils;
 
 /**
  * Unit tests for {@link PaymentServiceImpl}.
  * 
  * @author Oliver Gierke
  */
-@RunWith(MockitoJUnitRunner.class)
-public class PaymentServiceImplUnitTest {
+@ExtendWith(MockitoExtension.class)
+class PaymentServiceImplUnitTest {
 
 	static final CreditCardNumber NUMBER = new CreditCardNumber("1234123412341234");
 
@@ -46,44 +45,44 @@ public class PaymentServiceImplUnitTest {
 	@Mock CreditCardRepository creditCardRepository;
 	@Mock OrderRepository orderRepository;
 
-	@Rule public ExpectedException exception = ExpectedException.none();
-
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		this.paymentService = new PaymentServiceImpl(creditCardRepository, paymentRepository, orderRepository);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void rejectsNullPaymentRepository() {
-		new PaymentServiceImpl(creditCardRepository, null, orderRepository);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void rejectsNullCreditCardRepository() {
-		new PaymentServiceImpl(null, paymentRepository, orderRepository);
+	@Test
+	void rejectsNullPaymentRepository() {
+		
+		assertThatExceptionOfType(IllegalArgumentException.class) //
+			.isThrownBy(() -> new PaymentServiceImpl(creditCardRepository, null, orderRepository));
 	}
 
 	@Test
-	public void rejectsAlreadyPaidOrder() {
+	void rejectsNullCreditCardRepository() {
+		
+		assertThatExceptionOfType(IllegalArgumentException.class) //
+			.isThrownBy(() -> new PaymentServiceImpl(null, paymentRepository, orderRepository));
+	}
 
-		Order order = TestUtils.createExistingOrder();
+	@Test
+	void rejectsAlreadyPaidOrder() {
+
+		Order order = OrderTestUtils.createExistingOrder();
 		order.markPaid();
-
-		exception.expect(PaymentException.class);
-		exception.expectMessage("paid");
-
-		paymentService.pay(order, NUMBER);
+		
+		assertThatExceptionOfType(PaymentException.class) //
+			.isThrownBy(() -> paymentService.pay(order, NUMBER)) //
+			.withMessageContaining("paid");
 	}
 
 	@Test
-	public void rejectsPaymentIfNoCreditCardFound() {
+	void rejectsPaymentIfNoCreditCardFound() {
 
 		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(Optional.empty());
 
-		exception.expect(PaymentException.class);
-		exception.expectMessage("credit card");
-		exception.expectMessage(NUMBER.getNumber());
-
-		paymentService.pay(new Order(), NUMBER);
+		assertThatExceptionOfType(PaymentException.class) //
+			.isThrownBy(() -> paymentService.pay(new Order(), NUMBER)) //
+			.withMessageContaining("credit card") //
+			.withMessageContaining(NUMBER.getNumber());
 	}
 }
