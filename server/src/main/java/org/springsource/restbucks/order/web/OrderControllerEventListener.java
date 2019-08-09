@@ -35,7 +35,7 @@ class OrderControllerEventListener extends AbstractRepositoryEventListener<Order
 	protected void onBeforeDelete(Order order) {
 
 		if (order.isPaid()) {
-			throw new OrderAlreadyPaidException();
+			throw new OrderAlreadyPaid();
 		}
 	}
 }

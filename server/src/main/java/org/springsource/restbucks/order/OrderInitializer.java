@@ -20,7 +20,7 @@ import static org.springsource.restbucks.core.Currencies.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.javamoney.moneta.Money;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -50,12 +50,9 @@ class OrderInitializer {
 			return;
 		}
 
-		LineItem javaChip = new LineItem("Java Chip", Money.of(4.20, EURO));
-		LineItem cappuchino = new LineItem("Cappuchino", Money.of(3.20, EURO));
+		var javaChip = new LineItem("Java Chip", Money.of(4.20, EURO));
+		var cappuchino = new LineItem("Cappuchino", Money.of(3.20, EURO));
 
-		Order javaChipOrder = new Order(javaChip);
-		Order cappuchinoOrder = new Order(cappuchino);
-
-		orders.saveAll(Arrays.asList(javaChipOrder, cappuchinoOrder));
+		orders.saveAll(List.of(new Order(javaChip), new Order(cappuchino)));
 	}
 }

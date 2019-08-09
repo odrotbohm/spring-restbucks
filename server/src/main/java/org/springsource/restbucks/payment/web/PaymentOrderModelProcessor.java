@@ -41,7 +41,7 @@ class PaymentOrderModelProcessor implements RepresentationModelProcessor<EntityM
 	@Override
 	public EntityModel<Order> process(EntityModel<Order> resource) {
 
-		Order order = resource.getContent();
+		var order = resource.getContent();
 
 		if (!order.isPaid()) {
 			resource.add(paymentLinks.getPaymentLink(order));

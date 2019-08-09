@@ -20,7 +20,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.net.URI;
 
 import javax.money.MonetaryAmount;
 
@@ -28,7 +27,6 @@ import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.ExposesResourceFor;
-import org.springframework.hateoas.server.TypedEntityLinks;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
-import org.springsource.restbucks.payment.CreditCardPayment;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
 import org.springsource.restbucks.payment.PaymentService;
@@ -77,12 +74,11 @@ public class PaymentController {
 			return ResponseEntity.notFound().build();
 		}
 
-		CreditCardPayment payment = paymentService.pay(order, number);
-
-		PaymentModel model = new PaymentModel(order.getPrice(), payment.getCreditCard())//
+		var payment = paymentService.pay(order, number);
+		var model = new PaymentModel(order.getPrice(), payment.getCreditCard())//
 				.add(paymentLinks.getOrderLinks().linkToItemResource(order));
 		
-		URI paymentUri = paymentLinks.getPaymentLink(order).toUri();
+		var paymentUri = paymentLinks.getPaymentLink(order).toUri();
 
 		return ResponseEntity.created(paymentUri).body(model);
 	}
@@ -133,11 +129,10 @@ public class PaymentController {
 	 */
 	private HttpEntity<EntityModel<Receipt>> createReceiptResponse(Receipt receipt) {
 
-		TypedEntityLinks<Order> orderLinks = paymentLinks.getOrderLinks();
-		Order order = receipt.getOrder();
+		var orderLinks = paymentLinks.getOrderLinks();
+		var order = receipt.getOrder();
 
-		EntityModel<Receipt> resource = new EntityModel<>(receipt);
-		resource.add(orderLinks.linkToItemResource(order));
+		var resource = new EntityModel<>(receipt).add(orderLinks.linkToItemResource(order));
 
 		if (!order.isTaken()) {
 			resource.add(orderLinks.linkForItemResource(order).slash("receipt").withSelfRel());
