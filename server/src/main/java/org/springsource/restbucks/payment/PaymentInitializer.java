@@ -21,9 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.Month;
 import java.time.Year;
 
+import javax.annotation.PostConstruct;
+
+import org.javamoney.moneta.Money;
+import org.jmolecules.event.annotation.DomainEventHandler;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springsource.restbucks.core.Currencies;
+import org.springsource.restbucks.order.LineItem;
+import org.springsource.restbucks.order.Order;
+import org.springsource.restbucks.order.OrderRepository;
 
 /**
  * Initializing component to create a default {@link CreditCard} in the system.
@@ -35,20 +43,30 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class PaymentInitializer {
 
-	private final CreditCardRepository repository;
+	private final PaymentService payment;
+	private final OrderRepository orders;
+	private final CreditCardRepository creditCards;
 
-	@EventListener
-	public void init(ApplicationReadyEvent event) {
+	@PostConstruct
+	public void init() {
 
-		if (repository.count() > 0) {
+		if (creditCards.count() > 0) {
 			return;
 		}
 
 		CreditCardNumber number = CreditCardNumber.of("1234123412341234");
 		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2099));
 
-		creditCard = repository.save(creditCard);
+		creditCard = creditCards.save(creditCard);
 
 		LOG.info("Credit card {} created!", creditCard);
+	}
+
+	@Transactional
+	@DomainEventHandler
+	public void onStartup(ApplicationReadyEvent event) {
+
+		Order order = orders.save(new Order(new LineItem("Something", Money.of(47.11, Currencies.EURO))));
+		payment.pay(order, creditCards.findAll().iterator().next().getNumber());
 	}
 }

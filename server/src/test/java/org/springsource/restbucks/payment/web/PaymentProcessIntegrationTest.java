@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import java.nio.file.Files;
@@ -66,7 +67,8 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	private static final LinkRelation UPDATE_REL = BUILDER.relation("update");
 	private static final LinkRelation PAYMENT_REL = BUILDER.relation("payment");
 
-	private static final String FIRST_ORDER_EXPRESSION = String.format("$._embedded.%s[0]", ORDERS_REL);
+	private static final String FIRST_ORDER_EXPRESSION = String
+			.format("$._embedded.%s[?(@.status == 'Payment expected')]", ORDERS_REL);
 
 	/**
 	 * Processes the first existing {@link Order} found.
@@ -193,8 +195,18 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	private MockHttpServletResponse accessFirstOrder(MockHttpServletResponse source) throws Exception {
 
 		String content = source.getContentAsString();
-		String order = JsonPath.parse(content).read(JsonPath.compile(FIRST_ORDER_EXPRESSION), JSONObject.class).toString();
-		Link orderLink = getDiscovererFor(source).findRequiredLinkWithRel(IanaLinkRelations.SELF, order).expand();
+
+		String orders = JsonPath.parse(content)
+				.read(FIRST_ORDER_EXPRESSION, JSONArray.class)
+				.toJSONString();
+
+		String order = JsonPath.parse(orders)
+				.read("$.[0]", JSONObject.class)
+				.toJSONString();
+
+		Link orderLink = getDiscovererFor(source)
+				.findRequiredLinkWithRel(IanaLinkRelations.SELF, order)
+				.expand();
 
 		LOG.info(String.format("Picking first order using JSONPath expression %s…", FIRST_ORDER_EXPRESSION));
 		LOG.info(String.format("Discovered self link pointing to %s… Following", orderLink));

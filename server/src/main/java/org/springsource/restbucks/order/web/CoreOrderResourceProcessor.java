@@ -48,15 +48,10 @@ class CoreOrderResourceProcessor implements RepresentationModelProcessor<EntityM
 
 		var typedEntityLinks = entityLinks.forType(Order::getId);
 		var order = resource.getContent();
+		var orderLink = typedEntityLinks.linkForItemResource(order);
 
-		if (!order.isPaid()) {
-			
-			var orderLink = typedEntityLinks.linkForItemResource(order);
-			
-			resource.add(orderLink.withRel(CANCEL_REL));
-			resource.add(orderLink.withRel(UPDATE_REL));
-		}
-
-		return resource;
+		return resource
+				.addIf(!order.isPaid(), () -> orderLink.withRel(CANCEL_REL))
+				.addIf(!order.isPaid(), () -> orderLink.withRel(UPDATE_REL));
 	}
 }

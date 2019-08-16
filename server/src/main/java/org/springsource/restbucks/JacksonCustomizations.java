@@ -29,12 +29,14 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
 import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
 import org.springframework.data.util.TypeInformation;
+import org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration;
 import org.springsource.restbucks.order.LineItem;
 import org.springsource.restbucks.order.Location;
 import org.springsource.restbucks.order.Milk;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Size;
 import org.springsource.restbucks.payment.CreditCard;
+import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -53,6 +55,12 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
  */
 @Configuration(proxyBeanMethods = false)
 class JacksonCustomizations {
+
+	public @Bean HalFormsConfiguration halFormsConfiguration() {
+
+		return new HalFormsConfiguration()
+				.withPattern(CreditCardNumber.class, CreditCardNumber.REGEX);
+	}
 
 	public @Bean Module moneyModule() {
 		return new MoneyModule();

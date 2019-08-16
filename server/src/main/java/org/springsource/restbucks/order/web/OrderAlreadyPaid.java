@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Exception being thrown in case an {@link Order} has already been paid and a payment is reattempted.
- * 
+ *
  * @author Oliver Gierke
  */
 @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-public class OrderAlreadyPaid extends RuntimeException {
+class OrderAlreadyPaid extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 }

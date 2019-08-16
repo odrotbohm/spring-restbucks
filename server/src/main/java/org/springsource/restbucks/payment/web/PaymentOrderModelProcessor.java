@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,23 @@
  */
 package org.springsource.restbucks.payment.web;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.util.function.Function;
+
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 import org.springsource.restbucks.order.Order;
 
 /**
  * {@link ResourceProcessor} to enrich {@link Order} {@link Resource}s with links to the {@link PaymentController}.
- * 
+ *
  * @author Oliver Gierke
  */
 @Component
@@ -34,23 +40,21 @@ class PaymentOrderModelProcessor implements RepresentationModelProcessor<EntityM
 
 	private final @NonNull PaymentLinks paymentLinks;
 
-	/* 
+	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.hateoas.server.RepresentationModelProcessor#process(org.springframework.hateoas.RepresentationModel)
 	 */
 	@Override
-	public EntityModel<Order> process(EntityModel<Order> resource) {
+	public EntityModel<Order> process(EntityModel<Order> model) {
 
-		var order = resource.getContent();
+		var order = model.getContent();
 
-		if (!order.isPaid()) {
-			resource.add(paymentLinks.getPaymentLink(order));
-		}
+		Function<Link, Link> mapper = link -> link
+				.andAffordance(afford(methodOn(PaymentController.class).submitPayment(order, null)));
 
-		if (order.isReady()) {
-			resource.add(paymentLinks.getReceiptLink(order));
-		}
-
-		return resource;
+		return model
+				.mapLinkIf(!order.isPaid(), IanaLinkRelations.SELF, mapper)
+				.addIf(!order.isPaid(), () -> paymentLinks.getPaymentLink(order))
+				.addIf(order.isReady(), () -> paymentLinks.getReceiptLink(order));
 	}
 }
