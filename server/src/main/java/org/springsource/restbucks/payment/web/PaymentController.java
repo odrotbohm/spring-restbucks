@@ -20,7 +20,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-
 import javax.money.MonetaryAmount;
 
 import org.springframework.data.repository.support.DomainClassConverter;
@@ -53,7 +52,7 @@ import org.springsource.restbucks.payment.PaymentService;
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
 @RequiredArgsConstructor
-public class PaymentController {
+class PaymentController {
 
 	private final @NonNull PaymentService paymentService;
 	private final @NonNull PaymentLinks paymentLinks;
@@ -75,9 +74,9 @@ public class PaymentController {
 		}
 
 		var payment = paymentService.pay(order, number);
-		var model = new PaymentModel(order.getPrice(), payment.getCreditCard())//
+		var model = new PaymentModel(order.getPrice(), payment.getCreditCard()) //
 				.add(paymentLinks.getOrderLinks().linkToItemResource(order));
-		
+
 		var paymentUri = paymentLinks.getPaymentLink(order).toUri();
 
 		return ResponseEntity.created(paymentUri).body(model);
@@ -98,7 +97,7 @@ public class PaymentController {
 
 		return paymentService.getPaymentFor(order) //
 				.map(Payment::getReceipt) //
-				.map(this::createReceiptResponse)
+				.map(this::createReceiptResponse) //
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
@@ -132,13 +131,14 @@ public class PaymentController {
 		var orderLinks = paymentLinks.getOrderLinks();
 		var order = receipt.getOrder();
 
-		var resource = new EntityModel<>(receipt).add(orderLinks.linkToItemResource(order));
+		var model = new EntityModel<>(receipt) //
+				.add(orderLinks.linkToItemResource(order));
 
 		if (!order.isTaken()) {
-			resource.add(orderLinks.linkForItemResource(order).slash("receipt").withSelfRel());
+			model.add(orderLinks.linkForItemResource(order).slash("receipt").withSelfRel());
 		}
 
-		return ResponseEntity.ok(resource);
+		return ResponseEntity.ok(model);
 	}
 
 	/**
