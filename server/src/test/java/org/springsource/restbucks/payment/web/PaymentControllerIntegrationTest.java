@@ -21,12 +21,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
 import org.springsource.restbucks.order.OrderRepository;
 import org.springsource.restbucks.payment.CreditCardNumber;
+import org.springsource.restbucks.payment.web.PaymentController.PaymentForm;
 
 /**
  * Integration test for {@link PaymentController}.
@@ -35,7 +34,7 @@ import org.springsource.restbucks.payment.CreditCardNumber;
  */
 @Transactional
 @SpringBootTest
-public class PaymentControllerIntegrationTest {
+class PaymentControllerIntegrationTest {
 
 	@Autowired PaymentController controller;
 	@Autowired OrderRepository orders;
@@ -44,15 +43,16 @@ public class PaymentControllerIntegrationTest {
 	void processesPayment() throws Exception {
 
 		// Given
-		Order order = orders.findByStatus(Status.PAYMENT_EXPECTED).get(0);
+		var order = orders.findByStatus(Status.PAYMENT_EXPECTED).get(0);
 
 		// When
-		ResponseEntity<?> entity = controller.submitPayment(order, new CreditCardNumber("1234123412341234"));
+		var model = new PaymentForm(new CreditCardNumber("1234123412341234"));
+		var entity = controller.submitPayment(order, model);
 
 		// Then
 		assertThat(entity.getHeaders().getLocation()).isNotNull();
-		assertThat(entity.getBody()).isInstanceOfSatisfying(RepresentationModel.class, model -> {
-			assertThat(model.hasLink("order")).isTrue();
+		assertThat(entity.getBody()).isInstanceOfSatisfying(RepresentationModel.class, it -> {
+			assertThat(it.hasLink("order")).isTrue();
 		});
 	}
 }

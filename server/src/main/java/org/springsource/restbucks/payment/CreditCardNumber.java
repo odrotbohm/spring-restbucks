@@ -15,49 +15,61 @@
  */
 package org.springsource.restbucks.payment;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.regex.Pattern;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import lombok.Data;
-
 /**
  * Value object to represent a {@link CreditCardNumber}.
- * 
+ *
  * @author Oliver Gierke
  */
 @Data
 @Embeddable
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class CreditCardNumber {
 
-	private static final String regex = "[0-9]{16}";
+	public static final String REGEX = "[0-9]{16}";
+	private static final Pattern PATTERN = Pattern.compile(REGEX);
 
-	private final @Column(unique = true) String number;
-
-	protected CreditCardNumber() {
-		this.number = null;
-	}
+	@Column(unique = true) //
+	private final String number;
 
 	/**
 	 * Creates a new {@link CreditCardNumber}.
-	 * 
+	 *
 	 * @param number must not be {@literal null} and be a 16 digit numerical only String.
 	 */
 	public CreditCardNumber(String number) {
 
 		if (!isValid(number)) {
-			throw new IllegalArgumentException(String.format("Invalid credit card NUMBER %s!", number));
+			throw new IllegalArgumentException(String.format("Invalid credit card number %s!", number));
 		}
 
 		this.number = number;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return number;
+	}
+
 	/**
 	 * Returns whether the given {@link String} is a valid {@link CreditCardNumber}.
-	 * 
+	 *
 	 * @param number
 	 * @return
 	 */
 	public static boolean isValid(String number) {
-		return number == null ? false : number.matches(regex);
+		return number == null ? false : PATTERN.matcher(number).matches();
 	}
 }

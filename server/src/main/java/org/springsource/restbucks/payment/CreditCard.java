@@ -15,26 +15,29 @@
  */
 package org.springsource.restbucks.payment;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
 import javax.persistence.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-
 import org.springsource.restbucks.core.AbstractEntity;
 
 /**
  * Abstraction of a credit card.
- * 
+ *
  * @author Oliver Gierke
  */
 @Entity
 @ToString(callSuper = true)
 @AllArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class CreditCard extends AbstractEntity {
 
 	private final @Getter CreditCardNumber number;
@@ -43,13 +46,9 @@ public class CreditCard extends AbstractEntity {
 	private Month expiryMonth;
 	private Year expiryYear;
 
-	protected CreditCard() {
-		this(null, null, null, null);
-	}
-
 	/**
 	 * Returns whether the {@link CreditCard} is currently valid.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isValid() {
@@ -58,7 +57,7 @@ public class CreditCard extends AbstractEntity {
 
 	/**
 	 * Returns whether the {@link CreditCard} is valid for the given date.
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
@@ -68,7 +67,7 @@ public class CreditCard extends AbstractEntity {
 
 	/**
 	 * Returns the {@link LocalDate} the {@link CreditCard} expires.
-	 * 
+	 *
 	 * @return will never be {@literal null}.
 	 */
 	public LocalDate getExpirationDate() {
@@ -77,7 +76,7 @@ public class CreditCard extends AbstractEntity {
 
 	/**
 	 * Protected setter to allow binding the expiration date.
-	 * 
+	 *
 	 * @param date
 	 */
 	protected void setExpirationDate(LocalDate date) {

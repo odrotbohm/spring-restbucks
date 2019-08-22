@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
 import javax.money.MonetaryAmount;
 
@@ -42,6 +43,8 @@ import org.springsource.restbucks.payment.CreditCardNumber;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
 import org.springsource.restbucks.payment.PaymentService;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * Spring MVC controller to handle payments for an {@link Order}.
@@ -67,13 +70,13 @@ class PaymentController {
 	 * @return
 	 */
 	@PutMapping(path = PaymentLinks.PAYMENT)
-	ResponseEntity<?> submitPayment(@PathVariable("id") Order order, @RequestBody CreditCardNumber number) {
+	ResponseEntity<?> submitPayment(@PathVariable("id") Order order, @RequestBody PaymentForm ccn) {
 
 		if (order == null || order.isPaid()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		var payment = paymentService.pay(order, number);
+		var payment = paymentService.pay(order, ccn.getNumber());
 		var model = new PaymentModel(order.getPrice(), payment.getCreditCard()) //
 				.add(paymentLinks.getOrderLinks().linkToItemResource(order));
 
@@ -152,5 +155,11 @@ class PaymentController {
 
 		private final MonetaryAmount amount;
 		private final CreditCard creditCard;
+	}
+
+	@Value
+	@RequiredArgsConstructor(onConstructor = @__(@JsonCreator))
+	static class PaymentForm {
+		CreditCardNumber number;
 	}
 }

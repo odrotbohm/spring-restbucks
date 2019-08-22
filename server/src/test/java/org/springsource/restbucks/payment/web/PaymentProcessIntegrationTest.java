@@ -228,10 +228,10 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		LOG.info("Triggering payment…");
 
-		ResultActions action = mvc.perform(put(paymentLink.getHref()).//
-				content("\"1234123412341234\"").//
-				contentType(MediaType.APPLICATION_JSON).//
-				accept(MediaTypes.HAL_JSON));
+		ResultActions action = mvc.perform(put(paymentLink.getHref())//
+				.content("{ \"number\" : \"1234123412341234\" }")//
+				.contentType(MediaType.APPLICATION_JSON)//
+				.accept(MediaTypes.HAL_JSON));
 
 		MockHttpServletResponse result = action.andExpect(status().isCreated()). //
 				andExpect(linkWithRelIsPresent(ORDER_REL)). //

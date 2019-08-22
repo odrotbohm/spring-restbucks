@@ -42,14 +42,15 @@ import org.springsource.restbucks.payment.CreditCardNumber;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.deser.ValueInstantiator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 /**
  * Configures custom serialization and deserialization of {@link Money} instances
@@ -97,12 +98,9 @@ class JacksonCustomizations {
 		}
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-		static abstract class CreditCardMixin {
+		static abstract class CreditCardMixin {}
 
-			abstract @JsonUnwrapped CreditCardNumber getNumber();
-		}
-
-		@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+		@JsonSerialize(using = ToStringSerializer.class)
 		static abstract class CreditCardNumberMixin {}
 	}
 
