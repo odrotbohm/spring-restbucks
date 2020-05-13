@@ -30,16 +30,11 @@ import org.springsource.restbucks.order.Order;
 @Getter
 @EqualsAndHashCode
 @ToString
+@RequiredArgsConstructor
 public class OrderPaid {
 
-	private final long orderId;
-
 	/**
-	 * Creates a new {@link OrderPaid}
-	 * 
-	 * @param orderId the id of the order that just has been payed
+	 * The id of the {@link Order} that just has been payed
 	 */
-	public OrderPaid(long orderId) {
-		this.orderId = orderId;
-	}
+	private final long orderId;
 }
