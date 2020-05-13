@@ -179,7 +179,7 @@ public class Order extends AbstractAggregateRoot {
 	 * 
 	 * @author Oliver Gierke
 	 */
-	public static enum Status {
+	public enum Status {
 
 		/**
 		 * Placed, but not payed yet. Still changeable.
