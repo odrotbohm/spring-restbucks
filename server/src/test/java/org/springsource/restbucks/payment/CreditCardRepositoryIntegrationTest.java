@@ -15,9 +15,9 @@
  */
 package org.springsource.restbucks.payment;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDate;
+import java.time.Month;
 import java.time.Year;
 import java.util.Optional;
 
@@ -48,12 +48,6 @@ class CreditCardRepositoryIntegrationTest extends AbstractIntegrationTest {
 	public static CreditCard createCreditCard() {
 
 		CreditCardNumber number = new CreditCardNumber("4321432143214321");
-		LocalDate monthAfterNext = monthAfterNext();
-		return new CreditCard(number, "Oliver Gierke", monthAfterNext.getMonth(), Year.of(monthAfterNext.getYear()));
+		return new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2020));
 	}
-
-	private static LocalDate monthAfterNext() {
-		return LocalDate.now().plusMonths(2);
-	}
-
 }
