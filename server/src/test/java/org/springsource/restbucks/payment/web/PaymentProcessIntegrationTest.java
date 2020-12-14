@@ -17,12 +17,15 @@ package org.springsource.restbucks.payment.web;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
+import static org.springframework.hateoas.mediatype.hal.HalLinkRelation.curied;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springsource.restbucks.Restbucks.CURIE_NAMESPACE;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.util.Optional;
 
@@ -57,6 +60,8 @@ import com.jayway.jsonpath.JsonPath;
 @Slf4j
 class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
+	private static final String PAYMENT = "payment";
+	
 	private static final HalLinkRelationBuilder BUILDER = HalLinkRelation.curieBuilder(Restbucks.CURIE_NAMESPACE);
 
 	private static final LinkRelation ORDERS_REL = BUILDER.relation("orders");
@@ -64,7 +69,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	private static final LinkRelation RECEIPT_REL = BUILDER.relation("receipt");
 	private static final LinkRelation CANCEL_REL = BUILDER.relation("cancel");
 	private static final LinkRelation UPDATE_REL = BUILDER.relation("update");
-	private static final LinkRelation PAYMENT_REL = BUILDER.relation("payment");
+	private static final LinkRelation PAYMENT_REL = BUILDER.relation(PAYMENT);
 
 	private static final String FIRST_ORDER_EXPRESSION = String.format("$._embedded.%s[0]", ORDERS_REL);
 
@@ -78,6 +83,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		response = discoverOrdersResource(response);
 		response = accessFirstOrder(response);
+		verifyPaymentIsDocumented(response);
 		response = triggerPayment(response);
 		response = pollUntilOrderHasReceiptLink(response);
 		response = takeReceipt(response);
@@ -94,6 +100,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		MockHttpServletResponse response = accessRootResource();
 
 		response = createNewOrder(response);
+		verifyPaymentIsDocumented(response);
 		response = triggerPayment(response);
 		response = pollUntilOrderHasReceiptLink(response);
 		response = takeReceipt(response);
@@ -206,6 +213,25 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				andExpect(linkWithRelIsPresent(PAYMENT_REL)).//
 				andReturn().getResponse();
 	}
+
+	/**
+	 * Verifies that the HTML curie of payment can be accessed. 
+	 * @param response
+	 * @throws Exception 
+	 */
+	private void verifyPaymentIsDocumented(MockHttpServletResponse response) throws Exception {
+
+		String content = response.getContentAsString();
+		Link curiesLink = getDiscovererFor(response).findRequiredLinkWithRel(LinkRelation.of("curies"), content);
+
+		LOG.info(String.format("Discovered curies link pointing to %s…", curiesLink));
+		Link paymentCurie = curiesLink.expand(PAYMENT);
+
+		LOG.info(String.format("Expanded payment curie pointing to %s…", paymentCurie));
+		mvc.perform(get(paymentCurie.getHref())). //
+				andExpect(status().isOk()); //
+	}
+
 
 	/**
 	 * Triggers the payment of an {@link Order} by following the {@code payment} link and submitting a credit card number
