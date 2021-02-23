@@ -46,7 +46,7 @@ class PaymentControllerIntegrationTest {
 		var order = orders.findByStatus(Status.PAYMENT_EXPECTED).get(0);
 
 		// When
-		var model = new PaymentForm(new CreditCardNumber("1234123412341234"));
+		var model = new PaymentForm(CreditCardNumber.of("1234123412341234"));
 		var entity = controller.submitPayment(order, model);
 
 		// Then

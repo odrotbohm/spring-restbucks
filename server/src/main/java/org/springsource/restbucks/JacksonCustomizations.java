@@ -17,7 +17,6 @@ package org.springsource.restbucks;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.money.MonetaryAmount;
@@ -30,34 +29,29 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
 import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
 import org.springframework.data.util.TypeInformation;
-import org.springsource.restbucks.core.AbstractAggregateRoot;
 import org.springsource.restbucks.order.LineItem;
 import org.springsource.restbucks.order.Location;
 import org.springsource.restbucks.order.Milk;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Size;
 import org.springsource.restbucks.payment.CreditCard;
-import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.deser.ValueInstantiator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 /**
  * Configures custom serialization and deserialization of {@link Money} instances
  *
  * @author Oliver Gierke
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class JacksonCustomizations {
 
 	public @Bean Module moneyModule() {
@@ -73,15 +67,9 @@ class JacksonCustomizations {
 
 		public RestbucksModule() {
 
-			setMixInAnnotation(AbstractAggregateRoot.class, AggregateRootMixin.class);
 			setMixInAnnotation(Order.class, RestbucksModule.OrderMixin.class);
 			setMixInAnnotation(LineItem.class, LineItemMixin.class);
 			setMixInAnnotation(CreditCard.class, CreditCardMixin.class);
-			setMixInAnnotation(CreditCardNumber.class, CreditCardNumberMixin.class);
-		}
-
-		static abstract class AggregateRootMixin {
-			abstract @JsonIgnore List<Object> getDomainEvents();
 		}
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
@@ -99,9 +87,6 @@ class JacksonCustomizations {
 
 		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 		static abstract class CreditCardMixin {}
-
-		@JsonSerialize(using = ToStringSerializer.class)
-		static abstract class CreditCardNumberMixin {}
 	}
 
 	@SuppressWarnings("serial")

@@ -21,14 +21,14 @@ import org.springframework.data.repository.CrudRepository;
 
 /**
  * Repository to access {@link CreditCard} instances.
- * 
+ *
  * @author Oliver Gierke
  */
-interface CreditCardRepository extends CrudRepository<CreditCard, Long> {
+interface CreditCardRepository extends CrudRepository<CreditCard, CreditCardNumber> {
 
 	/**
 	 * Returns the {@link CreditCard} associated with the given {@link CreditCardNumber}.
-	 * 
+	 *
 	 * @param number must not be {@literal null}.
 	 * @return
 	 */

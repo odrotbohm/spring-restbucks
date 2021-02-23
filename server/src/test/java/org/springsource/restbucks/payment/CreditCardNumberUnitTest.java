@@ -15,33 +15,33 @@
  */
 package org.springsource.restbucks.payment;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link CreditCardNumber}.
- * 
+ *
  * @author Oliver Gierke
  */
 class CreditCardNumberUnitTest {
 
 	@Test
 	void rejectsInvalidLength() {
-		
+
 		assertThatExceptionOfType(IllegalArgumentException.class) //
-			.isThrownBy(() -> new CreditCardNumber("1234"));
+				.isThrownBy(() -> CreditCardNumber.of("1234"));
 	}
 
 	@Test
 	void rejectsLetters() {
-		
+
 		assertThatExceptionOfType(IllegalArgumentException.class) //
-			.isThrownBy(() -> new CreditCardNumber("123412341234123A"));
+				.isThrownBy(() -> CreditCardNumber.of("123412341234123A"));
 	}
 
 	@Test
 	void createsValidCreditCardNumber() {
-		new CreditCardNumber("1234123412341234");
+		assertThatNoException().isThrownBy(() -> CreditCardNumber.of("1234123412341234"));
 	}
 }

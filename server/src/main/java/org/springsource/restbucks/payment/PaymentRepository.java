@@ -17,21 +17,27 @@ package org.springsource.restbucks.payment;
 
 import java.util.Optional;
 
+import org.jmolecules.ddd.types.Association;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springsource.restbucks.order.Order;
+import org.springsource.restbucks.order.Order.OrderIdentifier;
 
 /**
  * Repository interface to manage {@link Payment} instances.
- * 
+ *
  * @author Oliver Gierke
  */
-interface PaymentRepository extends PagingAndSortingRepository<Payment, Long> {
+interface PaymentRepository extends PagingAndSortingRepository<Payment<?>, Long> {
 
 	/**
 	 * Returns the payment registered for the given {@link Order}.
-	 * 
+	 *
 	 * @param order
 	 * @return
 	 */
-	Optional<Payment> findByOrder(Order order);
+	default Optional<Payment<?>> findByOrder(OrderIdentifier id) {
+		return findByOrder(Association.forId(id));
+	}
+
+	Optional<Payment<?>> findByOrder(Association<Order, OrderIdentifier> order);
 }

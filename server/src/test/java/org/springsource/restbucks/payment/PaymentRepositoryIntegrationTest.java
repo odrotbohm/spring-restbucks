@@ -27,7 +27,7 @@ import org.springsource.restbucks.order.OrderRepository;
 
 /**
  * Integration tests for {@link PaymentRepository}.
- * 
+ *
  * @author Oliver Gierke
  */
 class PaymentRepositoryIntegrationTest extends AbstractIntegrationTest {
@@ -45,6 +45,6 @@ class PaymentRepositoryIntegrationTest extends AbstractIntegrationTest {
 		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCard, order));
 
 		assertThat(payment.getId()).isNotNull();
-		assertThat(payments.findByOrder(order)).hasValue(payment);
+		assertThat(payments.findByOrder(order.getId())).hasValue(payment);
 	}
 }

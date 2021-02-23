@@ -22,14 +22,14 @@ import org.springsource.restbucks.payment.Payment.Receipt;
 
 /**
  * Interface to collect payment services.
- * 
+ *
  * @author Oliver Gierke
  */
 public interface PaymentService {
 
 	/**
 	 * Pay the given {@link Order} with the {@link CreditCard} identified by the given {@link CreditCardNumber}.
-	 * 
+	 *
 	 * @param order
 	 * @param creditCardNumber
 	 * @return
@@ -38,16 +38,16 @@ public interface PaymentService {
 
 	/**
 	 * Returns the {@link Payment} for the given {@link Order}.
-	 * 
+	 *
 	 * @param order
 	 * @return the {@link Payment} for the given {@link Order} or {@link Optional#empty()} if the Order hasn't been payed
 	 *         yet.
 	 */
-	Optional<Payment> getPaymentFor(Order order);
+	Optional<Payment<?>> getPaymentFor(Order order);
 
 	/**
 	 * Takes the receipt
-	 * 
+	 *
 	 * @param order
 	 * @return
 	 */

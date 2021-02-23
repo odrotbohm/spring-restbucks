@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks.payment;
+package org.springsource.restbucks.order;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import java.time.LocalDateTime;
 
-import org.springsource.restbucks.order.Order;
+import org.springframework.data.rest.core.config.Projection;
+import org.springsource.restbucks.order.Order.Status;
 
 /**
- * Event to be thrown when an {@link Order} has been payed.
+ * Projection interface to render {@link Order} summaries.
  * 
  * @author Oliver Gierke
- * @author Stéphane Nicoll
  */
-@Getter
-@EqualsAndHashCode
-@ToString
-public class OrderPaid {
-
-	private final long orderId;
+@Projection(name = "summary", types = Order.class)
+public interface OrderProjection {
 
 	/**
-	 * Creates a new {@link OrderPaid}
-	 * 
-	 * @param orderId the id of the order that just has been payed
+	 * @see Order#getOrderedDate()
+	 * @return
 	 */
-	public OrderPaid(long orderId) {
-		this.orderId = orderId;
-	}
+	LocalDateTime getOrderedDate();
+
+	/**
+	 * @see Order#getStatus()
+	 * @return
+	 */
+	Status getStatus();
 }

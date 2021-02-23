@@ -17,23 +17,26 @@ package org.springsource.restbucks.order;
 
 import lombok.Getter;
 import lombok.ToString;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import javax.money.MonetaryAmount;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.javamoney.moneta.Money;
-import org.springsource.restbucks.core.AbstractAggregateRoot;
-import org.springsource.restbucks.payment.OrderPaid;
+import org.jmolecules.ddd.types.AggregateRoot;
+import org.jmolecules.ddd.types.Identifier;
+import org.springframework.data.domain.AbstractAggregateRoot;
+import org.springsource.restbucks.order.Order.OrderIdentifier;
 
 /**
  * An order.
@@ -44,25 +47,27 @@ import org.springsource.restbucks.payment.OrderPaid;
 @Getter
 @ToString(exclude = "lineItems")
 @Table(name = "RBOrder")
-public class Order extends AbstractAggregateRoot {
+public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot<Order, OrderIdentifier> {
 
+	private final OrderIdentifier id;
 	private final Location location;
 	private final LocalDateTime orderedDate;
 	private Status status;
+	private @Version Long version;
 
 	@OrderColumn //
 	@Column(unique = true) //
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //
 	private final List<LineItem> lineItems = new ArrayList<>();
 
 	/**
 	 * Creates a new {@link Order} for the given {@link LineItem}s and {@link Location}.
-	 * 
+	 *
 	 * @param lineItems must not be {@literal null}.
 	 * @param location
 	 */
 	public Order(Collection<LineItem> lineItems, Location location) {
 
+		this.id = OrderIdentifier.of(UUID.randomUUID().toString());
 		this.location = location == null ? Location.TAKE_AWAY : location;
 		this.status = Status.PAYMENT_EXPECTED;
 		this.lineItems.addAll(lineItems);
@@ -71,7 +76,7 @@ public class Order extends AbstractAggregateRoot {
 
 	/**
 	 * Creates a new {@link Order} containing the given {@link LineItem}s.
-	 * 
+	 *
 	 * @param items must not be {@literal null}.
 	 */
 	public Order(LineItem... items) {
@@ -84,7 +89,7 @@ public class Order extends AbstractAggregateRoot {
 
 	/**
 	 * Returns the price of the {@link Order} calculated from the contained items.
-	 * 
+	 *
 	 * @return will never be {@literal null}.
 	 */
 	public MonetaryAmount getPrice() {
@@ -105,7 +110,7 @@ public class Order extends AbstractAggregateRoot {
 
 		this.status = Status.PAID;
 
-		registerEvent(new OrderPaid(getId()));
+		registerEvent(new OrderPaid(id));
 
 		return this;
 	}
@@ -154,7 +159,7 @@ public class Order extends AbstractAggregateRoot {
 
 	/**
 	 * Returns whether the {@link Order} has been paid already.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isPaid() {
@@ -163,7 +168,7 @@ public class Order extends AbstractAggregateRoot {
 
 	/**
 	 * Returns if the {@link Order} is ready to be taken.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isReady() {
@@ -176,7 +181,7 @@ public class Order extends AbstractAggregateRoot {
 
 	/**
 	 * Enumeration for all the statuses an {@link Order} can be in.
-	 * 
+	 *
 	 * @author Oliver Gierke
 	 */
 	public static enum Status {
@@ -205,5 +210,10 @@ public class Order extends AbstractAggregateRoot {
 		 * The {@link Order} was completed.
 		 */
 		TAKEN;
+	}
+
+	@Value(staticConstructor = "of")
+	public static class OrderIdentifier implements Identifier {
+		String id;
 	}
 }

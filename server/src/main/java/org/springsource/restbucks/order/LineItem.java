@@ -17,34 +17,41 @@ package org.springsource.restbucks.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Value;
+
+import java.util.UUID;
 
 import javax.money.MonetaryAmount;
-import javax.persistence.Entity;
 
-import org.springsource.restbucks.core.AbstractEntity;
+import org.jmolecules.ddd.types.Entity;
+import org.jmolecules.ddd.types.Identifier;
+import org.springsource.restbucks.order.LineItem.LineItemIdentifier;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * A line item.
- * 
+ *
  * @author Oliver Gierke
  */
 @Data
-@Entity
-@NoArgsConstructor(force = true)
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class LineItem extends AbstractEntity {
+public class LineItem implements Entity<Order, LineItemIdentifier> {
 
+	private final LineItemIdentifier id;
 	private final String name;
 	private final int quantity;
 	private final Milk milk;
 	private final Size size;
 	private final MonetaryAmount price;
 
+	@JsonCreator
 	public LineItem(String name, MonetaryAmount price) {
-		this(name, 1, Milk.SEMI, Size.LARGE, price);
+		this(LineItemIdentifier.of(UUID.randomUUID()), name, 1, Milk.SEMI, Size.LARGE, price);
 	}
 
+	@Value(staticConstructor = "of")
+	public static class LineItemIdentifier implements Identifier {
+		UUID id;
+	}
 }

@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Initializing component to create a default {@link CreditCard} in the system.
- * 
+ *
  * @author Oliver Gierke
  */
 @Service
@@ -44,7 +44,7 @@ class PaymentInitializer {
 			return;
 		}
 
-		CreditCardNumber number = new CreditCardNumber("1234123412341234");
+		CreditCardNumber number = CreditCardNumber.of("1234123412341234");
 		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2099));
 
 		creditCard = repository.save(creditCard);

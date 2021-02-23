@@ -23,13 +23,13 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.javamoney.moneta.Money;
+import org.jmolecules.ddd.annotation.Service;
+import org.jmolecules.event.annotation.DomainEventHandler;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
 
 /**
  * Initializer to set up two {@link Order}s.
- * 
+ *
  * @author Oliver Gierke
  */
 @Service
@@ -40,10 +40,10 @@ class OrderInitializer {
 
 	/**
 	 * Creates two orders and persists them using the given {@link OrderRepository}.
-	 * 
+	 *
 	 * @param orders must not be {@literal null}.
 	 */
-	@EventListener
+	@DomainEventHandler
 	public void init(ApplicationReadyEvent event) {
 
 		if (orders.count() != 0) {

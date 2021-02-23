@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
+import org.jmolecules.jackson.JMoleculesModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springsource.restbucks.JacksonTestUtils;
@@ -37,7 +38,7 @@ import com.jayway.jsonpath.Option;
 
 /**
  * Integration tests for marshaling of {@link CreditCard}.
- * 
+ *
  * @author Oliver Gierke
  */
 class CreditCardMarshallingTest {
@@ -52,13 +53,14 @@ class CreditCardMarshallingTest {
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		mapper.registerModule(new JavaTimeModule());
 		mapper.registerModule(new ParameterNamesModule());
+		mapper.registerModule(new JMoleculesModule());
 		mapper.registerModules(JacksonTestUtils.getModules());
 	}
 
 	@Test
 	void serializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
 
-		CreditCard creditCard = new CreditCard(new CreditCardNumber("1234123412341234"), "Oliver Gierke", Month.NOVEMBER,
+		CreditCard creditCard = new CreditCard(CreditCardNumber.of("1234123412341234"), "Oliver Gierke", Month.NOVEMBER,
 				Year.of(2013));
 
 		String result = mapper.writeValueAsString(creditCard);
@@ -78,7 +80,7 @@ class CreditCardMarshallingTest {
 
 		CreditCard creditCard = mapper.readValue(REFERENCE, CreditCard.class);
 
-		assertThat(creditCard.getId()).isNull();
+		assertThat(creditCard.getId()).isEqualTo(creditCard.getNumber());
 		assertThat(creditCard.getExpirationDate()).isEqualTo(LocalDate.of(2013, 11, 1));
 		assertThat(creditCard.getNumber()).isNotNull();
 	}

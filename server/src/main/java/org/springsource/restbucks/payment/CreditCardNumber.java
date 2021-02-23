@@ -15,24 +15,23 @@
  */
 package org.springsource.restbucks.payment;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.util.regex.Pattern;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+
+import org.jmolecules.ddd.annotation.ValueObject;
+import org.jmolecules.ddd.types.Identifier;
 
 /**
  * Value object to represent a {@link CreditCardNumber}.
  *
  * @author Oliver Gierke
  */
-@Data
-@Embeddable
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-public class CreditCardNumber {
+@Value(staticConstructor = "of")
+@ValueObject
+public class CreditCardNumber implements Identifier {
 
 	public static final String REGEX = "[0-9]{16}";
 	private static final Pattern PATTERN = Pattern.compile(REGEX);
@@ -45,7 +44,7 @@ public class CreditCardNumber {
 	 *
 	 * @param number must not be {@literal null} and be a 16 digit numerical only String.
 	 */
-	public CreditCardNumber(String number) {
+	private CreditCardNumber(String number) {
 
 		if (!isValid(number)) {
 			throw new IllegalArgumentException(String.format("Invalid credit card number %s!", number));

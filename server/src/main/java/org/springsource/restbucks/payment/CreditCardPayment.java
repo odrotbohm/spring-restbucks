@@ -17,7 +17,6 @@ package org.springsource.restbucks.payment;
 
 import lombok.Getter;
 
-import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 import org.springframework.util.Assert;
@@ -25,22 +24,17 @@ import org.springsource.restbucks.order.Order;
 
 /**
  * A {@link Payment} done through a {@link CreditCard}.
- * 
+ *
  * @author Oliver Gierke
  */
-@Entity
 @Getter
-public class CreditCardPayment extends Payment {
+public class CreditCardPayment extends Payment<CreditCardPayment> {
 
 	private final @ManyToOne CreditCard creditCard;
 
-	protected CreditCardPayment() {
-		this.creditCard = null;
-	}
-
 	/**
 	 * Creates a new {@link CreditCardPayment} for the given {@link CreditCard} and {@link Order}.
-	 * 
+	 *
 	 * @param creditCard must not be {@literal null}.
 	 * @param order
 	 */

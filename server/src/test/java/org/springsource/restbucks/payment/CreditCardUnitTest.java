@@ -25,12 +25,12 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for {@link CreditCard}.
- * 
+ *
  * @author Oliver Gierke
  */
 class CreditCardUnitTest {
 
-	static final CreditCardNumber NUMBER = new CreditCardNumber("1234123412341234");
+	static final CreditCardNumber NUMBER = CreditCardNumber.of("1234123412341234");
 
 	@Test
 	void discoversExpiredCreditCard() {

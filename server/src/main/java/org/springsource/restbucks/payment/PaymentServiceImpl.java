@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
+import org.jmolecules.ddd.annotation.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderRepository;
@@ -29,7 +29,7 @@ import org.springsource.restbucks.payment.Payment.Receipt;
 /**
  * Implementation of {@link PaymentService} delegating persistence operations to {@link PaymentRepository} and
  * {@link CreditCardRepository}.
- * 
+ *
  * @author Oliver Gierke
  * @author Stéphane Nicoll
  */
@@ -42,7 +42,7 @@ class PaymentServiceImpl implements PaymentService {
 	private final @NonNull PaymentRepository paymentRepository;
 	private final @NonNull OrderRepository orderRepository;
 
-	/* 
+	/*
 	 * (non-Javadoc)
 	 * @see org.springsource.restbucks.payment.PaymentService#pay(org.springsource.restbucks.order.Order, org.springsource.restbucks.payment.Payment)
 	 */
@@ -75,17 +75,17 @@ class PaymentServiceImpl implements PaymentService {
 		return payment;
 	}
 
-	/* 
+	/*
 	 * (non-Javadoc)
 	 * @see org.springsource.restbucks.payment.PaymentService#getPaymentFor(org.springsource.restbucks.order.Order)
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<Payment> getPaymentFor(Order order) {
-		return paymentRepository.findByOrder(order);
+	public Optional<Payment<?>> getPaymentFor(Order order) {
+		return paymentRepository.findByOrder(order.getId());
 	}
 
-	/* 
+	/*
 	 * (non-Javadoc)
 	 * @see org.springsource.restbucks.payment.PaymentService#takeReceiptFor(org.springsource.restbucks.order.Order)
 	 */

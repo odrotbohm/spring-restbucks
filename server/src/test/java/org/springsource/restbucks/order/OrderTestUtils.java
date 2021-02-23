@@ -15,7 +15,7 @@
  */
 package org.springsource.restbucks.order;
 
-import static org.springsource.restbucks.core.Currencies.EURO;
+import static org.springsource.restbucks.core.Currencies.*;
 
 import org.javamoney.moneta.Money;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -29,10 +29,7 @@ import org.springsource.restbucks.order.Order.Status;
 public class OrderTestUtils {
 
 	public static Order createExistingOrder() {
-
-		Order order = new Order();
-		ReflectionTestUtils.setField(order, "id", 1L);
-		return order;
+		return new Order();
 	}
 
 	public static Order createExistingOrderWithStatus(Status status) {
@@ -41,7 +38,7 @@ public class OrderTestUtils {
 		ReflectionTestUtils.setField(order, "status", status);
 		return order;
 	}
-	
+
 	public static Order createOrder() {
 		return new Order(new LineItem("English breakfast", Money.of(2.70, EURO)));
 	}

@@ -12,14 +12,53 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.0-M2</version>
+		<version>2.5.0-M3</version>
 	</parent>
 
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jmolecules</groupId>
+				<artifactId>jmolecules-bom</artifactId>
+				<version>2021.0.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
+	
+		<!-- jMolecules -->
+
+		<dependency>
+			<groupId>org.jmolecules</groupId>
+			<artifactId>jmolecules-ddd</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jmolecules</groupId>
+			<artifactId>jmolecules-events</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-spring</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-jackson</artifactId>
+		</dependency>
 
 		<!-- Spring Data REST -->
 
@@ -111,6 +150,26 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<groupId>org.springframework.boot.experimental</groupId>
 						<artifactId>spring-boot-thin-layout</artifactId>
 						<version>1.0.27.BUILD-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>net.bytebuddy</groupId>
+				<artifactId>byte-buddy-maven-plugin</artifactId>
+				<version>1.10.21</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>transform</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jmolecules.integrations</groupId>
+						<artifactId>jmolecules-bytebuddy</artifactId>
+						<version>0.2.0</version>
 					</dependency>
 				</dependencies>
 			</plugin>

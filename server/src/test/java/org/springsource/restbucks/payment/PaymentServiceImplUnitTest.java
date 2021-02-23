@@ -15,7 +15,7 @@
  */
 package org.springsource.restbucks.payment;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -31,13 +31,13 @@ import org.springsource.restbucks.order.OrderTestUtils;
 
 /**
  * Unit tests for {@link PaymentServiceImpl}.
- * 
+ *
  * @author Oliver Gierke
  */
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceImplUnitTest {
 
-	static final CreditCardNumber NUMBER = new CreditCardNumber("1234123412341234");
+	static final CreditCardNumber NUMBER = CreditCardNumber.of("1234123412341234");
 
 	PaymentService paymentService;
 
@@ -52,16 +52,16 @@ class PaymentServiceImplUnitTest {
 
 	@Test
 	void rejectsNullPaymentRepository() {
-		
+
 		assertThatExceptionOfType(IllegalArgumentException.class) //
-			.isThrownBy(() -> new PaymentServiceImpl(creditCardRepository, null, orderRepository));
+				.isThrownBy(() -> new PaymentServiceImpl(creditCardRepository, null, orderRepository));
 	}
 
 	@Test
 	void rejectsNullCreditCardRepository() {
-		
+
 		assertThatExceptionOfType(IllegalArgumentException.class) //
-			.isThrownBy(() -> new PaymentServiceImpl(null, paymentRepository, orderRepository));
+				.isThrownBy(() -> new PaymentServiceImpl(null, paymentRepository, orderRepository));
 	}
 
 	@Test
@@ -69,10 +69,10 @@ class PaymentServiceImplUnitTest {
 
 		Order order = OrderTestUtils.createExistingOrder();
 		order.markPaid();
-		
+
 		assertThatExceptionOfType(PaymentException.class) //
-			.isThrownBy(() -> paymentService.pay(order, NUMBER)) //
-			.withMessageContaining("paid");
+				.isThrownBy(() -> paymentService.pay(order, NUMBER)) //
+				.withMessageContaining("paid");
 	}
 
 	@Test
@@ -81,8 +81,8 @@ class PaymentServiceImplUnitTest {
 		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(Optional.empty());
 
 		assertThatExceptionOfType(PaymentException.class) //
-			.isThrownBy(() -> paymentService.pay(new Order(), NUMBER)) //
-			.withMessageContaining("credit card") //
-			.withMessageContaining(NUMBER.getNumber());
+				.isThrownBy(() -> paymentService.pay(new Order(), NUMBER)) //
+				.withMessageContaining("credit card") //
+				.withMessageContaining(NUMBER.getNumber());
 	}
 }

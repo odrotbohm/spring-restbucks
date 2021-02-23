@@ -16,60 +16,60 @@
 package org.springsource.restbucks.payment;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
+import javax.persistence.Column;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
+import org.jmolecules.ddd.types.AggregateRoot;
+import org.jmolecules.ddd.types.Association;
+import org.jmolecules.ddd.types.Identifier;
 import org.springframework.util.Assert;
-import org.springsource.restbucks.core.AbstractEntity;
 import org.springsource.restbucks.order.Order;
+import org.springsource.restbucks.order.Order.OrderIdentifier;
+import org.springsource.restbucks.payment.Payment.PaymentIdentifier;
 
 /**
  * Baseclass for payment implementations.
- * 
+ *
  * @author Oliver Gierke
  */
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Getter
-@ToString(callSuper = true)
-public abstract class Payment extends AbstractEntity {
+@ToString
+@NoArgsConstructor(force = true)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
+		implements AggregateRoot<T, PaymentIdentifier> {
 
-	@JoinColumn(name = "rborder") //
-	@OneToOne(cascade = CascadeType.MERGE) //
-	private final Order order;
+	private final PaymentIdentifier id;
+
+	@Column(name = "rborder") //
+	private final Association<Order, OrderIdentifier> order;
 	private final LocalDateTime paymentDate;
-
-	protected Payment() {
-
-		this.order = null;
-		this.paymentDate = null;
-	}
 
 	/**
 	 * Creates a new {@link Payment} referring to the given {@link Order}.
-	 * 
+	 *
 	 * @param order must not be {@literal null}.
 	 */
-	public Payment(Order order) {
+	protected Payment(Order order) {
 
 		Assert.notNull(order, "Order must not be null!");
 
-		this.order = order;
+		this.id = PaymentIdentifier.of(UUID.randomUUID().toString());
+		this.order = Association.forAggregate(order);
 		this.paymentDate = LocalDateTime.now();
 	}
 
 	/**
 	 * Returns a receipt for the {@link Payment}.
-	 * 
+	 *
 	 * @return
 	 */
 	public Receipt getReceipt() {
@@ -78,13 +78,18 @@ public abstract class Payment extends AbstractEntity {
 
 	/**
 	 * A receipt for an {@link Order} and a payment date.
-	 * 
+	 *
 	 * @author Oliver Gierke
 	 */
 	@Value
 	public static class Receipt {
 
 		private final LocalDateTime date;
-		private final Order order;
+		private final Association<Order, OrderIdentifier> order;
+	}
+
+	@Value(staticConstructor = "of")
+	public static class PaymentIdentifier implements Identifier {
+		String id;
 	}
 }

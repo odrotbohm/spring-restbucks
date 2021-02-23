@@ -15,10 +15,8 @@
  */
 package org.springsource.restbucks.payment;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
@@ -27,7 +25,7 @@ import java.time.Year;
 
 import javax.persistence.Entity;
 
-import org.springsource.restbucks.core.AbstractEntity;
+import org.jmolecules.ddd.types.AggregateRoot;
 
 /**
  * Abstraction of a credit card.
@@ -37,14 +35,22 @@ import org.springsource.restbucks.core.AbstractEntity;
 @Entity
 @ToString(callSuper = true)
 @AllArgsConstructor
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class CreditCard extends AbstractEntity {
+public class CreditCard implements AggregateRoot<CreditCard, CreditCardNumber> {
 
 	private final @Getter CreditCardNumber number;
 	private final @Getter String cardHolderName;
 
 	private Month expiryMonth;
 	private Year expiryYear;
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.jmolecules.ddd.types.Identifiable#getId()
+	 */
+	@Override
+	public CreditCardNumber getId() {
+		return number;
+	}
 
 	/**
 	 * Returns whether the {@link CreditCard} is currently valid.

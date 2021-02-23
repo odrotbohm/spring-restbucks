@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springsource.restbucks.order.Order;
+import org.springsource.restbucks.order.OrderRepository;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
 import org.springsource.restbucks.payment.Payment;
@@ -59,6 +60,7 @@ class PaymentController {
 
 	private final @NonNull PaymentService paymentService;
 	private final @NonNull PaymentLinks paymentLinks;
+	private final @NonNull OrderRepository orders;
 
 	/**
 	 * Accepts a payment for an {@link Order}
@@ -132,16 +134,11 @@ class PaymentController {
 	private HttpEntity<EntityModel<Receipt>> createReceiptResponse(Receipt receipt) {
 
 		var orderLinks = paymentLinks.getOrderLinks();
-		var order = receipt.getOrder();
+		var order = orders.resolveRequired(receipt.getOrder());
 
-		var model = new EntityModel<>(receipt) //
-				.add(orderLinks.linkToItemResource(order));
-
-		if (!order.isTaken()) {
-			model.add(orderLinks.linkForItemResource(order).slash("receipt").withSelfRel());
-		}
-
-		return ResponseEntity.ok(model);
+		return ResponseEntity.ok(EntityModel.of(receipt)
+				.add(orderLinks.linkToItemResource(order))
+				.addIf(!order.isTaken(), () -> orderLinks.linkForItemResource(order).slash("receipt").withSelfRel()));
 	}
 
 	/**

@@ -57,8 +57,8 @@ class PaymentOrderModelProcessorUnitTest {
 		ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
 		RequestContextHolder.setRequestAttributes(requestAttributes);
 
-		paymentLink = new Link("payment", PaymentLinks.PAYMENT_REL);
-		receiptLink = new Link("receipt", PaymentLinks.RECEIPT_REL);
+		paymentLink = Link.of("payment", PaymentLinks.PAYMENT_REL);
+		receiptLink = Link.of("receipt", PaymentLinks.RECEIPT_REL);
 
 		processor = new PaymentOrderModelProcessor(paymentLinks);
 		when(paymentLinks.getPaymentLink(Mockito.any(Order.class))).thenReturn(paymentLink);
@@ -75,7 +75,7 @@ class PaymentOrderModelProcessorUnitTest {
 			}
 
 			Order order = OrderTestUtils.createExistingOrderWithStatus(status);
-			EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
+			EntityModel<Order> resource = processor.process(EntityModel.of(order));
 
 			assertThat(resource.hasLinks()).isFalse();
 		}
@@ -86,7 +86,7 @@ class PaymentOrderModelProcessorUnitTest {
 
 		Order order = OrderTestUtils.createExistingOrder();
 
-		EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
+		EntityModel<Order> resource = processor.process(EntityModel.of(order));
 		assertThat(resource.getLink(PaymentLinks.PAYMENT_REL)).hasValue(paymentLink);
 	}
 
@@ -98,7 +98,7 @@ class PaymentOrderModelProcessorUnitTest {
 		order.markInPreparation();
 		order.markPrepared();
 
-		EntityModel<Order> resource = processor.process(new EntityModel<Order>(order));
+		EntityModel<Order> resource = processor.process(EntityModel.of(order));
 		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL)).hasValue(receiptLink);
 	}
 }
