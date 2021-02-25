@@ -107,13 +107,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<executable>true</executable>
 				</configuration>
 				<dependencies>
-					<!--
 					<dependency>
 						<groupId>org.springframework.boot.experimental</groupId>
 						<artifactId>spring-boot-thin-layout</artifactId>
-						<version>1.0.26.RELEASE</version>
+						<version>1.0.27.BUILD-SNAPSHOT</version>
 					</dependency>
-					-->
 				</dependencies>
 			</plugin>
 
@@ -132,8 +130,15 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<pluginRepositories>
 		<pluginRepository>
+			<id>spring-snapshot</id>
+			<url>https://repo.spring.io/snapshot</url>
+		</pluginRepository>
+		<pluginRepository>
 			<id>spring-milestone</id>
 			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
 
