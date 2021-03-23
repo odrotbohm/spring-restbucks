@@ -268,6 +268,64 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 		</profile>
 
+		<!-- To build native images -->
+		<profile>
+
+			<id>nativeBP</id>
+
+			<build>
+				<defaultGoal>spring-boot:build-image</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<executable>true</executable>
+							<image>
+								<builder>paketobuildpacks/builder:tiny</builder>
+								<env>
+									<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+								</env>
+							</image>
+						</configuration>
+						<executions>
+							<execution>
+								<id>process-aot</id>
+								<goals>
+									<goal>process-aot</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+
+		<!-- Activate in addition to 'native' if you're building on an ARM machine (such as an M1 MacBook) -->
+
+		<profile>
+			<id>arm64</id>
+			<activation>
+				<os>
+					<arch>aarch64</arch>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration >
+							<image>
+								<builder>dashaun/java-native-builder-arm64:7.19.0</builder>
+							</image>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 
 	<build>

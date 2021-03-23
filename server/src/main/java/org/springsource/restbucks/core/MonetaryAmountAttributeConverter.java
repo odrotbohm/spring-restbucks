@@ -46,7 +46,7 @@ public class MonetaryAmountAttributeConverter implements AttributeConverter<Mone
 	}
 
 	@Override
-	public MonetaryAmount convertToEntityAttribute(String source) {
+	public Money convertToEntityAttribute(String source) {
 
 		if (source == null) {
 			return null;
