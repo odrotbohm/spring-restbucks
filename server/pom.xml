@@ -181,6 +181,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<repositories>
 		<repository>
+			<id>spring-snapshot</id>
+			<url>https://repo.spring.io/snapshot</url>
+		</repository>
+		<repository>
 			<id>spring-milestone</id>
 			<url>https://repo.spring.io/milestone</url>
 			<snapshots>
