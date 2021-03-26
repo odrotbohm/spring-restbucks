@@ -20,6 +20,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.UriTemplate;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
+import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 import org.springframework.hateoas.mediatype.hal.CurieProvider;
 import org.springframework.hateoas.mediatype.hal.DefaultCurieProvider;
 import org.springframework.modulith.Modulithic;
@@ -37,13 +39,14 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ConfigurationPropertiesScan
 @Modulithic(sharedModules = "core")
 @SpringBootApplication
+@EnableHypermediaSupport(type = { HypermediaType.HAL, HypermediaType.HAL_FORMS })
 public class Restbucks {
 
 	public static String CURIE_NAMESPACE = "restbucks";
 
 	@Bean
 	CurieProvider curieProvider() {
-		return new DefaultCurieProvider(CURIE_NAMESPACE, UriTemplate.of("/docs/{rel}.html"));
+		return new DefaultCurieProvider(CURIE_NAMESPACE, UriTemplate.of("/docs/{rel}"));
 	}
 
 	/**

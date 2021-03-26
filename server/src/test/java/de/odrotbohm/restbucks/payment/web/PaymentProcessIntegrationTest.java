@@ -16,9 +16,12 @@
 package de.odrotbohm.restbucks.payment.web;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import de.odrotbohm.restbucks.AbstractWebIntegrationTest;
+import de.odrotbohm.restbucks.DocumentationFlow;
 import de.odrotbohm.restbucks.Restbucks;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -41,6 +44,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.restdocs.hypermedia.HypermediaDocumentation;
+import org.springframework.restdocs.hypermedia.LinkDescriptor;
+import org.springframework.restdocs.hypermedia.LinksSnippet;
 
 import com.jayway.jsonpath.JsonPath;
 
@@ -74,6 +80,8 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	 */
 	@Test
 	void processExistingOrder() throws Exception {
+
+		this.flow = DocumentationFlow.of("pay-order");
 
 		var response = accessRootResource();
 
@@ -127,14 +135,21 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		LOG.info("Accessing root resource…");
 
-		var response = mvc.perform(get("/") //
-				.accept(MediaTypes.HAL_FORMS_JSON));
+		var result = mvc.perform(get("/").accept(MediaTypes.HAL_FORMS_JSON));
 
-		assertThat(response)
+		var docs = flow.documentUnmasked("access-api",
+				relaxedLinks(linkWithRel(ORDERS_REL.value()).description("Pointing to the orders resource.")));
+
+		assertThat(result)
+				.apply(docs)
 				.hasStatus(HttpStatus.OK)
-				.has(linkWithRel(ORDERS_REL));
+				.has(hasLinkWithRel(ORDERS_REL));
 
-		return response.getMvcResult().getResponse();
+		return result.getResponse();
+	}
+
+	LinksSnippet relaxedLinks(LinkDescriptor... descriptors) {
+		return HypermediaDocumentation.relaxedLinks(JsonPathHalLinkExtractor.INSTANCE, descriptors);
 	}
 
 	/**
@@ -146,7 +161,6 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("null")
 	private MockHttpServletResponse createNewOrder(MockHttpServletResponse source) throws Exception {
 
 		String content = source.getContentAsString();
@@ -171,19 +185,21 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		var location = locations[RANDOM.nextInt(locations.length)];
 
 		var payload = Map.of("drinks", List.of(drinkUri), "location", location);
-
 		var ordersLink = getDiscovererFor(source).findRequiredLinkWithRel(ORDERS_REL, content);
 
 		var response = mvc.perform(post(ordersLink.expand().getHref()) //
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new JsonMapper().writeValueAsString(payload)));
 
+		var docs = flow.document("create-order",
+				relaxedLinks(linkWithRel(PAYMENT_REL.value()).description("A link pointing to the payment resource.")));
+
 		assertThat(response)
+				.apply(docs)
 				.hasStatus(HttpStatus.CREATED)
 				.headers().containsHeader(HttpHeaders.LOCATION);
 
-		return mvc.perform(get(response.getMvcResult().getResponse().getHeader(HttpHeaders.LOCATION)))
-				.getMvcResult().getResponse();
+		return response.getResponse();
 	}
 
 	/**
@@ -241,11 +257,15 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		var result = mvc.perform(get(orderLink.getHref()));
 
+		var docs = flow.document("access-order",
+				relaxedLinks(linkWithRel(PAYMENT_REL.value()).description("A link pointing to the payment resource.")));
+
 		assertThat(result)
-				.has(linkWithRel(IanaLinkRelations.SELF))
-				.has(linkWithRel(CANCEL_REL))
-				.has(linkWithRel(UPDATE_REL))
-				.has(linkWithRel(PAYMENT_REL));
+				.apply(docs)
+				.has(hasLinkWithRel(IanaLinkRelations.SELF))
+				.has(hasLinkWithRel(CANCEL_REL))
+				.has(hasLinkWithRel(UPDATE_REL))
+				.has(hasLinkWithRel(PAYMENT_REL));
 
 		return result.getMvcResult().getResponse();
 	}
@@ -276,9 +296,16 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				.contentType(MediaType.APPLICATION_JSON)//
 				.accept(MediaTypes.HAL_JSON));
 
+		var docs = flow.document("trigger-payment",
+				relaxedResponseFields(fieldWithPath("amount").description("The amount paid."),
+						fieldWithPath("creditCardNumber").description("Information about the credit card used.")),
+				relaxedLinks(
+						linkWithRel(ORDER_REL.value()).description("Pointing back to the order to poll for updates.")));
+
 		assertThat(action)
+				.apply(docs)
 				.hasStatus(HttpStatus.CREATED)
-				.has(linkWithRel(ORDER_REL));
+				.has(hasLinkWithRel(ORDER_REL));
 
 		LOG.info("Payment triggered…");
 
@@ -286,11 +313,13 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		LOG.info("Faking a cancel request to make sure it's forbidden…");
 
 		var selfLink = discoverer.findRequiredLinkWithRel(IanaLinkRelations.SELF, content);
+		var result = mvc.perform(delete(selfLink.getHref()));
 
-		assertThat(mvc.perform(delete(selfLink.getHref())))
+		assertThat(result)
+				.apply(flow.document("order-not-payable"))
 				.hasStatus(HttpStatus.METHOD_NOT_ALLOWED);
 
-		return action.getMvcResult().getResponse();
+		return action.getResponse();
 	}
 
 	/**
@@ -334,9 +363,9 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 			if (status == HttpStatus.OK.value()) {
 
 				assertThat(action)
-						.has(linkWithRel(IanaLinkRelations.SELF))
-						.doesNotHave(linkWithRel(UPDATE_REL))
-						.doesNotHave(linkWithRel(CANCEL_REL));
+						.has(hasLinkWithRel(IanaLinkRelations.SELF))
+						.doesNotHave(hasLinkWithRel(UPDATE_REL))
+						.doesNotHave(hasLinkWithRel(CANCEL_REL));
 
 				receiptLink = discoverer.findLinkWithRel(RECEIPT_REL, pollResponse.getContentAsString());
 
@@ -346,6 +375,15 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 			if (!receiptLink.isPresent()) {
 				Thread.sleep(2000);
+			} else {
+
+				// One more request for documentation purposes
+				var result = mvc.perform(get(orderLink.expand().getHref()));
+
+				var docs = flow.document("order-prepared",
+						relaxedLinks(linkWithRel(RECEIPT_REL.value()).description("Pointing to a receipt.")));
+
+				assertThat(result).apply(docs);
 			}
 
 		} while (!receiptLink.isPresent());
@@ -367,7 +405,9 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		var result = mvc.perform(get(receiptLink.getHref()));
 
-		assertThat(result).hasStatus(HttpStatus.OK);
+		assertThat(result)
+				.apply(flow.document("access-receipt"))
+				.hasStatus(HttpStatus.OK);
 
 		var receiptResponse = result.getMvcResult().getResponse();
 
@@ -376,7 +416,9 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		result = mvc.perform(delete(receiptLink.getHref()).accept(MediaTypes.HAL_JSON));
 
-		assertThat(result).hasStatus(HttpStatus.OK);
+		assertThat(result)
+				.apply(flow.document("take-receipt"))
+				.hasStatus(HttpStatus.OK);
 
 		return result.getMvcResult().getResponse();
 	}
@@ -395,10 +437,10 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		assertThat(result)
 				.hasStatus(HttpStatus.OK)
-				.has(linkWithRel(IanaLinkRelations.SELF))
-				.doesNotHave(linkWithRel(UPDATE_REL))
-				.doesNotHave(linkWithRel(CANCEL_REL))
-				.doesNotHave(linkWithRel(PAYMENT_REL))
+				.has(hasLinkWithRel(IanaLinkRelations.SELF))
+				.doesNotHave(hasLinkWithRel(UPDATE_REL))
+				.doesNotHave(hasLinkWithRel(CANCEL_REL))
+				.doesNotHave(hasLinkWithRel(PAYMENT_REL))
 				.bodyJson().extractingPath("$.status").isEqualTo("Delivered");
 
 		LOG.info("Final order state: " + result.getMvcResult().getResponse().getContentAsString());
@@ -441,7 +483,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		LOG.info(String.format("Expanded payment curie pointing to %s…", paymentCurie));
 
 		assertThat(mvc.perform(get(paymentCurie.getHref())))
-				.hasStatus(HttpStatus.OK);
+				.hasStatus(HttpStatus.FOUND);
 
 		return response;
 	}

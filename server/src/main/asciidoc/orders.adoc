@@ -1,0 +1,7 @@
+= The orders resource
+
+Lists all orders.
+
+include::{snippets}/orders/1/curl-request.adoc[]
+include::{snippets}/orders/1/http-request.adoc[]
+include::{snippets}/orders/1/http-response.adoc[]

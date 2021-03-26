@@ -15,18 +15,23 @@
  */
 package de.odrotbohm.restbucks;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+
 import lombok.SneakyThrows;
 
 import java.util.Locale;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.client.LinkDiscoverer;
 import org.springframework.hateoas.client.LinkDiscoverers;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
@@ -40,19 +45,22 @@ import org.springframework.web.context.WebApplicationContext;
  * @author Oliver Drotbohm
  */
 @SpringBootTest
+@ExtendWith(RestDocumentationExtension.class)
 public abstract class AbstractWebIntegrationTest {
 
 	@Autowired WebApplicationContext context;
 	@Autowired LinkDiscoverers links;
 
 	protected MockMvcTester mvc;
+	protected DocumentationFlow flow;
 
 	@BeforeEach
-	void setUp() {
+	void setUp(RestDocumentationContextProvider restDocumentation) {
 
-		this.mvc = MockMvcTester.from(context, builder ->//
-				builder.defaultRequest(MockMvcRequestBuilders.get("/").locale(Locale.US)).//
-				build());
+		this.flow = DocumentationFlow.NONE;
+		this.mvc = MockMvcTester.from(context, builder -> builder.apply(documentationConfiguration(restDocumentation))
+				.defaultRequest(MockMvcRequestBuilders.get("/").locale(Locale.US))
+				.build());
 	}
 
 	/**
@@ -62,7 +70,7 @@ public abstract class AbstractWebIntegrationTest {
 	 * @param rel must not be {@literal null}.
 	 * @return will never be {@literal null}.
 	 */
-	protected Condition<MvcTestResult> linkWithRel(LinkRelation rel) {
+	protected Condition<MvcTestResult> hasLinkWithRel(LinkRelation rel) {
 
 		Assert.notNull(rel, "LinkRelation must not be null!");
 
