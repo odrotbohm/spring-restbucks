@@ -1,0 +1,48 @@
+[[usecases]]
+= Use cases
+
+[[usecases.payorder]]
+== Submitting a payment
+
+If an order can be paid, a `payment` link will be included in the representation of it.
+
+=== Detecting payability
+
+include::{snippets}/pay-order/access-order/curl-request.adoc[]
+include::{snippets}/pay-order/access-order/http-request.adoc[]
+include::{snippets}/pay-order/access-order/http-response.adoc[]
+include::{snippets}/pay-order/access-order/links.adoc[]
+
+[[payment]]
+=== Issuing the payment
+
+We can now follow the link submitting a PUT request with the credit card number as payload.
+
+include::{snippets}/pay-order/trigger-payment/curl-request.adoc[]
+include::{snippets}/pay-order/trigger-payment/http-request.adoc[]
+
+The service will answer with detailed payment information.
+
+include::{snippets}/pay-order/trigger-payment/http-response.adoc[]
+include::{snippets}/pay-order/trigger-payment/response-fields.adoc[]
+include::{snippets}/pay-order/trigger-payment/links.adoc[]
+
+[[receipt]]
+=== Concluding the order
+
+If an order has been completed, a `receipt` link will be present in its representation.
+
+include::{snippets}/pay-order/order-prepared/http-response.adoc[]
+include::{snippets}/pay-order/order-prepared/links.adoc[]
+
+The receipt can then be accessed by issuing a GET request:
+
+include::{snippets}/pay-order/access-receipt/curl-request.adoc[]
+include::{snippets}/pay-order/access-receipt/http-request.adoc[]
+include::{snippets}/pay-order/access-receipt/http-response.adoc[]
+
+Issuing a DELETE request will conclude the order.
+
+include::{snippets}/pay-order/take-receipt/curl-request.adoc[]
+include::{snippets}/pay-order/take-receipt/http-request.adoc[]
+include::{snippets}/pay-order/take-receipt/http-response.adoc[]
