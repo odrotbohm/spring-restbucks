@@ -1,6 +1,6 @@
 # Spring Restbucks
 
-[![Build Status](https://travis-ci.org/odrotbohm/spring-restbucks.png?branch=master)](https://travis-ci.org/odrotbohm/spring-restbucks)
+[![Java CI with Maven](https://github.com/odrotbohm/spring-restbucks/actions/workflows/build.yaml/badge.svg)](https://github.com/odrotbohm/spring-restbucks/actions/workflows/build.yaml)
 
 This project is a sample implementation of the Restbucks application described in the book [REST in Practice](http://shop.oreilly.com/product/9780596805838.do) by Jim Webber, Savas Parastatidis and Ian Robinson. It's a showcase for bringing different Spring eco-system technologies together to implement a REST web service. The application uses [HAL](http://stateless.co/hal_specification.html) as the primary representation format. The server implementation is accompanied by a hypermedia-aware Android client that adapts to changes on the server dynamically.
 
