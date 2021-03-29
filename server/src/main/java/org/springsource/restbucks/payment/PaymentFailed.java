@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks;
+package org.springsource.restbucks.payment;
 
-import java.util.Map;
-import java.util.Set;
+import lombok.Getter;
 
-import com.fasterxml.jackson.databind.Module;
+import org.springframework.util.Assert;
+import org.springsource.restbucks.order.Order;
 
 /**
- * Helper to expose custom Jackson modules for unit tests.
- *
  * @author Oliver Gierke
  */
-public class JacksonTestUtils extends JacksonCustomizations {
+@Getter
+public class PaymentFailed extends RuntimeException {
 
-	public static Set<Module> getModules(Map<Class<?>, Class<?>> mixins) {
-		return Set.of(new RestbucksModule(mixins), new MoneyModule());
+	private static final long serialVersionUID = -4929826142920520541L;
+
+	private final Order order;
+
+	public PaymentFailed(Order order, String message) {
+
+		super(message);
+
+		Assert.notNull(order, "Order must not be null!");
+
+		this.order = order;
 	}
 }

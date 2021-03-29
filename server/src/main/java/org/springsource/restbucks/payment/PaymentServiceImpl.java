@@ -23,12 +23,12 @@ import java.util.Optional;
 import org.jmolecules.ddd.annotation.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.OrderRepository;
+import org.springsource.restbucks.order.Orders;
 import org.springsource.restbucks.payment.Payment.Receipt;
 
 /**
- * Implementation of {@link PaymentService} delegating persistence operations to {@link PaymentRepository} and
- * {@link CreditCardRepository}.
+ * Implementation of {@link PaymentService} delegating persistence operations to {@link Payments} and
+ * {@link CreditCards}.
  *
  * @author Oliver Gierke
  * @author Stéphane Nicoll
@@ -38,9 +38,9 @@ import org.springsource.restbucks.payment.Payment.Receipt;
 @RequiredArgsConstructor
 class PaymentServiceImpl implements PaymentService {
 
-	private final @NonNull CreditCardRepository creditCardRepository;
-	private final @NonNull PaymentRepository paymentRepository;
-	private final @NonNull OrderRepository orderRepository;
+	private final @NonNull CreditCards cards;
+	private final @NonNull Payments payments;
+	private final @NonNull Orders orders;
 
 	/*
 	 * (non-Javadoc)
@@ -50,27 +50,22 @@ class PaymentServiceImpl implements PaymentService {
 	public CreditCardPayment pay(Order order, CreditCardNumber creditCardNumber) {
 
 		if (order.isPaid()) {
-			throw new PaymentException(order, "Order already paid!");
+			throw new PaymentFailed(order, "Order already paid!");
 		}
 
 		// Using Optional.orElseThrow(…) doesn't work due to https://bugs.openjdk.java.net/browse/JDK-8054569
-		var creditCardResult = creditCardRepository.findByNumber(creditCardNumber);
-
-		if (!creditCardResult.isPresent()) {
-			throw new PaymentException(order,
-					String.format("No credit card found for number: %s", creditCardNumber.getNumber()));
-		}
-
-		var creditCard = creditCardResult.get();
+		var creditCard = cards.findByNumber(creditCardNumber)
+				.orElseThrow(() -> new PaymentFailed(order,
+						String.format("No credit card found for number: %s", creditCardNumber.getNumber())));
 
 		if (!creditCard.isValid()) {
-			throw new PaymentException(order, String.format("Invalid credit card with number %s, expired %s!",
+			throw new PaymentFailed(order, String.format("Invalid credit card with number %s, expired %s!",
 					creditCardNumber.getNumber(), creditCard.getExpirationDate()));
 		}
 
-		var payment = paymentRepository.save(new CreditCardPayment(creditCard, order));
+		var payment = payments.save(new CreditCardPayment(creditCard, order));
 
-		orderRepository.save(order.markPaid());
+		orders.save(order.markPaid());
 
 		return payment;
 	}
@@ -82,7 +77,7 @@ class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional(readOnly = true)
 	public Optional<Payment<?>> getPaymentFor(Order order) {
-		return paymentRepository.findByOrder(order.getId());
+		return payments.findByOrder(order.getId());
 	}
 
 	/*
@@ -92,7 +87,7 @@ class PaymentServiceImpl implements PaymentService {
 	@Override
 	public Optional<Receipt> takeReceiptFor(Order order) {
 
-		var result = orderRepository.save(order.markTaken());
+		var result = orders.save(order.markTaken());
 
 		return getPaymentFor(result).map(Payment::getReceipt);
 	}

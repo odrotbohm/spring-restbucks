@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 the original author or authors.
+ * Copyright 2016-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.springsource.restbucks.payment.web;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Locale;
+import java.util.Map;
 
 import javax.money.MonetaryAmount;
 
@@ -32,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Unit tests for serialization and deserialization of {@link MonetaryAmount} values.
- * 
+ *
  * @author Oliver Gierke
  */
 class MoneySerializationTest {
@@ -43,7 +44,7 @@ class MoneySerializationTest {
 	void setUp() {
 
 		this.mapper = new ObjectMapper();
-		this.mapper.registerModules(JacksonTestUtils.getModules());
+		this.mapper.registerModules(JacksonTestUtils.getModules(Map.of()));
 
 		LocaleContextHolder.setLocale(Locale.ROOT);
 	}

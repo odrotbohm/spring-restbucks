@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks.payment;
+package org.springsource.restbucks.order;
 
-import java.util.Optional;
+import java.util.List;
 
-import org.jmolecules.ddd.types.Association;
+import org.jmolecules.spring.AssociationResolver;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springsource.restbucks.order.Order;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
+import org.springsource.restbucks.order.Order.Status;
 
 /**
- * Repository interface to manage {@link Payment} instances.
+ * Repository to manage {@link Order} instances.
  *
  * @author Oliver Gierke
  */
-interface PaymentRepository extends PagingAndSortingRepository<Payment<?>, Long> {
+@RepositoryRestResource(excerptProjection = OrderProjection.class)
+public interface Orders
+		extends AssociationResolver<Order, OrderIdentifier>, PagingAndSortingRepository<Order, OrderIdentifier> {
 
 	/**
-	 * Returns the payment registered for the given {@link Order}.
+	 * Returns all {@link Order}s with the given {@link Status}.
 	 *
-	 * @param order
+	 * @param status must not be {@literal null}.
 	 * @return
 	 */
-	default Optional<Payment<?>> findByOrder(OrderIdentifier id) {
-		return findByOrder(Association.forId(id));
-	}
-
-	Optional<Payment<?>> findByOrder(Association<Order, OrderIdentifier> order);
+	List<Order> findByStatus(@Param("status") Status status);
 }

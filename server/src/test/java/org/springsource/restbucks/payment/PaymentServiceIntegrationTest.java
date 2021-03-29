@@ -17,14 +17,14 @@ package org.springsource.restbucks.payment;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springsource.restbucks.order.OrderTestUtils.*;
-import static org.springsource.restbucks.payment.CreditCardRepositoryIntegrationTest.*;
+import static org.springsource.restbucks.payment.CreditCardsIntegrationTest.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.Status;
-import org.springsource.restbucks.order.OrderRepository;
+import org.springsource.restbucks.order.Orders;
 
 /**
  * Integration tests for {@link PaymentServiceImpl}.
@@ -34,8 +34,8 @@ import org.springsource.restbucks.order.OrderRepository;
 class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 
 	@Autowired PaymentService paymentService;
-	@Autowired OrderRepository orders;
-	@Autowired CreditCardRepository creditCards;
+	@Autowired Orders orders;
+	@Autowired CreditCards creditCards;
 
 	@Test
 	void marksOrderAsPaid() {

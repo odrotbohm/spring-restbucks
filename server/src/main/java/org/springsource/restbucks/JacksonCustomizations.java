@@ -15,8 +15,13 @@
  */
 package org.springsource.restbucks;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import java.io.IOException;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import javax.money.MonetaryAmount;
@@ -30,16 +35,12 @@ import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
 import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration;
-import org.springsource.restbucks.order.LineItem;
+import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions;
+import org.springsource.restbucks.drinks.DrinksOptions;
 import org.springsource.restbucks.order.Location;
-import org.springsource.restbucks.order.Milk;
-import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.Size;
-import org.springsource.restbucks.payment.CreditCard;
+import org.springsource.restbucks.order.web.LocationAndDrinks;
 import org.springsource.restbucks.payment.CreditCardNumber;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.Module;
@@ -59,42 +60,34 @@ class JacksonCustomizations {
 	public @Bean HalFormsConfiguration halFormsConfiguration() {
 
 		return new HalFormsConfiguration()
-				.withPattern(CreditCardNumber.class, CreditCardNumber.REGEX);
+				.withPattern(CreditCardNumber.class, CreditCardNumber.REGEX)
+				.withOptions(LocationAndDrinks.class, "location",
+						it -> HalFormsOptions.inline(Location.values()).withSelectedValue(Location.TAKE_AWAY))
+				.withOptions(LocationAndDrinks.class, "drinks",
+						it -> HalFormsOptions.remote(linkTo(methodOn(DrinksOptions.class).getOptions(Optional.empty())).toString()));
 	}
 
 	public @Bean Module moneyModule() {
 		return new MoneyModule();
 	}
 
-	public @Bean Module restbucksModule() {
-		return new RestbucksModule();
+	public @Bean Module restbucksModule(List<Mixins> mixins) {
+
+		Map<Class<?>, Class<?>> annotations = mixins.stream().map(Mixins::getMixins)
+				.reduce(new HashMap<>(), (left, right) -> {
+					left.putAll(right);
+					return left;
+				});
+
+		return new RestbucksModule(annotations);
 	}
 
 	@SuppressWarnings("serial")
 	static class RestbucksModule extends SimpleModule {
 
-		public RestbucksModule() {
-
-			setMixInAnnotation(Order.class, RestbucksModule.OrderMixin.class);
-			setMixInAnnotation(LineItem.class, LineItemMixin.class);
-			setMixInAnnotation(CreditCard.class, CreditCardMixin.class);
+		public RestbucksModule(Map<Class<?>, Class<?>> mixins) {
+			mixins.entrySet().forEach(it -> setMixInAnnotation(it.getKey(), it.getValue()));
 		}
-
-		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-		static abstract class OrderMixin {
-
-			@JsonCreator
-			public OrderMixin(Collection<LineItem> lineItems, Location location) {}
-		}
-
-		static abstract class LineItemMixin {
-
-			@JsonCreator
-			public LineItemMixin(String name, int quantity, Milk milk, Size size, MonetaryAmount price) {}
-		}
-
-		@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
-		static abstract class CreditCardMixin {}
 	}
 
 	@SuppressWarnings("serial")

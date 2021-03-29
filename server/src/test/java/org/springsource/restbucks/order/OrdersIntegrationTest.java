@@ -24,13 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
 
 /**
- * Integration tests for Spring Data based {@link OrderRepository}.
+ * Integration tests for Spring Data based {@link Orders}.
  * 
  * @author Oliver Gierke
  */
-class OrderRepositoryIntegrationTest extends AbstractIntegrationTest {
+class OrdersIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired OrderRepository repository;
+	@Autowired Orders repository;
 
 	@Test
 	void findsAllOrders() {

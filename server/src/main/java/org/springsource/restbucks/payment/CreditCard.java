@@ -23,8 +23,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
-import javax.persistence.Entity;
-
 import org.jmolecules.ddd.types.AggregateRoot;
 
 /**
@@ -32,7 +30,6 @@ import org.jmolecules.ddd.types.AggregateRoot;
  *
  * @author Oliver Gierke
  */
-@Entity
 @ToString(callSuper = true)
 @AllArgsConstructor
 public class CreditCard implements AggregateRoot<CreditCard, CreditCardNumber> {

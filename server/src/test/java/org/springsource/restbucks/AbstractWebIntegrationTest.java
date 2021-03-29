@@ -17,11 +17,15 @@ package org.springsource.restbucks;
 
 import static org.assertj.core.api.Assertions.*;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.Locale;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.client.LinkDiscoverer;
 import org.springframework.hateoas.client.LinkDiscoverers;
@@ -32,8 +36,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import lombok.RequiredArgsConstructor;
 
 /**
  * Base class to derive concrete web test classes from.
@@ -97,7 +99,15 @@ public abstract class AbstractWebIntegrationTest {
 			String content = response.getContentAsString();
 			LinkDiscoverer discoverer = links.getRequiredLinkDiscovererFor(response.getContentType());
 
-			assertThat(discoverer.findLinkWithRel(rel, content)).matches(it -> it.isPresent() == present);
+			Optional<Link> link = discoverer.findLinkWithRel(rel, content);
+
+			assertThat(link).matches(it -> it.isPresent() == present, getMessage(link));
+		}
+
+		private String getMessage(Optional<Link> link) {
+
+			return String.format("Expected to %s link with relation %s, but found %s!",
+					present ? "find" : "not find", rel, present ? link.get() : "none");
 		}
 	}
 }

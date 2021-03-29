@@ -26,20 +26,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
 
 /**
- * Integration tests for {@link CreditCardRepository}.
+ * Integration tests for {@link CreditCards}.
  *
  * @author Oliver Gierke
  */
-class CreditCardRepositoryIntegrationTest extends AbstractIntegrationTest {
+class CreditCardsIntegrationTest extends AbstractIntegrationTest {
 
-	@Autowired CreditCardRepository repository;
+	@Autowired CreditCards creditCards;
 
 	@Test
 	void createsCreditCard() {
 
-		CreditCard creditCard = repository.save(createCreditCard());
+		CreditCard creditCard = creditCards.save(createCreditCard());
 
-		Optional<CreditCard> result = repository.findByNumber(creditCard.getNumber());
+		Optional<CreditCard> result = creditCards.findByNumber(creditCard.getNumber());
 
 		assertThat(result.isPresent()).isTrue();
 		assertThat(result.get()).isEqualTo(creditCard);
@@ -48,6 +48,6 @@ class CreditCardRepositoryIntegrationTest extends AbstractIntegrationTest {
 	public static CreditCard createCreditCard() {
 
 		CreditCardNumber number = CreditCardNumber.of("4321432143214321");
-		return new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2021));
+		return new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.now());
 	}
 }

@@ -21,12 +21,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springsource.restbucks.AbstractWebIntegrationTest;
 
 /**
  * Integration test for REST resources exposed by Spring Data REST.
- * 
+ *
  * @author Oliver Gierke
  */
 class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
@@ -34,10 +33,9 @@ class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 	@Test
 	void exposesOrdersResourceViaRootResource() throws Exception {
 
-		mvc.perform(get("/")).//
-				andDo(MockMvcResultHandlers.print()).//
-				andExpect(status().isOk()). //
-				andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)). //
-				andExpect(jsonPath("$._links.restbucks:orders.href", notNullValue()));
+		mvc.perform(get("/")) //
+				.andExpect(status().isOk()) //
+				.andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)) //
+				.andExpect(jsonPath("$._links.restbucks:orders.href", notNullValue()));
 	}
 }

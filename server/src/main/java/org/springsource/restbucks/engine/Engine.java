@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderPaid;
-import org.springsource.restbucks.order.OrderRepository;
+import org.springsource.restbucks.order.Orders;
 
 /**
  * Simple {@link OrderPaid} listener marking the according {@link Order} as in process, sleeping for 5 seconds and
@@ -42,7 +42,7 @@ import org.springsource.restbucks.order.OrderRepository;
 @AllArgsConstructor
 class Engine {
 
-	private final @NonNull OrderRepository repository;
+	private final @NonNull Orders repository;
 	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
 
 	@Async

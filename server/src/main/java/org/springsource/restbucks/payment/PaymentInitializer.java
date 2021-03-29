@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,7 @@ import java.time.Year;
 
 import javax.annotation.PostConstruct;
 
-import org.javamoney.moneta.Money;
-import org.jmolecules.event.annotation.DomainEventHandler;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springsource.restbucks.core.Currencies;
-import org.springsource.restbucks.order.LineItem;
-import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.OrderRepository;
 
 /**
  * Initializing component to create a default {@link CreditCard} in the system.
@@ -43,9 +35,7 @@ import org.springsource.restbucks.order.OrderRepository;
 @RequiredArgsConstructor
 class PaymentInitializer {
 
-	private final PaymentService payment;
-	private final OrderRepository orders;
-	private final CreditCardRepository creditCards;
+	private final CreditCards creditCards;
 
 	@PostConstruct
 	public void init() {
@@ -60,13 +50,5 @@ class PaymentInitializer {
 		creditCard = creditCards.save(creditCard);
 
 		LOG.info("Credit card {} created!", creditCard);
-	}
-
-	@Transactional
-	@DomainEventHandler
-	public void onStartup(ApplicationReadyEvent event) {
-
-		Order order = orders.save(new Order(new LineItem("Something", Money.of(47.11, Currencies.EURO))));
-		payment.pay(order, creditCards.findAll().iterator().next().getNumber());
 	}
 }

@@ -19,6 +19,7 @@ import static org.springsource.restbucks.core.Currencies.*;
 
 import org.javamoney.moneta.Money;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springsource.restbucks.drinks.Drink;
 import org.springsource.restbucks.order.Order.Status;
 
 /**
@@ -40,6 +41,6 @@ public class OrderTestUtils {
 	}
 
 	public static Order createOrder() {
-		return new Order(new LineItem("English breakfast", Money.of(2.70, EURO)));
+		return new Order().add(new Drink("English breakfast", Milk.WHOLE, Size.LARGE, Money.of(2.70, EURO)));
 	}
 }

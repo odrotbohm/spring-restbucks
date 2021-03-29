@@ -27,7 +27,6 @@ import java.util.UUID;
 
 import javax.money.MonetaryAmount;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -36,6 +35,7 @@ import org.javamoney.moneta.Money;
 import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Identifier;
 import org.springframework.data.domain.AbstractAggregateRoot;
+import org.springsource.restbucks.drinks.Drink;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
 
 /**
@@ -43,7 +43,6 @@ import org.springsource.restbucks.order.Order.OrderIdentifier;
  *
  * @author Oliver Gierke
  */
-@Entity
 @Getter
 @ToString(exclude = "lineItems")
 @Table(name = "RBOrder")
@@ -97,6 +96,23 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		return lineItems.stream().//
 				map(LineItem::getPrice).//
 				reduce(MonetaryAmount::add).orElse(Money.of(0.0, "EUR"));
+	}
+
+	public Order add(Drink drink) {
+
+		lineItems.stream()
+				.filter(it -> it.refersTo(drink))
+				.findFirst()
+				.map(it -> it.increaseAmount())
+
+				.orElseGet(() -> {
+
+					LineItem item = new LineItem(drink);
+					this.lineItems.add(item);
+					return item;
+				});
+
+		return this;
 	}
 
 	/**

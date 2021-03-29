@@ -20,12 +20,14 @@ import static org.springsource.restbucks.core.Currencies.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 import org.javamoney.moneta.Money;
 import org.jmolecules.ddd.annotation.Service;
 import org.jmolecules.event.annotation.DomainEventHandler;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springsource.restbucks.drinks.Drink;
+import org.springsource.restbucks.drinks.Drinks;
 
 /**
  * Initializer to set up two {@link Order}s.
@@ -36,10 +38,11 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 @RequiredArgsConstructor
 class OrderInitializer {
 
-	private final @NonNull OrderRepository orders;
+	private final @NonNull Orders orders;
+	private final @NonNull Drinks drinks;
 
 	/**
-	 * Creates two orders and persists them using the given {@link OrderRepository}.
+	 * Creates two orders and persists them using the given {@link Orders}.
 	 *
 	 * @param orders must not be {@literal null}.
 	 */
@@ -50,9 +53,11 @@ class OrderInitializer {
 			return;
 		}
 
-		var javaChip = new LineItem("Java Chip", Money.of(4.20, EURO));
-		var cappuchino = new LineItem("Cappuchino", Money.of(3.20, EURO));
+		var javaChip = drinks.save(new Drink("Java Chip", Milk.WHOLE, Size.LARGE, Money.of(4.20, EURO)));
+		var cappuchino = drinks.save(new Drink("Cappuchino", Milk.WHOLE, Size.LARGE, Money.of(3.20, EURO)));
 
-		orders.saveAll(List.of(new Order(javaChip), new Order(cappuchino)));
+		Stream.of(javaChip, cappuchino)
+				.map(it -> new Order().add(it))
+				.forEach(orders::save);
 	}
 }

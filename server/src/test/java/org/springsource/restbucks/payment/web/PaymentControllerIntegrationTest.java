@@ -23,7 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.transaction.annotation.Transactional;
 import org.springsource.restbucks.order.Order.Status;
-import org.springsource.restbucks.order.OrderRepository;
+import org.springsource.restbucks.order.Orders;
 import org.springsource.restbucks.payment.CreditCardNumber;
 import org.springsource.restbucks.payment.web.PaymentController.PaymentForm;
 
@@ -37,7 +37,7 @@ import org.springsource.restbucks.payment.web.PaymentController.PaymentForm;
 class PaymentControllerIntegrationTest {
 
 	@Autowired PaymentController controller;
-	@Autowired OrderRepository orders;
+	@Autowired Orders orders;
 
 	@Test
 	void processesPayment() throws Exception {

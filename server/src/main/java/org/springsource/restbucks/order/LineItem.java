@@ -16,38 +16,55 @@
 package org.springsource.restbucks.order;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.Value;
 
 import java.util.UUID;
 
 import javax.money.MonetaryAmount;
 
+import org.jmolecules.ddd.types.Association;
 import org.jmolecules.ddd.types.Entity;
 import org.jmolecules.ddd.types.Identifier;
+import org.springsource.restbucks.drinks.Drink;
+import org.springsource.restbucks.drinks.Drink.DrinkIdentifier;
 import org.springsource.restbucks.order.LineItem.LineItemIdentifier;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * A line item.
  *
  * @author Oliver Gierke
  */
-@Data
+@Getter
 @AllArgsConstructor
 public class LineItem implements Entity<Order, LineItemIdentifier> {
 
 	private final LineItemIdentifier id;
 	private final String name;
-	private final int quantity;
 	private final Milk milk;
 	private final Size size;
 	private final MonetaryAmount price;
+	private final Association<Drink, DrinkIdentifier> drink;
+	private int quantity;
 
-	@JsonCreator
-	public LineItem(String name, MonetaryAmount price) {
-		this(LineItemIdentifier.of(UUID.randomUUID()), name, 1, Milk.SEMI, Size.LARGE, price);
+	public LineItem(Drink drink) {
+
+		this.id = LineItemIdentifier.of(UUID.randomUUID());
+		this.name = drink.getName();
+		this.quantity = 1;
+		this.milk = drink.getMilk();
+		this.size = drink.getSize();
+		this.price = drink.getPrice();
+		this.drink = Association.forAggregate(drink);
+	}
+
+	boolean refersTo(Drink drink) {
+		return this.drink.getId().equals(drink.getId());
+	}
+
+	LineItem increaseAmount() {
+		this.quantity++;
+		return this;
 	}
 
 	@Value(staticConstructor = "of")

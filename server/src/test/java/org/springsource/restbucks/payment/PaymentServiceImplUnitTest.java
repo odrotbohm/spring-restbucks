@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.OrderRepository;
+import org.springsource.restbucks.order.Orders;
 import org.springsource.restbucks.order.OrderTestUtils;
 
 /**
@@ -41,9 +41,9 @@ class PaymentServiceImplUnitTest {
 
 	PaymentService paymentService;
 
-	@Mock PaymentRepository paymentRepository;
-	@Mock CreditCardRepository creditCardRepository;
-	@Mock OrderRepository orderRepository;
+	@Mock Payments paymentRepository;
+	@Mock CreditCards creditCardRepository;
+	@Mock Orders orderRepository;
 
 	@BeforeEach
 	void setUp() {
@@ -70,7 +70,7 @@ class PaymentServiceImplUnitTest {
 		Order order = OrderTestUtils.createExistingOrder();
 		order.markPaid();
 
-		assertThatExceptionOfType(PaymentException.class) //
+		assertThatExceptionOfType(PaymentFailed.class) //
 				.isThrownBy(() -> paymentService.pay(order, NUMBER)) //
 				.withMessageContaining("paid");
 	}
@@ -80,7 +80,7 @@ class PaymentServiceImplUnitTest {
 
 		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(Optional.empty());
 
-		assertThatExceptionOfType(PaymentException.class) //
+		assertThatExceptionOfType(PaymentFailed.class) //
 				.isThrownBy(() -> paymentService.pay(new Order(), NUMBER)) //
 				.withMessageContaining("credit card") //
 				.withMessageContaining(NUMBER.getNumber());

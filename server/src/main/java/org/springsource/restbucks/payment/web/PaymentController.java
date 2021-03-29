@@ -15,6 +15,8 @@
  */
 package org.springsource.restbucks.payment.web;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -38,7 +40,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.OrderRepository;
+import org.springsource.restbucks.order.Orders;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
 import org.springsource.restbucks.payment.Payment;
@@ -60,7 +62,7 @@ class PaymentController {
 
 	private final @NonNull PaymentService paymentService;
 	private final @NonNull PaymentLinks paymentLinks;
-	private final @NonNull OrderRepository orders;
+	private final @NonNull Orders orders;
 
 	/**
 	 * Accepts a payment for an {@link Order}
@@ -68,7 +70,7 @@ class PaymentController {
 	 * @param order the {@link Order} to process the payment for. Retrieved from the path variable and converted into an
 	 *          {@link Order} instance by Spring Data's {@link DomainClassConverter}. Will be {@literal null} in case no
 	 *          {@link Order} with the given id could be found.
-	 * @param number the {@link CreditCardNumber} unmarshaled from the request payload.
+	 * @param number the {@link CreditCardNumber} unmarshalled from the request payload.
 	 * @return
 	 */
 	@PutMapping(path = PaymentLinks.PAYMENT)
@@ -138,7 +140,7 @@ class PaymentController {
 
 		return ResponseEntity.ok(EntityModel.of(receipt)
 				.add(orderLinks.linkToItemResource(order))
-				.addIf(!order.isTaken(), () -> orderLinks.linkForItemResource(order).slash("receipt").withSelfRel()));
+				.addIf(!order.isTaken(), () -> linkTo(methodOn(PaymentController.class).showReceipt(order)).withSelfRel()));
 	}
 
 	/**

@@ -15,26 +15,29 @@
  */
 package org.springsource.restbucks.payment;
 
-import lombok.Getter;
+import java.util.Optional;
 
-import org.springframework.util.Assert;
+import org.jmolecules.ddd.types.Association;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springsource.restbucks.order.Order;
+import org.springsource.restbucks.order.Order.OrderIdentifier;
 
 /**
+ * Repository interface to manage {@link Payment} instances.
+ *
  * @author Oliver Gierke
  */
-@Getter
-public class PaymentException extends RuntimeException {
+interface Payments extends PagingAndSortingRepository<Payment<?>, Long> {
 
-	private static final long serialVersionUID = -4929826142920520541L;
-	private final Order order;
-
-	public PaymentException(Order order, String message) {
-
-		super(message);
-
-		Assert.notNull(order, "Order must not be null!");
-
-		this.order = order;
+	/**
+	 * Returns the payment registered for the given {@link Order}.
+	 *
+	 * @param order
+	 * @return
+	 */
+	default Optional<Payment<?>> findByOrder(OrderIdentifier id) {
+		return findByOrder(Association.forId(id));
 	}
+
+	Optional<Payment<?>> findByOrder(Association<Order, OrderIdentifier> order);
 }
