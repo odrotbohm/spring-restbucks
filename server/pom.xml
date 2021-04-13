@@ -182,12 +182,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<dependency>
 						<groupId>org.jmolecules.integrations</groupId>
 						<artifactId>jmolecules-bytebuddy</artifactId>
-						<version>0.2.0</version>
+						<version>0.3.0</version>
 					</dependency>
 				</dependencies>
-				<configuration>
-					<incremental>true</incremental>
-				</configuration>
 			</plugin>
 
 		</plugins>
