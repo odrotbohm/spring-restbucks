@@ -62,9 +62,10 @@ class JacksonCustomizations {
 		return new HalFormsConfiguration()
 				.withPattern(CreditCardNumber.class, CreditCardNumber.REGEX)
 				.withOptions(LocationAndDrinks.class, "location",
-						it -> HalFormsOptions.inline(Location.values()).withSelectedValue(Location.TAKE_AWAY))
+						it -> HalFormsOptions.inline(Location.values()).withSelectedValue(Location.TAKE_AWAY).withMaxItems(1L))
 				.withOptions(LocationAndDrinks.class, "drinks",
-						it -> HalFormsOptions.remote(linkTo(methodOn(DrinksOptions.class).getOptions(Optional.empty())).toString()));
+						it -> HalFormsOptions.remote(linkTo(methodOn(DrinksOptions.class).getOptions(Optional.empty())).toString())
+								.withMinItems(1L));
 	}
 
 	public @Bean Module moneyModule() {
