@@ -151,7 +151,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		var drinksOptionsUri = Link.of(drinksTemplate).expand().getHref();
 		var drinksOptionsResponse = mvc.perform(get(drinksOptionsUri))
 				.andReturn().getResponse().getContentAsString();
-		var drinkUri = JsonPath.parse(drinksOptionsResponse).read("$[0].value", String.class);
+		var drinkUri = JsonPath.parse(drinksOptionsResponse).read("$._embedded.drinks[0].value", String.class);
 
 		// Select location
 		var location = parse.read("$._templates.default.properties[1].options.inline[0]");

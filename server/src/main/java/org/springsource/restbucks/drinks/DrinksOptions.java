@@ -21,6 +21,8 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
+import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsPromptedValue;
 import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.TypedEntityLinks;
@@ -70,12 +72,10 @@ public class DrinksOptions {
 				.map(it -> HalFormsPromptedValue.of(it.getName(), links.linkToItemResource(it).getHref()))
 				.toList();
 
-		return ResponseEntity.ok(options);
+		var model = HalModelBuilder.halModel()
+				.embed(options, LinkRelation.of("drinks"))
+				.build();
 
-		// var model = HalModelBuilder.halModel()
-		// .embed(options, LinkRelation.of("drinks"))
-		// .build();
-		//
-		// return ResponseEntity.ok(model);
+		return ResponseEntity.ok(model);
 	}
 }
