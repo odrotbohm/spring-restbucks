@@ -168,7 +168,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<plugin>
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-maven-plugin</artifactId>
-				<version>1.10.21</version>
+				<version>1.11.2</version>
 				<executions>
 					<execution>
 						<goals>
