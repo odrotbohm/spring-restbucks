@@ -17,6 +17,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<properties>
 		<java.version>11</java.version>
+		<spring-data-bom.version>2021.0.2</spring-data-bom.version>
 	</properties>
 
 	<dependencyManagement>
