@@ -16,7 +16,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</parent>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>16</java.version>
 	</properties>
 
 	<dependencyManagement>
