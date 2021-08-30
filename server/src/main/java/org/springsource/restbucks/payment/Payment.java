@@ -44,10 +44,10 @@ import org.springsource.restbucks.payment.Payment.PaymentIdentifier;
 @ToString
 @NoArgsConstructor(force = true)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
-		implements AggregateRoot<T, PaymentIdentifier> {
+public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier<T>>>
+		implements AggregateRoot<T, PaymentIdentifier<T>> {
 
-	private final PaymentIdentifier id;
+	private final PaymentIdentifier<T> id;
 
 	@Column(name = "rborder") //
 	private final Association<Order, OrderIdentifier> order;
@@ -62,7 +62,7 @@ public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 
 		Assert.notNull(order, "Order must not be null!");
 
-		this.id = PaymentIdentifier.of(UUID.randomUUID().toString());
+		this.id = new PaymentIdentifier<T>(UUID.randomUUID().toString());
 		this.order = Association.forAggregate(order);
 		this.paymentDate = LocalDateTime.now();
 	}
@@ -88,8 +88,9 @@ public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 		private final Association<Order, OrderIdentifier> order;
 	}
 
-	@Value(staticConstructor = "of")
-	public static class PaymentIdentifier implements Identifier {
+	@Value
+	public static class PaymentIdentifier<T extends AggregateRoot<T, PaymentIdentifier<T>>>
+			implements Identifier<T, PaymentIdentifier<T>> {
 		String id;
 	}
 }

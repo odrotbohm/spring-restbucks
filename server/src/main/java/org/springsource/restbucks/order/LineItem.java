@@ -37,7 +37,7 @@ import org.springsource.restbucks.order.LineItem.LineItemIdentifier;
  */
 @Getter
 @AllArgsConstructor
-public class LineItem implements Entity<Order, LineItemIdentifier> {
+public class LineItem implements Entity<Order, LineItemIdentifier, LineItem> {
 
 	private final LineItemIdentifier id;
 	private final String name;
@@ -68,7 +68,7 @@ public class LineItem implements Entity<Order, LineItemIdentifier> {
 	}
 
 	@Value(staticConstructor = "of")
-	public static class LineItemIdentifier implements Identifier {
+	public static class LineItemIdentifier implements Identifier<LineItem, LineItemIdentifier> {
 		UUID id;
 	}
 }

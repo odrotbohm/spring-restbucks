@@ -50,7 +50,7 @@ public class Drink implements AggregateRoot<Drink, DrinkIdentifier> {
 	}
 
 	@Value(staticConstructor = "of")
-	public static class DrinkIdentifier implements Identifier {
+	public static class DrinkIdentifier implements Identifier<Drink, DrinkIdentifier> {
 		String id;
 	}
 }

@@ -229,7 +229,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	}
 
 	@Value(staticConstructor = "of")
-	public static class OrderIdentifier implements Identifier {
+	public static class OrderIdentifier implements Identifier<Order, OrderIdentifier> {
 		String id;
 	}
 }
