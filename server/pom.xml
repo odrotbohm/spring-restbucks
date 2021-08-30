@@ -12,11 +12,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.4</version>
+		<version>2.6.0-M2</version>
 	</parent>
 
 	<properties>
 		<java.version>16</java.version>
+		<spring-data-bom.version>2021.1.0-SNAPSHOT</spring-data-bom.version>
 	</properties>
 
 	<dependencyManagement>
