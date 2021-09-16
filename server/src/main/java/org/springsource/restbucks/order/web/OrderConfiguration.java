@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @author Oliver Drotbohm
  */
 @Configuration(proxyBeanMethods = false)
-public class OrderConfiguration implements Mixins {
+class OrderConfiguration implements Mixins {
 
 	/*
 	 * (non-Javadoc)
