@@ -48,6 +48,6 @@ class CreditCardsIntegrationTest extends AbstractIntegrationTest {
 	public static CreditCard createCreditCard() {
 
 		CreditCardNumber number = CreditCardNumber.of("4321432143214321");
-		return new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.now());
+		return new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.now().plusYears(1));
 	}
 }
