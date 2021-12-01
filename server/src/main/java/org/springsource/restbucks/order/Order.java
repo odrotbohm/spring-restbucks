@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package org.springsource.restbucks.order;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.Value;
@@ -26,10 +30,6 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.money.MonetaryAmount;
-import javax.persistence.Column;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.Version;
 
 import org.javamoney.moneta.Money;
 import org.jmolecules.ddd.types.AggregateRoot;

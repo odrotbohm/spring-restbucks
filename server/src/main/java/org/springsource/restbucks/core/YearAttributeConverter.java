@@ -15,10 +15,10 @@
  */
 package org.springsource.restbucks.core;
 
-import java.time.Year;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import java.time.Year;
 
 import org.hibernate.annotations.Immutable;
 

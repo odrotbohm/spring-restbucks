@@ -15,9 +15,8 @@
  */
 package org.springsource.restbucks.payment;
 
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
-
-import javax.persistence.ManyToOne;
 
 import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;

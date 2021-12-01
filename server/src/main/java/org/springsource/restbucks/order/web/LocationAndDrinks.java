@@ -15,12 +15,11 @@
  */
 package org.springsource.restbucks.order.web;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Collections;
 import java.util.List;
-
-import javax.validation.constraints.NotNull;
 
 import org.springsource.restbucks.drinks.Drink;
 import org.springsource.restbucks.order.Location;

@@ -12,7 +12,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.1</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -236,22 +236,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 			</dependencies>
 		</profile>
-		
+
+		<!-- General AOT support -->
+
 		<profile>
 
 			<id>aot</id>
-
-			<properties>
-				<spring-native.version>0.12.1-SNAPSHOT</spring-native.version>
-			</properties>
-			
-			<dependencies>
-				<dependency>
-					<groupId>org.springframework.experimental</groupId>
-					<artifactId>spring-native</artifactId>
-					<version>${spring-native.version}</version>
-				</dependency>
-			</dependencies>
 
 			<build>
 
@@ -264,16 +254,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<configuration>
 							<executable>true</executable>
 						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.springframework.experimental</groupId>
-						<artifactId>spring-aot-maven-plugin</artifactId>
-						<version>${spring-native.version}</version>
 						<executions>
 							<execution>
-								<id>generate</id>
+								<id>process-aot</id>
 								<goals>
-									<goal>generate</goal>
+									<goal>process-aot</goal>
 								</goals>
 							</execution>
 						</executions>

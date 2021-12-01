@@ -15,6 +15,8 @@
  */
 package org.springsource.restbucks.payment.web;
 
+import lombok.Getter;
+
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.hal.HalLinkRelation;
@@ -26,8 +28,6 @@ import org.springsource.restbucks.Restbucks;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
-
-import lombok.Getter;
 
 /**
  * Helper component to create links to the {@link Payment} and {@link Receipt}.

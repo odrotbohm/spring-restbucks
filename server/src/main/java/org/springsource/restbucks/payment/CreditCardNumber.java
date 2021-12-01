@@ -15,11 +15,10 @@
  */
 package org.springsource.restbucks.payment;
 
+import jakarta.persistence.Column;
 import lombok.Value;
 
 import java.util.regex.Pattern;
-
-import javax.persistence.Column;
 
 import org.jmolecules.ddd.annotation.ValueObject;
 import org.jmolecules.ddd.types.Identifier;
