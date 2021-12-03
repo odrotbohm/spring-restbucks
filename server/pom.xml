@@ -24,7 +24,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<dependency>
 				<groupId>org.jmolecules</groupId>
 				<artifactId>jmolecules-bom</artifactId>
-				<version>2021.1.0</version>
+				<version>2021.2.1-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -180,7 +180,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<dependency>
 						<groupId>org.jmolecules.integrations</groupId>
 						<artifactId>jmolecules-bytebuddy</artifactId>
-						<version>0.5.0</version>
+						<version>0.7.0-SNAPSHOT</version>
 					</dependency>
 				</dependencies>
 			</plugin>
