@@ -19,6 +19,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import org.jmolecules.event.types.DomainEvent;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
 
 /**
@@ -30,7 +31,7 @@ import org.springsource.restbucks.order.Order.OrderIdentifier;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class OrderPaid {
+public class OrderPaid implements DomainEvent {
 
 	private final OrderIdentifier orderId;
 
