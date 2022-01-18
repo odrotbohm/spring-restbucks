@@ -118,6 +118,23 @@ The use of the Spring Cloud Contract extension also causes WireMock stubs to be 
 
 The project uses [Lombok](http://projectlombok.org) to reduce the amount of boilerplate code to be written for Java entities and value objects.
 
+## Observability
+
+The project uses [Moduliths'](http://moduliths.org) observability features to inspect the runtime interaction between the logical modules of RESTBucks.
+To use and see this, run the application with the `observability` Maven profile enabled:
+
+```
+$ mvn spring-boot:run -Pobservability
+```
+
+That profile adds some dependencies, like Spring Cloud Sleuth as well as its integration with Zipkin.
+Make sure you have Zipkin running as described [here](https://zipkin.io/pages/quickstart.html).
+Interactions with the system will now expose the logical module invocation and their choreography
+
+![A sample Zipkin trace](server/docs/images/observability.png "A sample Zipkin trace")
+
+See how the triggering of the payment for an order changes the order state, kicks of the preparation engine and tweaks the order's state in turn at the start and end of the process.
+
 ## Hypermedia
 
 A core focus of this sample app is to demonstrate how easy resources can be modeled in a hypermedia driven way. There are two major aspects to this challenge in Java web-frameworks:
