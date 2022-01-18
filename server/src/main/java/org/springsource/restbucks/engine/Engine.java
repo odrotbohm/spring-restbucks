@@ -43,6 +43,7 @@ import org.springsource.restbucks.order.Orders;
 class Engine {
 
 	private final @NonNull Orders orders;
+	private final @NonNull EngineSettings settings;
 	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
 
 	@Async
@@ -50,13 +51,14 @@ class Engine {
 	public void handleOrderPaidEvent(OrderPaid event) {
 
 		var order = orders.markInPreparation(event.getOrderId());
+		var processingTime = settings.getProcessingTime();
 
 		ordersInProgress.add(order);
 
-		LOG.info("Starting to process order {}.", order);
+		LOG.info("Starting to process order {} for {}.", order, processingTime.toString());
 
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(processingTime.toMillis());
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}

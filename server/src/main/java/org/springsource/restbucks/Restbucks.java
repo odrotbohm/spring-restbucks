@@ -17,6 +17,7 @@ package org.springsource.restbucks;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.mediatype.hal.CurieProvider;
@@ -31,8 +32,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @see SpringApplication
  * @author Oliver Gierke
  */
-@SpringBootApplication
 @EnableAsync
+@ConfigurationPropertiesScan
+@SpringBootApplication
 public class Restbucks {
 
 	public static String CURIE_NAMESPACE = "restbucks";
