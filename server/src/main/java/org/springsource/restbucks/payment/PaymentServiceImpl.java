@@ -56,11 +56,11 @@ class PaymentServiceImpl implements PaymentService {
 		// Using Optional.orElseThrow(…) doesn't work due to https://bugs.openjdk.java.net/browse/JDK-8054569
 		var creditCard = cards.findByNumber(creditCardNumber)
 				.orElseThrow(() -> new PaymentFailed(order,
-						String.format("No credit card found for number: %s", creditCardNumber.getNumber())));
+						String.format("No credit card found for number: %s", creditCardNumber)));
 
 		if (!creditCard.isValid()) {
-			throw new PaymentFailed(order, String.format("Invalid credit card with number %s, expired %s!",
-					creditCardNumber.getNumber(), creditCard.getExpirationDate()));
+			throw new PaymentFailed(order, "Invalid credit card with number %s, expired %s!".formatted(
+					creditCardNumber, creditCard.getExpirationDate()));
 		}
 
 		orders.markPaid(order);
