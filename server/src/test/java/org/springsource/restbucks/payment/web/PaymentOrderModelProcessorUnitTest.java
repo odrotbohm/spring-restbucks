@@ -93,10 +93,7 @@ class PaymentOrderModelProcessorUnitTest {
 	@Test
 	void addsReceiptLinkForPaidOrder() {
 
-		Order order = OrderTestUtils.createExistingOrder();
-		order.markPaid();
-		order.markInPreparation();
-		order.markPrepared();
+		Order order = OrderTestUtils.createPreparedOrder();
 
 		EntityModel<Order> resource = processor.process(EntityModel.of(order));
 		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL)).hasValue(receiptLink);

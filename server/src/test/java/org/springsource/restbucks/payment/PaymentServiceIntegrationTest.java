@@ -28,7 +28,7 @@ import org.springsource.restbucks.order.Orders;
 
 /**
  * Integration tests for {@link PaymentServiceImpl}.
- * 
+ *
  * @author Oliver Gierke
  */
 class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
@@ -40,9 +40,9 @@ class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	void marksOrderAsPaid() {
 
-		Order order = orders.save(createOrder());
-		CreditCard creditCard = creditCards.save(createCreditCard());
-		CreditCardPayment payment = paymentService.pay(order, creditCard.getNumber());
+		var order = orders.save(createOrder());
+		var creditCard = creditCards.save(createCreditCard());
+		var payment = paymentService.pay(order, creditCard.getNumber());
 
 		assertThat(paymentService.getPaymentFor(order)).hasValue(payment);
 		assertThat(order.isPaid()).isTrue();
@@ -51,11 +51,7 @@ class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	void marksOrderAsTakenIfReceiptIsTaken() {
 
-		Order order = orders.save(createOrder());
-		order.markPaid();
-		order.markInPreparation();
-		order.markPrepared();
-		orders.save(order);
+		var order = createPreparedOrder();
 
 		paymentService.takeReceiptFor(order);
 

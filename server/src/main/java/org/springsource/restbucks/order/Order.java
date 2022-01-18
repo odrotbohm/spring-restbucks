@@ -118,7 +118,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	/**
 	 * Marks the {@link Order} as payed.
 	 */
-	public Order markPaid() {
+	Order markPaid() {
 
 		if (isPaid()) {
 			throw new IllegalStateException("Already paid order cannot be paid again!");
@@ -134,7 +134,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	/**
 	 * Marks the {@link Order} as in preparation.
 	 */
-	public Order markInPreparation() {
+	Order markInPreparation() {
 
 		if (this.status != Status.PAID) {
 			throw new IllegalStateException(
@@ -149,7 +149,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	/**
 	 * Marks the {@link Order} as prepared.
 	 */
-	public Order markPrepared() {
+	Order markPrepared() {
 
 		if (this.status != Status.PREPARING) {
 			throw new IllegalStateException(String
@@ -161,7 +161,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		return this;
 	}
 
-	public Order markTaken() {
+	Order markTaken() {
 
 		if (this.status != Status.READY) {
 			throw new IllegalStateException(

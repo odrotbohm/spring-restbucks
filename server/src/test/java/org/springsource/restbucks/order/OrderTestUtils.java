@@ -43,4 +43,15 @@ public class OrderTestUtils {
 	public static Order createOrder() {
 		return new Order().add(new Drink("English breakfast", Milk.WHOLE, Size.LARGE, Money.of(2.70, EURO)));
 	}
+
+	public static Order createPaidOrder() {
+		return createOrder().markPaid();
+	}
+
+	public static Order createPreparedOrder() {
+
+		return createPaidOrder()
+				.markInPreparation()
+				.markPrepared();
+	}
 }

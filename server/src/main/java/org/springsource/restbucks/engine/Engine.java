@@ -33,7 +33,7 @@ import org.springsource.restbucks.order.Orders;
 /**
  * Simple {@link OrderPaid} listener marking the according {@link Order} as in process, sleeping for 5 seconds and
  * marking the order as processed right after that.
- * 
+ *
  * @author Oliver Gierke
  * @author Stéphane Nicoll
  */
@@ -42,18 +42,14 @@ import org.springsource.restbucks.order.Orders;
 @AllArgsConstructor
 class Engine {
 
-	private final @NonNull Orders repository;
+	private final @NonNull Orders orders;
 	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
 
 	@Async
 	@TransactionalEventListener
 	public void handleOrderPaidEvent(OrderPaid event) {
 
-		var id = event.getOrderId();
-		var order = repository.findById(id) //
-				.orElseThrow(() -> new IllegalStateException(String.format("No order found for identifier %s!", id)));
-
-		order = repository.save(order.markInPreparation());
+		var order = orders.markInPreparation(event.getOrderId());
 
 		ordersInProgress.add(order);
 
@@ -65,7 +61,7 @@ class Engine {
 			throw new RuntimeException(e);
 		}
 
-		order = repository.save(order.markPrepared());
+		order = orders.markPrepared(order);
 
 		ordersInProgress.remove(order);
 

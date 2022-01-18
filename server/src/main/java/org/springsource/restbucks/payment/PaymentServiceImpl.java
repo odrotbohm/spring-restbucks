@@ -63,11 +63,9 @@ class PaymentServiceImpl implements PaymentService {
 					creditCardNumber.getNumber(), creditCard.getExpirationDate()));
 		}
 
-		var payment = payments.save(new CreditCardPayment(creditCard, order));
+		orders.markPaid(order);
 
-		orders.save(order.markPaid());
-
-		return payment;
+		return payments.save(new CreditCardPayment(creditCard, order));
 	}
 
 	/*
@@ -87,7 +85,7 @@ class PaymentServiceImpl implements PaymentService {
 	@Override
 	public Optional<Receipt> takeReceiptFor(Order order) {
 
-		var result = orders.save(order.markTaken());
+		var result = orders.markTaken(order);
 
 		return getPaymentFor(result).map(Payment::getReceipt);
 	}

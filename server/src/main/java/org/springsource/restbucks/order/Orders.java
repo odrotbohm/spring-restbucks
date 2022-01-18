@@ -21,6 +21,7 @@ import org.jmolecules.spring.AssociationResolver;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.transaction.annotation.Transactional;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
 import org.springsource.restbucks.order.Order.Status;
 
@@ -40,4 +41,52 @@ public interface Orders
 	 * @return
 	 */
 	List<Order> findByStatus(@Param("status") Status status);
+
+	/**
+	 * Marks the given {@link Order} as paid.
+	 *
+	 * @param order must not be {@literal null}.
+	 * @return
+	 */
+	@Transactional
+	default Order markPaid(Order order) {
+		return save(order.markPaid());
+	}
+
+	/**
+	 * Marks the order with the given {@link OrderIdentifier} as in preparation.
+	 *
+	 * @param id must not be {@literal null}.
+	 * @return
+	 */
+	@Transactional
+	default Order markInPreparation(OrderIdentifier id) {
+
+		var order = findById(id) //
+				.orElseThrow(() -> new IllegalStateException(String.format("No order found for identifier %s!", id)));
+
+		return save(order.markInPreparation());
+	}
+
+	/**
+	 * Marks the given Order as prepared.
+	 *
+	 * @param order must not be {@literal null}.
+	 * @return
+	 */
+	@Transactional
+	default Order markPrepared(Order order) {
+		return save(order.markPrepared());
+	}
+
+	/**
+	 * Marks the given {@link Order} as taken.
+	 *
+	 * @param order must not be {@literal null}.
+	 * @return
+	 */
+	@Transactional
+	default Order markTaken(Order order) {
+		return save(order.markTaken());
+	}
 }
