@@ -16,6 +16,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</parent>
 
 	<properties>
+		<bytebuddy.version>1.12.7</bytebuddy.version>
 		<java.version>17</java.version>
 		<jmolecules.version>2021.2.2</jmolecules.version>
 		<moduliths.version>1.3.0-M2</moduliths.version>
@@ -185,7 +186,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<plugin>
 				<groupId>net.bytebuddy</groupId>
 				<artifactId>byte-buddy-maven-plugin</artifactId>
-				<version>1.12.2</version>
+				<version>${bytebuddy.version}</version>
 				<executions>
 					<execution>
 						<goals>
