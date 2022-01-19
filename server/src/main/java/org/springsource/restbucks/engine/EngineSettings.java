@@ -42,6 +42,6 @@ class EngineSettings {
 	 * @param processingTime must not be {@literal null}.
 	 */
 	public EngineSettings(@DefaultValue("2s") Duration processingTime) {
-		this.processingTime = processingTime == null ? null : null;
+		this.processingTime = processingTime;
 	}
 }
