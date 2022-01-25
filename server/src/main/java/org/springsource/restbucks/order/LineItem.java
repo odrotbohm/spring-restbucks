@@ -49,7 +49,7 @@ public class LineItem implements Entity<Order, LineItemIdentifier> {
 
 	public LineItem(Drink drink) {
 
-		this.id = LineItemIdentifier.of(UUID.randomUUID());
+		this.id = LineItemIdentifier.of(UUID.randomUUID().toString());
 		this.name = drink.getName();
 		this.quantity = 1;
 		this.milk = drink.getMilk();
@@ -69,6 +69,6 @@ public class LineItem implements Entity<Order, LineItemIdentifier> {
 
 	@Value(staticConstructor = "of")
 	public static class LineItemIdentifier implements Identifier {
-		UUID id;
+		String id;
 	}
 }
