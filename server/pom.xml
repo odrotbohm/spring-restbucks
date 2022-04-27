@@ -156,7 +156,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
@@ -169,11 +169,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<profile>
 
 			<id>observability</id>
-			
+
 			<properties>
 				<spring-cloud.version>2021.0.0</spring-cloud.version>
 			</properties>
-			
+
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
@@ -193,12 +193,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<artifactId>moduliths-observability</artifactId>
 					<version>${moduliths.version}</version>
 				</dependency>
-		
+
 				<dependency>
 					<groupId>org.springframework.cloud</groupId>
 					<artifactId>spring-cloud-starter-sleuth</artifactId>
 				</dependency>
-		
+
 				<dependency>
 					<groupId>org.springframework.cloud</groupId>
 					<artifactId>spring-cloud-sleuth-zipkin</artifactId>
