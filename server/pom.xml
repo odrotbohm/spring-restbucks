@@ -19,7 +19,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<bytebuddy.version>1.12.10</bytebuddy.version>
 		<java.version>17</java.version>
 		<jmolecules.version>2021.2.3</jmolecules.version>
-		<moduliths.version>1.3.0-RC1</moduliths.version>
+		<moduliths.version>1.3.0</moduliths.version>
 	</properties>
 
 	<dependencyManagement>
