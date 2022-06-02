@@ -18,6 +18,7 @@ package org.springsource.restbucks.payment;
 import java.util.Optional;
 
 import org.jmolecules.ddd.types.Association;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
@@ -27,7 +28,7 @@ import org.springsource.restbucks.order.Order.OrderIdentifier;
  *
  * @author Oliver Gierke
  */
-interface Payments extends PagingAndSortingRepository<Payment<?>, Long> {
+interface Payments extends CrudRepository<Payment<?>, Long>, PagingAndSortingRepository<Payment<?>, Long> {
 
 	/**
 	 * Returns the payment registered for the given {@link Order}.
