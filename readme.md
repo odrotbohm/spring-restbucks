@@ -170,6 +170,31 @@ This will return:
 
 You can then follow the `profile` link to access all available ALPS resources, such as the one for `orders`, a link relation also listed in the response for the root resource.
 
+## Building native images for the server application
+
+The server application can be built as a Graal native image by using the `hacking/native` branch (as we need to tweak the build and dependency setup slightly) and running the build with the native profile enabled:
+
+```
+$ git checkout hacking/native
+$ mvn -Pnative
+```
+
+Preerequisite for that is Docker running as the Spring Boot Maven plugin will use Paketo build images to pull down the necessary infrastructure and build a Docker container containing the native app.
+If you are on an ARM64 machine, additionally activate the `arm64` profile:
+
+```
+$ mvn -Pnative,arm64
+```
+
+You can run the native application by starting the created Docker image right away:
+
+```
+$ docker run --rm -p 8080:8080 restbucks:1.0.0.BUILD-SNAPSHOT
+…
+… INFO 1 --- [           main] … : Started Restbucks in 0.284 seconds (JVM running for 0.291)
+```
+
+
 ## The Android client
 
 The Android sample client can be found in `android-client` and is a most rudimentary implementation of a client application that leverages hypermedia elements to avoid strong coupling to the server.
