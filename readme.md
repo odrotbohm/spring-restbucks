@@ -170,6 +170,18 @@ This will return:
 
 You can then follow the `profile` link to access all available ALPS resources, such as the one for `orders`, a link relation also listed in the response for the root resource.
 
+## Using the AOT mode for the server application
+
+You can use Spring Native's AOT support to build the application for optimized Spring Boot startup that pre-processes the Spring configuration at runtime but still run the app as JVM application.
+To achieve that, run the build using the `aot` profile.
+Then activate the AOT mode of the application on startup.
+
+```
+$ ./mvnw -Paot
+…
+$ java -DspringAot=true -jar target/*.jar
+```
+
 ## Building native images for the server application
 
 The server application can be built as a Graal native image by using the `hacking/native` branch (as we need to tweak the build and dependency setup slightly) and running the build with the native profile enabled:
