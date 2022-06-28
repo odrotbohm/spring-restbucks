@@ -110,7 +110,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>de.odrotbohm.playground</groupId>
 			<artifactId>spring-web-tools</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.2.0</version>
 		</dependency>
 
 		<!-- JDK 8 DateTime support for Jackson -->
