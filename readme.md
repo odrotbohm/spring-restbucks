@@ -192,11 +192,6 @@ $ mvn -Pnative
 ```
 
 Preerequisite for that is Docker running as the Spring Boot Maven plugin will use Paketo build images to pull down the necessary infrastructure and build a Docker container containing the native app.
-If you are on an ARM64 machine, additionally activate the `arm64` profile:
-
-```
-$ mvn -Pnative,arm64
-```
 
 You can run the native application by starting the created Docker image right away:
 
