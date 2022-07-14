@@ -21,10 +21,10 @@ import ch.qos.logback.classic.Logger;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.moduliths.docs.Documenter;
-import org.moduliths.docs.Documenter.CanvasOptions;
-import org.moduliths.docs.Documenter.Options;
-import org.moduliths.model.Modules;
+import org.springframework.modulith.docs.Documenter;
+import org.springframework.modulith.docs.Documenter.CanvasOptions;
+import org.springframework.modulith.docs.Documenter.Options;
+import org.springframework.modulith.model.ApplicationModules;
 
 /**
  * @author Oliver Drotbohm
@@ -37,7 +37,7 @@ public class DocumentationTest {
 		((Logger) org.slf4j.LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)) //
 				.setLevel(Level.ERROR);
 
-		new Documenter(Modules.of(Restbucks.class))
+		new Documenter(ApplicationModules.of(Restbucks.class))
 				.writeDocumentation(Options.defaults(), CanvasOptions.defaults());
 	}
 }
