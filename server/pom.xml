@@ -160,15 +160,15 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</dependencies>
 
 	<profiles>
-	
+
 		<profile>
-			
+
 			<id>default</id>
-			
+
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			
+
 			<build>
 				<plugins>
 					<plugin>
@@ -187,9 +187,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					</plugin>
 				</plugins>
 			</build>
-			
+
 		</profile>
-	
+
 		<profile>
 
 			<id>observability</id>
@@ -276,7 +276,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			</build>
 
 		</profile>
-		
+
 	</profiles>
 
 	<build>
