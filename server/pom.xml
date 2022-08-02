@@ -36,6 +36,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<dependencies>
 
+		<!-- Temporarily -->
+		<dependency>
+			<groupId>org.springframework.plugin</groupId>
+			<artifactId>spring-plugin-core</artifactId>
+			<version>3.0.0-SNAPSHOT</version>
+		</dependency>
+
 		<!-- jMolecules -->
 
 		<dependency>
