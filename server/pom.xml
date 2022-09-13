@@ -326,6 +326,35 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			</build>
 		</profile>
 
+		<profile>
+
+			<id>native</id>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.graalvm.buildtools</groupId>
+						<artifactId>native-maven-plugin</artifactId>
+						<configuration>
+							<classesDirectory>${project.build.outputDirectory}</classesDirectory>
+							<metadataRepository>
+								<enabled>true</enabled>
+								<version>0.1.2</version>
+							</metadataRepository>
+						</configuration>
+						<executions>
+							<execution>
+								<id>native-build</id>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 
 	<build>
