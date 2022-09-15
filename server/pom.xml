@@ -113,6 +113,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<version>0.2.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-graalvm</artifactId>
+			<version>6.1.1.Final</version>
+		</dependency>
+
 		<!-- JDK 8 DateTime support for Jackson -->
 
 		<dependency>
