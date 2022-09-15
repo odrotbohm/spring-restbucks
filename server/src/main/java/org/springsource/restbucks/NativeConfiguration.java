@@ -15,7 +15,11 @@
  */
 package org.springsource.restbucks;
 
+import org.springframework.aot.hint.RuntimeHints;
+import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort;
+import org.springsource.restbucks.drinks.Drink;
 
 /**
  * Additional configuration needed to produce Graal metadata to let some application properly work on it.
@@ -26,4 +30,10 @@ import org.springframework.context.annotation.Configuration;
 
 // Due to DrinksOptions.BY_NAME (i.e. the usage of a domain type with Spring Data's TypedSort)
 // @AotProxyHint(targetClass = Drink.class, proxyFeatures = ProxyBits.IS_STATIC)
-class NativeConfiguration {}
+class NativeConfiguration implements RuntimeHintsRegistrar {
+
+	@Override
+	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
+		Sort.sort(Drink.class).by(Drink::getName).ascending();
+	}
+}
