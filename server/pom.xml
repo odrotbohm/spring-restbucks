@@ -113,12 +113,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<version>0.2.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.hibernate.orm</groupId>
-			<artifactId>hibernate-graalvm</artifactId>
-			<version>6.1.1.Final</version>
-		</dependency>
-
 		<!-- JDK 8 DateTime support for Jackson -->
 
 		<dependency>
@@ -342,20 +336,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<groupId>org.graalvm.buildtools</groupId>
 						<artifactId>native-maven-plugin</artifactId>
 						<configuration>
-							<classesDirectory>${project.build.outputDirectory}</classesDirectory>
 							<metadataRepository>
 								<enabled>true</enabled>
-								<version>0.1.2</version>
+								<version>0.2.2</version>
 							</metadataRepository>
 						</configuration>
-						<executions>
-							<execution>
-								<id>native-build</id>
-								<goals>
-									<goal>build</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 			</build>
