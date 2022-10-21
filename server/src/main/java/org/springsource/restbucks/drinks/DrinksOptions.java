@@ -19,7 +19,6 @@ import static org.springframework.data.domain.Sort.*;
 
 import java.util.Optional;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
@@ -37,8 +36,6 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @BasePathAwareController
 public class DrinksOptions {
-
-	private static final Sort BY_NAME = sort(Drink.class).by(Drink::getName).ascending();
 
 	private final Drinks drinks;
 	private final TypedEntityLinks<Drink> links;
@@ -67,8 +64,10 @@ public class DrinksOptions {
 	@GetMapping("/drinks/by-name")
 	public HttpEntity<?> getOptions(@RequestParam Optional<String> q) {
 
-		var options = q.map(it -> drinks.findByNameContaining(it, BY_NAME))
-				.orElseGet(() -> drinks.findAll(BY_NAME))
+		var sortByName = sort(Drink.class).by(Drink::getName).ascending();
+
+		var options = q.map(it -> drinks.findByNameContaining(it, sortByName))
+				.orElseGet(() -> drinks.findAll(sortByName))
 				.map(it -> HalFormsPromptedValue.of(it.getName(), links.linkToItemResource(it).getHref()))
 				.toList();
 

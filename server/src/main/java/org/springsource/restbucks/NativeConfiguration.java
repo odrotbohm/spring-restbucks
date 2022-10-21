@@ -15,10 +15,10 @@
  */
 package org.springsource.restbucks;
 
+import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.Sort;
 import org.springsource.restbucks.drinks.Drink;
 
 /**
@@ -26,14 +26,19 @@ import org.springsource.restbucks.drinks.Drink;
  *
  * @author Oliver Drotbohm
  */
-@Configuration
-
-// Due to DrinksOptions.BY_NAME (i.e. the usage of a domain type with Spring Data's TypedSort)
-// @AotProxyHint(targetClass = Drink.class, proxyFeatures = ProxyBits.IS_STATIC)
 class NativeConfiguration implements RuntimeHintsRegistrar {
 
 	@Override
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-		Sort.sort(Drink.class).by(Drink::getName).ascending();
+
+		System.out.println("Generating proxy for Drink");
+
+		ProxyFactory proxyFactory = new ProxyFactory();
+		proxyFactory.setTargetClass(Drink.class);
+		proxyFactory.setProxyTargetClass(true);
+
+		var proxy = proxyFactory.getProxyClass(classLoader);
+
+		hints.reflection().registerType(proxy, MemberCategory.INVOKE_DECLARED_METHODS);
 	}
 }
