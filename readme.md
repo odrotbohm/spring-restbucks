@@ -195,7 +195,6 @@ OpenJDK 64-Bit Server VM GraalVM CE 22.3.0 (build 17.0.5+8-jvmci-22.3-b08, mixed
 The image can then be built as follows:
 
 ```
-$ git checkout hacking/boot-3-native
 $ mvn -Pnative
 ```
 
