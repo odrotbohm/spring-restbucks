@@ -22,8 +22,6 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.docs.Documenter;
-import org.springframework.modulith.docs.Documenter.CanvasOptions;
-import org.springframework.modulith.docs.Documenter.Options;
 import org.springframework.modulith.model.ApplicationModules;
 
 /**
@@ -37,7 +35,6 @@ public class DocumentationTest {
 		((Logger) org.slf4j.LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)) //
 				.setLevel(Level.ERROR);
 
-		new Documenter(ApplicationModules.of(Restbucks.class))
-				.writeDocumentation(Options.defaults(), CanvasOptions.defaults());
+		new Documenter(ApplicationModules.of(Restbucks.class)).writeDocumentation();
 	}
 }
