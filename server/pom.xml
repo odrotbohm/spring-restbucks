@@ -20,6 +20,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<java.version>17</java.version>
 		<jmolecules.version>2022.3.0-SNAPSHOT</jmolecules.version>
 		<spring-modulith.version>0.1.0-M1</spring-modulith.version>
+		<spring-data-bom.version>2022.0.0-SNAPSHOT</spring-data-bom.version>
 	</properties>
 
 	<dependencyManagement>
@@ -62,7 +63,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<groupId>org.jmolecules.integrations</groupId>
 			<artifactId>jmolecules-jackson</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jmolecules.integrations</groupId>
 			<artifactId>jmolecules-bytebuddy-nodep</artifactId>
@@ -274,7 +275,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<id>nativeBP</id>
 
 			<build>
+
 				<defaultGoal>spring-boot:build-image</defaultGoal>
+
 				<plugins>
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
@@ -298,6 +301,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						</executions>
 					</plugin>
 				</plugins>
+
 			</build>
 
 		</profile>
@@ -331,6 +335,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<id>native</id>
 
 			<build>
+
+				<defaultGoal>native:compile</defaultGoal>
+
 				<plugins>
 					<plugin>
 						<groupId>org.graalvm.buildtools</groupId>
@@ -338,12 +345,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<configuration>
 							<metadataRepository>
 								<enabled>true</enabled>
-								<version>0.2.2</version>
+								<version>0.2.3</version>
 							</metadataRepository>
 						</configuration>
 					</plugin>
 				</plugins>
+
 			</build>
+
 		</profile>
 
 	</profiles>

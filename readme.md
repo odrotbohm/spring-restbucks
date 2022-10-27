@@ -179,28 +179,33 @@ Then activate the AOT mode of the application on startup.
 ```
 $ ./mvnw -Paot
 …
-$ java -DspringAot=true -jar target/*.jar
+$ java -Dspring.aot.enabled=true -jar target/*.jar
 ```
 
 ## Building native images for the server application
 
-The server application can be built as a Graal native image by using the `hacking/native` branch (as we need to tweak the build and dependency setup slightly) and running the build with the native profile enabled:
+Make sure you have GraalVM 22.3 installed (on a Mac: `brew install graalvm`), the native image plugin installed (`gu install native`) and your console shows the following output when running `java -version`:
 
 ```
-$ git checkout hacking/native
+openjdk version "17.0.5" 2022-10-18
+OpenJDK Runtime Environment GraalVM CE 22.3.0 (build 17.0.5+8-jvmci-22.3-b08)
+OpenJDK 64-Bit Server VM GraalVM CE 22.3.0 (build 17.0.5+8-jvmci-22.3-b08, mixed mode, sharing)
+```
+
+The image can then be built as follows:
+
+```
+$ git checkout hacking/boot-3-native
 $ mvn -Pnative
 ```
 
-Preerequisite for that is Docker running as the Spring Boot Maven plugin will use Paketo build images to pull down the necessary infrastructure and build a Docker container containing the native app.
-
-You can run the native application by starting the created Docker image right away:
+After the build has completed, start the binary:
 
 ```
-$ docker run --rm -p 8080:8080 restbucks:1.0.0.BUILD-SNAPSHOT
+$ ./target/spring-restbucks
 …
-… INFO 1 --- [           main] … : Started Restbucks in 0.284 seconds (JVM running for 0.291)
+… [           main] org.springsource.restbucks.Restbucks     : Started Restbucks in 0.366 seconds (process running for 0.446)
 ```
-
 
 ## The Android client
 
