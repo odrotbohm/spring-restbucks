@@ -17,6 +17,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<properties>
 		<bytebuddy.version>1.12.18</bytebuddy.version>
+		<datasourceMicrometerSpringBootVersion>1.0.0-SNAPSHOT</datasourceMicrometerSpringBootVersion>
 		<java.version>17</java.version>
 		<jmolecules.version>2022.2.2</jmolecules.version>
 		<spring-modulith.version>0.1.0-M2</spring-modulith.version>
@@ -200,38 +201,33 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 			<id>observability</id>
 
-			<properties>
-				<spring-cloud.version>2021.0.0</spring-cloud.version>
-			</properties>
-
-			<dependencyManagement>
-				<dependencies>
-					<dependency>
-						<groupId>org.springframework.cloud</groupId>
-						<artifactId>spring-cloud-dependencies</artifactId>
-						<version>${spring-cloud.version}</version>
-						<type>pom</type>
-						<scope>import</scope>
-					</dependency>
-				</dependencies>
-			</dependencyManagement>
-
 			<dependencies>
 
 				<dependency>
-					<groupId>org.moduliths</groupId>
-					<artifactId>moduliths-observability</artifactId>
-					<version>${moduliths.version}</version>
+					<groupId>org.springframework.experimental</groupId>
+					<artifactId>spring-modulith-observability</artifactId>
+					<version>${spring-modulith.version}</version>
 				</dependency>
 
 				<dependency>
-					<groupId>org.springframework.cloud</groupId>
-					<artifactId>spring-cloud-starter-sleuth</artifactId>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-actuator</artifactId>
 				</dependency>
 
 				<dependency>
-					<groupId>org.springframework.cloud</groupId>
-					<artifactId>spring-cloud-sleuth-zipkin</artifactId>
+					<groupId>io.micrometer</groupId>
+					<artifactId>micrometer-tracing-bridge-otel</artifactId>
+				</dependency>
+
+				<dependency>
+					<groupId>io.opentelemetry</groupId>
+					<artifactId>opentelemetry-exporter-zipkin</artifactId>
+				</dependency>
+
+				<dependency>
+					<groupId>net.ttddyy.observation</groupId>
+					<artifactId>datasource-micrometer-spring-boot</artifactId>
+					<version>${datasourceMicrometerSpringBootVersion}</version>
 				</dependency>
 
 			</dependencies>
@@ -401,6 +397,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>sonatype-snapshots</id>
+			<name>Sonatype Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
 		</repository>
 	</repositories>
 
