@@ -12,15 +12,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.0-RC1</version>
+		<version>3.0.0-RC2</version>
 	</parent>
 
 	<properties>
 		<bytebuddy.version>1.12.18</bytebuddy.version>
 		<java.version>17</java.version>
-		<jmolecules.version>2022.3.0-SNAPSHOT</jmolecules.version>
-		<spring-modulith.version>0.1.0-M1</spring-modulith.version>
-		<spring-data-bom.version>2022.0.0-SNAPSHOT</spring-data-bom.version>
+		<jmolecules.version>2022.2.2</jmolecules.version>
+		<spring-modulith.version>0.1.0-M2</spring-modulith.version>
 	</properties>
 
 	<dependencyManagement>
@@ -345,7 +344,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<configuration>
 							<metadataRepository>
 								<enabled>true</enabled>
-								<version>0.2.3</version>
+								<version>0.2.4</version>
 							</metadataRepository>
 						</configuration>
 					</plugin>

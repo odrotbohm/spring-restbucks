@@ -120,7 +120,7 @@ The project uses [Lombok](http://projectlombok.org) to reduce the amount of boil
 
 ## Observability
 
-The project uses [Moduliths'](http://moduliths.org) observability features to inspect the runtime interaction between the logical modules of RESTBucks.
+The project uses [Spring Moduliths'](https://github.com/spring-projects-experimental/spring-modulith) observability features to inspect the runtime interaction between the logical modules of RESTBucks.
 To use and see this, run the application with the `observability` Maven profile enabled:
 
 ```
