@@ -340,7 +340,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<configuration>
 							<metadataRepository>
 								<enabled>true</enabled>
-								<version>0.2.4</version>
+								<version>0.2.5</version>
 							</metadataRepository>
 						</configuration>
 					</plugin>
