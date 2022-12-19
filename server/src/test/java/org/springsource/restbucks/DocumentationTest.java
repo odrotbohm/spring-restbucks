@@ -35,6 +35,6 @@ public class DocumentationTest {
 		((Logger) org.slf4j.LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)) //
 				.setLevel(Level.ERROR);
 
-		new Documenter(ApplicationModules.of(Restbucks.class)).writeDocumentation();
+		new Documenter(ApplicationModules.of(Restbucks.class).verify()).writeDocumentation();
 	}
 }

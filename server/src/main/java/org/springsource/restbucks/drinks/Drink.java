@@ -25,8 +25,6 @@ import javax.money.MonetaryAmount;
 import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Identifier;
 import org.springsource.restbucks.drinks.Drink.DrinkIdentifier;
-import org.springsource.restbucks.order.Milk;
-import org.springsource.restbucks.order.Size;
 
 /**
  * @author Oliver Drotbohm

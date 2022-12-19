@@ -22,11 +22,11 @@ import javax.money.MonetaryAmount;
 
 import org.springframework.context.annotation.Configuration;
 import org.springsource.restbucks.Mixins;
+import org.springsource.restbucks.drinks.Milk;
+import org.springsource.restbucks.drinks.Size;
 import org.springsource.restbucks.order.LineItem;
 import org.springsource.restbucks.order.Location;
-import org.springsource.restbucks.order.Milk;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.Size;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;

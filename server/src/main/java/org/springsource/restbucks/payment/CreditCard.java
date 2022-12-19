@@ -15,6 +15,7 @@
  */
 package org.springsource.restbucks.payment;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -34,7 +35,7 @@ import org.jmolecules.ddd.types.AggregateRoot;
 @AllArgsConstructor
 public class CreditCard implements AggregateRoot<CreditCard, CreditCardNumber> {
 
-	private final @Getter CreditCardNumber number;
+	private final @Getter @Column(unique = true) CreditCardNumber number;
 	private final @Getter String cardHolderName;
 
 	private Month expiryMonth;

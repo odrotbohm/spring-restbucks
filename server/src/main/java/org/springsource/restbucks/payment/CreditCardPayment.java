@@ -15,9 +15,9 @@
  */
 package org.springsource.restbucks.payment;
 
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 
+import org.jmolecules.ddd.types.Association;
 import org.springframework.util.Assert;
 import org.springsource.restbucks.order.Order;
 
@@ -29,20 +29,20 @@ import org.springsource.restbucks.order.Order;
 @Getter
 public class CreditCardPayment extends Payment<CreditCardPayment> {
 
-	private final @ManyToOne CreditCard creditCard;
+	private final Association<CreditCard, CreditCardNumber> creditCardNumber;
 
 	/**
-	 * Creates a new {@link CreditCardPayment} for the given {@link CreditCard} and {@link Order}.
+	 * Creates a new {@link CreditCardPayment} for the given {@link CreditCardNumber} and {@link Order}.
 	 *
-	 * @param creditCard must not be {@literal null}.
+	 * @param creditCardNumber must not be {@literal null}.
 	 * @param order
 	 */
-	public CreditCardPayment(CreditCard creditCard, Order order) {
+	public CreditCardPayment(CreditCardNumber creditCardNumber, Order order) {
 
 		super(order);
 
-		Assert.notNull(creditCard, "Credit card must not be null!");
+		Assert.notNull(creditCardNumber, "Credit card number must not be null!");
 
-		this.creditCard = creditCard;
+		this.creditCardNumber = Association.forId(creditCardNumber);
 	}
 }

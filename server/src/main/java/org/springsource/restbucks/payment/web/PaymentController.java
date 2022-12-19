@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Orders;
-import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
 import org.springsource.restbucks.payment.Payment;
 import org.springsource.restbucks.payment.Payment.Receipt;
@@ -74,14 +73,14 @@ class PaymentController {
 	 * @return
 	 */
 	@PutMapping(path = PaymentLinks.PAYMENT)
-	ResponseEntity<?> submitPayment(@PathVariable("id") Order order, @RequestBody PaymentForm ccn) {
+	ResponseEntity<?> submitPayment(@PathVariable("id") Order order, @RequestBody PaymentForm form) {
 
 		if (order == null || order.isPaid()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		var payment = paymentService.pay(order, ccn.getNumber());
-		var model = new PaymentModel(order.getPrice(), payment.getCreditCard()) //
+		var payment = paymentService.pay(order, form.getNumber());
+		var model = new PaymentModel(order.getPrice(), payment.getCreditCardNumber().getId()) //
 				.add(paymentLinks.getOrderLinks().linkToItemResource(order));
 
 		var paymentUri = paymentLinks.getPaymentLink(order).toUri();
@@ -153,7 +152,7 @@ class PaymentController {
 	static class PaymentModel extends RepresentationModel<PaymentModel> {
 
 		private final MonetaryAmount amount;
-		private final CreditCard creditCard;
+		private final CreditCardNumber creditCardNumber;
 	}
 
 	@Value

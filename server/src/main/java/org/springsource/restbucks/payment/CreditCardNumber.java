@@ -15,13 +15,12 @@
  */
 package org.springsource.restbucks.payment;
 
-import jakarta.persistence.Column;
 import lombok.Value;
 
 import java.util.regex.Pattern;
 
-import org.jmolecules.ddd.annotation.ValueObject;
 import org.jmolecules.ddd.types.Identifier;
+import org.jmolecules.ddd.types.ValueObject;
 
 /**
  * Value object to represent a {@link CreditCardNumber}.
@@ -29,13 +28,11 @@ import org.jmolecules.ddd.types.Identifier;
  * @author Oliver Gierke
  */
 @Value(staticConstructor = "of")
-@ValueObject
-public class CreditCardNumber implements Identifier {
+public class CreditCardNumber implements Identifier, ValueObject {
 
 	public static final String REGEX = "[0-9]{16}";
 	private static final Pattern PATTERN = Pattern.compile(REGEX);
 
-	@Column(unique = true) //
 	private final String number;
 
 	/**

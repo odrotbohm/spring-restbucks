@@ -22,7 +22,6 @@ import static org.springsource.restbucks.payment.CreditCardsIntegrationTest.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springsource.restbucks.AbstractIntegrationTest;
-import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Orders;
 
 /**
@@ -39,10 +38,10 @@ class PaymentsIntegrationTest extends AbstractIntegrationTest {
 	@Test
 	void savesCreditCardPayment() {
 
-		CreditCard creditCard = creditCards.save(createCreditCard());
-		Order order = orders.save(createOrder());
+		var creditCardNumber = createCreditCardNumber();
+		var order = orders.save(createOrder());
 
-		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCard, order));
+		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCardNumber, order));
 
 		assertThat(payment.getId()).isNotNull();
 		assertThat(payments.findByOrder(order.getId())).hasValue(payment);

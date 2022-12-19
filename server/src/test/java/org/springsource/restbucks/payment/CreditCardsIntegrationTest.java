@@ -45,9 +45,11 @@ class CreditCardsIntegrationTest extends AbstractIntegrationTest {
 		assertThat(result.get()).isEqualTo(creditCard);
 	}
 
-	public static CreditCard createCreditCard() {
+	public static CreditCardNumber createCreditCardNumber() {
+		return CreditCardNumber.of("4321432143214321");
+	}
 
-		CreditCardNumber number = CreditCardNumber.of("4321432143214321");
-		return new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.now().plusYears(1));
+	public static CreditCard createCreditCard() {
+		return new CreditCard(createCreditCardNumber(), "Oliver Gierke", Month.DECEMBER, Year.now().plusYears(1));
 	}
 }

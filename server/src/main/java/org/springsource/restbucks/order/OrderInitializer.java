@@ -28,6 +28,8 @@ import org.jmolecules.event.annotation.DomainEventHandler;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springsource.restbucks.drinks.Drink;
 import org.springsource.restbucks.drinks.Drinks;
+import org.springsource.restbucks.drinks.Milk;
+import org.springsource.restbucks.drinks.Size;
 
 /**
  * Initializer to set up two {@link Order}s.
