@@ -80,6 +80,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 		<dependency>
 			<groupId>org.springframework.experimental</groupId>
+			<artifactId>spring-modulith-core</artifactId>
+			<version>${spring-modulith.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.experimental</groupId>
 			<artifactId>spring-modulith-docs</artifactId>
 			<version>${spring-modulith.version}</version>
 			<scope>test</scope>
