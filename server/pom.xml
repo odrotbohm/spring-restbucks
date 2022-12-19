@@ -32,6 +32,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework.experimental</groupId>
+				<artifactId>spring-modulith-bom</artifactId>
+				<version>${spring-modulith.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -81,13 +88,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.springframework.experimental</groupId>
 			<artifactId>spring-modulith-core</artifactId>
-			<version>${spring-modulith.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.experimental</groupId>
 			<artifactId>spring-modulith-docs</artifactId>
-			<version>${spring-modulith.version}</version>
 			<scope>test</scope>
 		</dependency>
 
