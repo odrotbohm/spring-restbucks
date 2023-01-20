@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.modulith.ApplicationModuleIntegrationListener;
+import org.springframework.modulith.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderPaid;
@@ -45,7 +45,7 @@ class Engine {
 	private final @NonNull EngineSettings settings;
 	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
 
-	@ApplicationModuleIntegrationListener
+	@ApplicationModuleListener
 	public void handleOrderPaidEvent(OrderPaid event) {
 
 		var order = orders.markInPreparation(event.getOrderId());

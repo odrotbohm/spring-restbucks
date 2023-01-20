@@ -21,8 +21,8 @@ import ch.qos.logback.classic.Logger;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
-import org.springframework.modulith.model.ApplicationModules;
 
 /**
  * @author Oliver Drotbohm
