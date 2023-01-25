@@ -16,7 +16,6 @@
 package org.springsource.restbucks.drinks;
 
 import lombok.Getter;
-import lombok.Value;
 
 import java.util.UUID;
 
@@ -40,15 +39,12 @@ public class Drink implements AggregateRoot<Drink, DrinkIdentifier> {
 
 	public Drink(String name, Milk milk, Size size, MonetaryAmount price) {
 
-		this.id = DrinkIdentifier.of(UUID.randomUUID().toString());
+		this.id = new DrinkIdentifier(UUID.randomUUID());
 		this.name = name;
 		this.milk = milk;
 		this.size = size;
 		this.price = price;
 	}
 
-	@Value(staticConstructor = "of")
-	public static class DrinkIdentifier implements Identifier {
-		String id;
-	}
+	public record DrinkIdentifier(UUID id) implements Identifier {}
 }

@@ -21,7 +21,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,7 +65,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	 */
 	public Order(Collection<LineItem> lineItems, Location location) {
 
-		this.id = OrderIdentifier.of(UUID.randomUUID().toString());
+		this.id = new OrderIdentifier(UUID.randomUUID());
 		this.location = location == null ? Location.TAKE_AWAY : location;
 		this.status = Status.PAYMENT_EXPECTED;
 		this.lineItems.addAll(lineItems);
@@ -228,8 +227,5 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		TAKEN;
 	}
 
-	@Value(staticConstructor = "of")
-	public static class OrderIdentifier implements Identifier {
-		String id;
-	}
+	public record OrderIdentifier(UUID id) implements Identifier {}
 }

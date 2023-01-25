@@ -61,7 +61,7 @@ public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 
 		Assert.notNull(order, "Order must not be null!");
 
-		this.id = PaymentIdentifier.of(UUID.randomUUID().toString());
+		this.id = new PaymentIdentifier(UUID.randomUUID());
 		this.order = Association.forAggregate(order);
 		this.paymentDate = LocalDateTime.now();
 	}
@@ -87,8 +87,5 @@ public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 		private final Association<Order, OrderIdentifier> order;
 	}
 
-	@Value(staticConstructor = "of")
-	public static class PaymentIdentifier implements Identifier {
-		String id;
-	}
+	public record PaymentIdentifier(UUID id) implements Identifier {}
 }

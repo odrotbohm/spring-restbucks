@@ -17,7 +17,6 @@ package org.springsource.restbucks.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Value;
 
 import java.util.UUID;
 
@@ -27,9 +26,9 @@ import org.jmolecules.ddd.types.Association;
 import org.jmolecules.ddd.types.Entity;
 import org.jmolecules.ddd.types.Identifier;
 import org.springsource.restbucks.drinks.Drink;
+import org.springsource.restbucks.drinks.Drink.DrinkIdentifier;
 import org.springsource.restbucks.drinks.Milk;
 import org.springsource.restbucks.drinks.Size;
-import org.springsource.restbucks.drinks.Drink.DrinkIdentifier;
 import org.springsource.restbucks.order.LineItem.LineItemIdentifier;
 
 /**
@@ -51,7 +50,7 @@ public class LineItem implements Entity<Order, LineItemIdentifier> {
 
 	public LineItem(Drink drink) {
 
-		this.id = LineItemIdentifier.of(UUID.randomUUID().toString());
+		this.id = new LineItemIdentifier(UUID.randomUUID());
 		this.name = drink.getName();
 		this.quantity = 1;
 		this.milk = drink.getMilk();
@@ -69,8 +68,5 @@ public class LineItem implements Entity<Order, LineItemIdentifier> {
 		return this;
 	}
 
-	@Value(staticConstructor = "of")
-	public static class LineItemIdentifier implements Identifier {
-		String id;
-	}
+	public record LineItemIdentifier(UUID id) implements Identifier {}
 }
