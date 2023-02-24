@@ -398,22 +398,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<repositories>
 		<repository>
-			<id>spring-snapshot</id>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-		<repository>
 			<id>spring-milestone</id>
 			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-release</id>
-			<url>https://repo.spring.io/release</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -430,22 +416,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>spring-snapshot</id>
-			<url>https://repo.spring.io/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</pluginRepository>
-		<pluginRepository>
 			<id>spring-milestone</id>
 			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-release</id>
-			<url>https://repo.spring.io/release</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
