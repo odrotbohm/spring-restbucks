@@ -16,12 +16,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</parent>
 
 	<properties>
-		<bytebuddy.version>1.14.0</bytebuddy.version>
+		<bytebuddy.version>1.14.1</bytebuddy.version>
 		<datasourceMicrometerSpringBootVersion>1.0.0-SNAPSHOT</datasourceMicrometerSpringBootVersion>
 		<hibernate.version>6.2.0.CR2</hibernate.version>
 		<java.version>17</java.version>
-		<jmolecules.version>2022.2.3</jmolecules.version>
-		<spring-modulith.version>0.4.0</spring-modulith.version>
+		<jmolecules.version>2022.2.4</jmolecules.version>
+		<spring-modulith.version>0.5.0</spring-modulith.version>
 	</properties>
 
 	<dependencyManagement>
@@ -48,33 +48,25 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<!-- jMolecules -->
 
 		<dependency>
-			<groupId>org.jmolecules</groupId>
-			<artifactId>jmolecules-ddd</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jmolecules</groupId>
-			<artifactId>jmolecules-events</artifactId>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-starter-ddd</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jmolecules.integrations</groupId>
 			<artifactId>jmolecules-jpa</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jmolecules.integrations</groupId>
-			<artifactId>jmolecules-spring</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jmolecules.integrations</groupId>
 			<artifactId>jmolecules-jackson</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jmolecules.integrations</groupId>
-			<artifactId>jmolecules-archunit</artifactId>
+			<artifactId>jmolecules-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -384,7 +376,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<executions>
 					<execution>
 						<goals>
-							<goal>transform</goal>
+							<goal>transform-extended</goal>
 						</goals>
 					</execution>
 				</executions>
