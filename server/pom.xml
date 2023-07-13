@@ -21,7 +21,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<hibernate.version>6.2.0.CR3</hibernate.version>
 		<java.version>17</java.version>
 		<jmolecules.version>2022.2.4</jmolecules.version>
-		<spring-modulith.version>0.5.0</spring-modulith.version>
+		<spring-modulith.version>1.0.0-M1</spring-modulith.version>
 	</properties>
 
 	<dependencyManagement>
@@ -34,7 +34,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<scope>import</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.springframework.experimental</groupId>
+				<groupId>org.springframework.modulith</groupId>
 				<artifactId>spring-modulith-bom</artifactId>
 				<version>${spring-modulith.version}</version>
 				<type>pom</type>
@@ -79,12 +79,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<!-- Spring Modulith -->
 
 		<dependency>
-			<groupId>org.springframework.experimental</groupId>
+			<groupId>org.springframework.modulith</groupId>
 			<artifactId>spring-modulith-api</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.experimental</groupId>
+			<groupId>org.springframework.modulith</groupId>
 			<artifactId>spring-modulith-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
