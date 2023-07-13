@@ -336,7 +336,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<configuration >
 							<image>
-								<builder>dashaun/java-native-builder-arm64:7.37.0</builder>
+								<builder>dashaun/builder:tiny</builder>
 							</image>
 						</configuration>
 					</plugin>
