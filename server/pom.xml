@@ -250,6 +250,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 			<id>aot</id>
 
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+
 			<build>
 
 				<defaultGoal>verify</defaultGoal>
@@ -279,6 +283,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<profile>
 
 			<id>nativeBP</id>
+
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
 
 			<build>
 
@@ -339,6 +347,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<profile>
 
 			<id>native</id>
+
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
 
 			<build>
 
