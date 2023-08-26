@@ -19,7 +19,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<bytebuddy.version>1.14.5</bytebuddy.version>
 		<datasourceMicrometerSpringBootVersion>1.0.0-SNAPSHOT</datasourceMicrometerSpringBootVersion>
 		<java.version>17</java.version>
-		<jmolecules.version>2023.0.0</jmolecules.version>
+		<jmolecules.version>2023.1.0</jmolecules.version>
 		<spring-modulith.version>1.0.0</spring-modulith.version>
 	</properties>
 
