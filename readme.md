@@ -184,18 +184,18 @@ $ java -Dspring.aot.enabled=true -jar target/*.jar
 
 ## Building native images for the server application
 
-Make sure you have GraalVM 22.3 installed (on a Mac: `brew install graalvm`), the native image plugin installed (`gu install native`) and your console shows the following output when running `java -version`:
+Make sure you have GraalVM 21+ installed (on a Mac: `brew install graalvm`), and your console shows the following output when running `java -version`:
 
 ```
-openjdk version "17.0.5" 2022-10-18
-OpenJDK Runtime Environment GraalVM CE 22.3.0 (build 17.0.5+8-jvmci-22.3-b08)
-OpenJDK 64-Bit Server VM GraalVM CE 22.3.0 (build 17.0.5+8-jvmci-22.3-b08, mixed mode, sharing)
+java 21 2023-09-19
+Java(TM) SE Runtime Environment Oracle GraalVM 21+35.1 (build 21+35-jvmci-23.1-b15)
+Java HotSpot(TM) 64-Bit Server VM Oracle GraalVM 21+35.1 (build 21+35-jvmci-23.1-b15, mixed mode, sharing)
 ```
 
 The image can then be built as follows:
 
 ```
-$ mvn -Pnative
+$ ./mvnw -Pnative
 ```
 
 After the build has completed, start the binary:
