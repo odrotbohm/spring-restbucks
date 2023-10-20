@@ -24,9 +24,11 @@ import java.time.Year;
 import org.jmolecules.jackson.JMoleculesModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springsource.restbucks.JacksonTestUtils;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
+import org.springsource.restbucks.payment.Payment.Receipt;
+import org.springsource.restbucks.payment.web.PaymentConfiguration.CreditCardMixin;
+import org.springsource.restbucks.payment.web.PaymentConfiguration.ReceiptMixin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -54,7 +56,8 @@ class CreditCardMarshallingTest {
 		mapper.registerModule(new JavaTimeModule());
 		mapper.registerModule(new ParameterNamesModule());
 		mapper.registerModule(new JMoleculesModule());
-		mapper.registerModules(JacksonTestUtils.getModules(new PaymentConfiguration().getMixins()));
+		mapper.addMixIn(Receipt.class, ReceiptMixin.class);
+		mapper.addMixIn(CreditCard.class, CreditCardMixin.class);
 	}
 
 	@Test
@@ -71,8 +74,7 @@ class CreditCardMarshallingTest {
 
 		Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);
 
-		Object read = JsonPath.compile("$.valid").read(result, configuration);
-		assertThat(read).isNull();
+		assertThat(JsonPath.compile("$.valid").<Boolean> read(result, configuration)).isNull();
 	}
 
 	@Test

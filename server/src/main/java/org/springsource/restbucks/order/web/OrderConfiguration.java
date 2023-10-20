@@ -18,12 +18,12 @@ package org.springsource.restbucks.order.web;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import javax.money.MonetaryAmount;
 
+import org.springframework.boot.jackson.JsonMixin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.Link;
@@ -31,7 +31,6 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.MediaTypeConfigurationCustomizer;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions;
-import org.springsource.restbucks.Mixins;
 import org.springsource.restbucks.drinks.DrinksOptions;
 import org.springsource.restbucks.drinks.Milk;
 import org.springsource.restbucks.drinks.Size;
@@ -46,7 +45,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @author Oliver Drotbohm
  */
 @Configuration(proxyBeanMethods = false)
-class OrderConfiguration implements Mixins {
+class OrderConfiguration {
 
 	@Bean
 	MediaTypeConfigurationCustomizer<HalFormsConfiguration> orderHalFormsCustomization() {
@@ -64,19 +63,7 @@ class OrderConfiguration implements Mixins {
 						__ -> HalFormsOptions.remote(drinkOptionsLink.get()).withMinItems(1L));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springsource.restbucks.Mixins#getMixins()
-	 */
-	@Override
-	public Map<Class<?>, Class<?>> getMixins() {
-
-		return Map.of( //
-				Order.class, OrderMixin.class, //
-				LineItem.class, LineItemMixin.class //
-		);
-	}
-
+	@JsonMixin(Order.class)
 	@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 	static abstract class OrderMixin {
 
@@ -84,6 +71,7 @@ class OrderConfiguration implements Mixins {
 		public OrderMixin(Collection<LineItem> lineItems, Location location) {}
 	}
 
+	@JsonMixin(LineItem.class)
 	static abstract class LineItemMixin {
 
 		@JsonCreator

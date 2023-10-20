@@ -16,9 +16,6 @@
 package org.springsource.restbucks;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.money.MonetaryAmount;
@@ -31,6 +28,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
 import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
 import org.springframework.data.util.TypeInformation;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -51,26 +49,6 @@ class JacksonCustomizations {
 	@Bean
 	Module moneyModule() {
 		return new MoneyModule();
-	}
-
-	@Bean
-	Module restbucksModule(List<Mixins> mixins) {
-
-		Map<Class<?>, Class<?>> annotations = mixins.stream().map(Mixins::getMixins)
-				.reduce(new HashMap<>(), (left, right) -> {
-					left.putAll(right);
-					return left;
-				});
-
-		return new RestbucksModule(annotations);
-	}
-
-	@SuppressWarnings("serial")
-	static class RestbucksModule extends SimpleModule {
-
-		public RestbucksModule(Map<Class<?>, Class<?>> mixins) {
-			mixins.entrySet().forEach(it -> setMixInAnnotation(it.getKey(), it.getValue()));
-		}
 	}
 
 	@SuppressWarnings("serial")
@@ -115,7 +93,8 @@ class JacksonCustomizations {
 			 * @see com.fasterxml.jackson.databind.ser.std.StdSerializer#serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)
 			 */
 			@Override
-			public void serialize(MonetaryAmount value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+			public void serialize(@Nullable MonetaryAmount value, JsonGenerator jgen, SerializerProvider provider)
+					throws IOException {
 
 				if (value != null) {
 					jgen.writeString(MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale()).format(value));

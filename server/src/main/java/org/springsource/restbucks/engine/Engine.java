@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.modulith.ApplicationModuleListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderPaid;

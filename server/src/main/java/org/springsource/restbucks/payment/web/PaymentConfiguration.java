@@ -15,13 +15,11 @@
  */
 package org.springsource.restbucks.payment.web;
 
-import java.util.Map;
-
+import org.springframework.boot.jackson.JsonMixin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.mediatype.MediaTypeConfigurationCustomizer;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration;
-import org.springsource.restbucks.Mixins;
 import org.springsource.restbucks.payment.CreditCard;
 import org.springsource.restbucks.payment.CreditCardNumber;
 import org.springsource.restbucks.payment.Payment.Receipt;
@@ -33,31 +31,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author Oliver Drotbohm
  */
 @Configuration(proxyBeanMethods = false)
-class PaymentConfiguration implements Mixins {
+class PaymentConfiguration {
 
 	@Bean
 	MediaTypeConfigurationCustomizer<HalFormsConfiguration> paymentHalFormsCustomization() {
 		return config -> config.withPattern(CreditCardNumber.class, CreditCardNumber.REGEX);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springsource.restbucks.Mixins#getMixins()
-	 */
-	@Override
-	public Map<Class<?>, Class<?>> getMixins() {
-		return Map.of( //
-				Receipt.class, ReceiptMixin.class, //
-				CreditCard.class, CreditCardMixin.class //
-		);
-	}
-
+	@JsonMixin(Receipt.class)
 	static abstract class ReceiptMixin {
 
 		@JsonIgnore
 		abstract Object getOrder();
 	}
 
+	@JsonMixin(CreditCard.class)
 	@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 	static abstract class CreditCardMixin {}
 }

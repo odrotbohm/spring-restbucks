@@ -16,9 +16,6 @@
 package org.springsource.restbucks.payment;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,7 +74,7 @@ class PaymentServiceImplUnitTest {
 	@Test
 	void rejectsPaymentIfNoCreditCardFound() {
 
-		when(creditCardRepository.findByNumber(NUMBER)).thenReturn(Optional.empty());
+		// when(creditCardRepository.findByNumber(NUMBER)).thenReturn(Optional.empty());
 
 		assertThatExceptionOfType(PaymentFailed.class) //
 				.isThrownBy(() -> paymentService.pay(new Order(), NUMBER)) //
