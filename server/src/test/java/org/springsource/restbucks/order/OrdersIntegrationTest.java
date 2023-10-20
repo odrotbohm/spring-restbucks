@@ -21,14 +21,18 @@ import static org.springsource.restbucks.order.OrderTestUtils.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springsource.restbucks.AbstractIntegrationTest;
+import org.springframework.modulith.test.ApplicationModuleTest;
+import org.springframework.modulith.test.ApplicationModuleTest.BootstrapMode;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for Spring Data based {@link Orders}.
- * 
+ *
  * @author Oliver Gierke
  */
-class OrdersIntegrationTest extends AbstractIntegrationTest {
+@Transactional
+@ApplicationModuleTest(mode = BootstrapMode.DIRECT_DEPENDENCIES)
+class OrdersIntegrationTest {
 
 	@Autowired Orders repository;
 

@@ -41,7 +41,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springsource.restbucks.AbstractWebIntegrationTest;
 import org.springsource.restbucks.Restbucks;
-import org.springsource.restbucks.order.Order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;

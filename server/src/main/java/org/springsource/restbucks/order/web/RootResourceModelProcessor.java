@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks;
+package org.springsource.restbucks.order.web;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -22,7 +22,6 @@ import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.web.OrderController;
 
 /**
  * {@link RepresentationModelProcessor} to add an {@link Order} creation link to the root resource.

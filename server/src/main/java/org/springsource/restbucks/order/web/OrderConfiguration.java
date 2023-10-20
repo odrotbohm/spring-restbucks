@@ -15,13 +15,24 @@
  */
 package org.springsource.restbucks.order.web;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.money.MonetaryAmount;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.mediatype.MediaTypeConfigurationCustomizer;
+import org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration;
+import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions;
 import org.springsource.restbucks.Mixins;
+import org.springsource.restbucks.drinks.DrinksOptions;
 import org.springsource.restbucks.drinks.Milk;
 import org.springsource.restbucks.drinks.Size;
 import org.springsource.restbucks.order.LineItem;
@@ -36,6 +47,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  */
 @Configuration(proxyBeanMethods = false)
 class OrderConfiguration implements Mixins {
+
+	@Bean
+	MediaTypeConfigurationCustomizer<HalFormsConfiguration> orderHalFormsCustomization() {
+
+		Supplier<Link> drinkOptionsLink = () -> linkTo(methodOn(DrinksOptions.class).getOptions(Optional.empty()))
+				.withSelfRel()
+				.withType(MediaTypes.HAL_JSON_VALUE);
+
+		return config -> config
+				.withOptions(LocationAndDrinks.class, "location",
+						__ -> HalFormsOptions.inline(Location.values())
+								.withSelectedValue(Location.TAKE_AWAY)
+								.withMaxItems(1L))
+				.withOptions(LocationAndDrinks.class, "drinks",
+						__ -> HalFormsOptions.remote(drinkOptionsLink.get()).withMinItems(1L));
+	}
 
 	/*
 	 * (non-Javadoc)

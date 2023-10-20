@@ -26,8 +26,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springsource.restbucks.Restbucks;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.payment.Payment;
-import org.springsource.restbucks.payment.Payment.Receipt;
 
 /**
  * Helper component to create links to the {@link Payment} and {@link Receipt}.
@@ -46,7 +44,7 @@ class PaymentLinks {
 
 	/**
 	 * Creates a new {@link PaymentLinks} for the given {@link EntityLinks}.
-	 * 
+	 *
 	 * @param entityLinks must not be {@literal null}.
 	 */
 	PaymentLinks(EntityLinks entityLinks) {

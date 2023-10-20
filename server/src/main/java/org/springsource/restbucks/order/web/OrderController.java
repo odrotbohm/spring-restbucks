@@ -26,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Orders;
 
 /**
@@ -34,7 +33,7 @@ import org.springsource.restbucks.order.Orders;
  */
 @BasePathAwareController
 @RequiredArgsConstructor
-public class OrderController {
+class OrderController {
 
 	private final Orders orders;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2021 the original author or authors.
+ * Copyright 2015-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,10 @@
  */
 package org.springsource.restbucks;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import javax.money.MonetaryAmount;
@@ -35,14 +31,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
 import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
 import org.springframework.data.util.TypeInformation;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration;
-import org.springframework.hateoas.mediatype.hal.forms.HalFormsOptions;
-import org.springsource.restbucks.drinks.DrinksOptions;
-import org.springsource.restbucks.order.Location;
-import org.springsource.restbucks.order.web.LocationAndDrinks;
-import org.springsource.restbucks.payment.CreditCardNumber;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -59,21 +47,6 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
  */
 @Configuration(proxyBeanMethods = false)
 class JacksonCustomizations {
-
-	@Bean
-	HalFormsConfiguration halFormsConfiguration() {
-
-		Supplier<Link> drinkOptionsLink = () -> linkTo(methodOn(DrinksOptions.class).getOptions(Optional.empty()))
-				.withSelfRel()
-				.withType(MediaTypes.HAL_JSON_VALUE);
-
-		return new HalFormsConfiguration()
-				.withPattern(CreditCardNumber.class, CreditCardNumber.REGEX)
-				.withOptions(LocationAndDrinks.class, "location",
-						it -> HalFormsOptions.inline(Location.values()).withSelectedValue(Location.TAKE_AWAY).withMaxItems(1L))
-				.withOptions(LocationAndDrinks.class, "drinks",
-						it -> HalFormsOptions.remote(drinkOptionsLink.get()).withMinItems(1L));
-	}
 
 	@Bean
 	Module moneyModule() {

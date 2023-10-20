@@ -49,6 +49,10 @@ class PaymentOrderModelProcessor implements RepresentationModelProcessor<EntityM
 
 		var order = model.getContent();
 
+		if (order == null) {
+			return model;
+		}
+
 		Function<Link, Link> mapper = link -> link
 				.andAffordance(afford(methodOn(PaymentController.class).submitPayment(order, null)));
 

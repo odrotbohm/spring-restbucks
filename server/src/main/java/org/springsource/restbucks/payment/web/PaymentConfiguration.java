@@ -17,9 +17,13 @@ package org.springsource.restbucks.payment.web;
 
 import java.util.Map;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.hateoas.mediatype.MediaTypeConfigurationCustomizer;
+import org.springframework.hateoas.mediatype.hal.forms.HalFormsConfiguration;
 import org.springsource.restbucks.Mixins;
 import org.springsource.restbucks.payment.CreditCard;
+import org.springsource.restbucks.payment.CreditCardNumber;
 import org.springsource.restbucks.payment.Payment.Receipt;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -30,6 +34,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Configuration(proxyBeanMethods = false)
 class PaymentConfiguration implements Mixins {
+
+	@Bean
+	MediaTypeConfigurationCustomizer<HalFormsConfiguration> paymentHalFormsCustomization() {
+		return config -> config.withPattern(CreditCardNumber.class, CreditCardNumber.REGEX);
+	}
 
 	/*
 	 * (non-Javadoc)
