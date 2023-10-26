@@ -63,7 +63,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 	private static final LinkRelation RECEIPT_REL = BUILDER.relation("receipt");
 	private static final LinkRelation CANCEL_REL = BUILDER.relation("cancel");
 	private static final LinkRelation UPDATE_REL = BUILDER.relation("update");
-	private static final LinkRelation PAYMENT_REL = BUILDER.relation("payment");
+	private static final HalLinkRelation PAYMENT_REL = BUILDER.relation("payment");
 
 	private static final String FIRST_ORDER_EXPRESSION = String
 			.format("$._embedded.%s[?(@.status == 'Payment expected')]", ORDERS_REL);
@@ -78,6 +78,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		response = discoverOrdersResource(response);
 		response = accessFirstOrder(response);
+		response = verifyPaymentIsDocumented(response);
 		response = triggerPayment(response);
 		response = pollUntilOrderHasReceiptLink(response);
 		response = takeReceipt(response);
@@ -94,6 +95,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		var response = accessRootResource();
 
 		response = createNewOrder(response);
+		response = verifyPaymentIsDocumented(response);
 		response = triggerPayment(response);
 		response = pollUntilOrderHasReceiptLink(response);
 		response = takeReceipt(response);
@@ -393,5 +395,26 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		mvc.perform(delete(cancellationLink.getHref())).andExpect(status().isNoContent());
 		mvc.perform(get(selfLink.getHref())).andExpect(status().isNotFound());
+	}
+
+	/**
+	 * Verifies that the HTML curie of payment can be accessed.
+	 *
+	 * @param response
+	 * @throws Exception
+	 */
+	private MockHttpServletResponse verifyPaymentIsDocumented(MockHttpServletResponse response) throws Exception {
+
+		var content = response.getContentAsString();
+		var curiesLink = getDiscovererFor(response).findRequiredLinkWithRel(LinkRelation.of("curies"), content);
+
+		LOG.info(String.format("Discovered curies link pointing to %s…", curiesLink));
+		var paymentCurie = curiesLink.expand(PAYMENT_REL.getLocalPart());
+
+		LOG.info(String.format("Expanded payment curie pointing to %s…", paymentCurie));
+		mvc.perform(get(paymentCurie.getHref())). //
+				andExpect(status().isOk()); //
+
+		return response;
 	}
 }
