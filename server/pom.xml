@@ -194,25 +194,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<activeByDefault>true</activeByDefault>
 			</activation>
 
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-						<configuration>
-							<executable>true</executable>
-						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>org.springframework.boot.experimental</groupId>
-								<artifactId>spring-boot-thin-layout</artifactId>
-								<version>1.0.28.RELEASE</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-				</plugins>
-			</build>
-
 			<dependencies>
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
@@ -363,6 +344,21 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<configuration>
 					<enablePreview>true</enablePreview>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.springframework.boot.experimental</groupId>
+						<artifactId>spring-boot-thin-layout</artifactId>
+						<version>1.0.28.RELEASE</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 
 		</plugins>
