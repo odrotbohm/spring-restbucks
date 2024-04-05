@@ -310,9 +310,31 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 		</profile>
 
+<!--		<profile>-->
+
+<!--			<id>native</id>-->
+
+<!--			<properties>-->
+<!--				<maven.test.skip>true</maven.test.skip>-->
+<!--			</properties>-->
+
+<!--			<build>-->
+
+<!--				<defaultGoal>native:compile</defaultGoal>-->
+
+<!--				<plugins>-->
+<!--					<plugin>-->
+<!--						<groupId>org.graalvm.buildtools</groupId>-->
+<!--						<artifactId>native-maven-plugin</artifactId>-->
+<!--					</plugin>-->
+<!--				</plugins>-->
+
+<!--			</build>-->
+
+<!--		</profile>-->
 		<profile>
 
-			<id>native</id>
+			<id>native-bp</id>
 
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
@@ -320,12 +342,28 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 			<build>
 
-				<defaultGoal>native:compile</defaultGoal>
+				<defaultGoal>spring-boot:build-image</defaultGoal>
 
 				<plugins>
 					<plugin>
-						<groupId>org.graalvm.buildtools</groupId>
-						<artifactId>native-maven-plugin</artifactId>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<image>
+								<buildpacks>
+									<buildpack>paketobuildpacks/java-native-image:beta</buildpack>
+								</buildpacks>
+								<builder>paketobuildpacks/builder-jammy-buildpackless-tiny</builder>
+							</image>
+						</configuration>
+						<executions>
+							<execution>
+								<id>process-aot</id>
+								<goals>
+									<goal>process-aot</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 
@@ -364,20 +402,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.springframework.boot.experimental</groupId>
-						<artifactId>spring-boot-thin-layout</artifactId>
-						<version>1.0.31.RELEASE</version>
-					</dependency>
-				</dependencies>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					<executable>true</executable>-->
+<!--				</configuration>-->
+<!--				<dependencies>-->
+<!--					<dependency>-->
+<!--						<groupId>org.springframework.boot.experimental</groupId>-->
+<!--						<artifactId>spring-boot-thin-layout</artifactId>-->
+<!--						<version>1.0.31.RELEASE</version>-->
+<!--					</dependency>-->
+<!--				</dependencies>-->
+<!--			</plugin>-->
 
 		</plugins>
 	</build>
