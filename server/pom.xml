@@ -19,7 +19,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<bytebuddy.version>1.14.13</bytebuddy.version>
 		<datasourceMicrometerSpringBootVersion>1.0.2</datasourceMicrometerSpringBootVersion>
 		<java.version>21</java.version>
-		<jmolecules.version>2023.1.2</jmolecules.version>
+		<jmolecules.version>2023.2.0-SNAPSHOT</jmolecules.version>
 		<spring-modulith.version>1.2.0-M3</spring-modulith.version>
 	</properties>
 
@@ -43,6 +43,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</dependencyManagement>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
 
 		<!-- jMolecules -->
 
@@ -154,11 +159,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<groupId>org.javamoney.moneta</groupId>
 			<artifactId>moneta-core</artifactId>
 			<version>1.4.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
 		</dependency>
 
 		<dependency>
