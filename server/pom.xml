@@ -5,7 +5,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<groupId>org.springsource.restbucks</groupId>
 	<artifactId>restbucks</artifactId>
-	<version>1.0.0.BUILD-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<name>Spring RESTBucks</name>
 
