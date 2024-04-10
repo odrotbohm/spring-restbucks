@@ -206,6 +206,40 @@ $ ./target/spring-restbucks
 … [           main] org.springsource.restbucks.Restbucks     : Started Restbucks in 0.366 seconds (process running for 0.446)
 ```
 
+## Using Class Data Sharing
+
+[Class Data Sharing (CDS)](https://docs.spring.io/spring-framework/reference/integration/cds.html) is an execution optimization technique available on recent JVMs (JDK 21 or newer).
+To make use of that make sure you have a recent JDK installed.
+
+```
+$ java -version
+openjdk version "22" 2024-03-19
+OpenJDK Runtime Environment Temurin-22+36 (build 22+36)
+OpenJDK 64-Bit Server VM Temurin-22+36 (build 22+36, mixed mode)
+```
+
+Next, create a CDS base image for that JDK:
+
+```
+java -Xshare:dump
+```
+
+Finally, execute `cds.sh` located in the root of the server project.
+It will perform the following steps:
+
+1. Build the application with the AOT optimizations applied.
+2. Unpack the JAR file and create the index files necessary for CDS execution
+3. Perform an initial training run that produces the metadata file necessary for the running application.
+4. Finally, start the application in CDS-enabled mode.
+
+You should see the startup time of the final run to roughly be half of the time the non-CDS run.
+
+```
+$ ./cds.sh
+…
+… : Started Restbucks in 1.475 seconds (process running for 1.636)
+```
+
 ## The Android client
 
 The Android sample client can be found in `android-client` and is a most rudimentary implementation of a client application that leverages hypermedia elements to avoid strong coupling to the server.
