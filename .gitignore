@@ -7,3 +7,5 @@ target/
 .springBeans
 *.log
 .factorypath
+
+.vscode/
