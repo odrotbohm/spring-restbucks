@@ -1,11 +1,19 @@
+# Build
 target/
+
+# Eclipse
 .settings/
 .project
 .classpath
-*.iml
-.idea
 .springBeans
-*.log
 .factorypath
 
+# IDEA
+*.iml
+.idea
+
+# VSCode
 .vscode/
+
+# Misc
+*.log
