@@ -22,13 +22,15 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
+import org.springsource.restbucks.payment.Payment.PaymentIdentifier;
 
 /**
  * Repository interface to manage {@link Payment} instances.
  *
  * @author Oliver Gierke
  */
-interface Payments extends CrudRepository<Payment<?>, Long>, PagingAndSortingRepository<Payment<?>, Long> {
+interface Payments
+		extends CrudRepository<Payment<?>, PaymentIdentifier>, PagingAndSortingRepository<Payment<?>, PaymentIdentifier> {
 
 	/**
 	 * Returns the payment registered for the given {@link Order}.
