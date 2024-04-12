@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 the original author or authors.
+ * Copyright 2013-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 package org.springsource.restbucks.order.web;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpStatus;
 import org.springsource.restbucks.AbstractWebIntegrationTest;
 
 /**
@@ -33,9 +33,10 @@ class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 	@Test
 	void exposesOrdersResourceViaRootResource() throws Exception {
 
-		mvc.perform(get("/")) //
-				.andExpect(status().isOk()) //
-				.andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON)) //
-				.andExpect(jsonPath("$._links.restbucks:orders.href", notNullValue()));
+		var result = mvc.perform(get("/")); //
+
+		assertThat(result).hasStatus(HttpStatus.OK);
+		assertThat(result).contentType().isCompatibleWith(MediaTypes.HAL_JSON);
+		assertThat(result).bodyJson().hasPath("$._links.restbucks:orders.href").isNotNull();
 	}
 }
