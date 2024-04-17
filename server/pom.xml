@@ -20,6 +20,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<datasourceMicrometerSpringBootVersion>1.0.2</datasourceMicrometerSpringBootVersion>
 		<hibernate-entitymanager.version>6.5.0.RC1</hibernate-entitymanager.version>
 		<java.version>22</java.version>
+		<lombok.version>1.18.32</lombok.version>
 		<jmolecules.version>2023.2.0-SNAPSHOT</jmolecules.version>
 		<spring-modulith.version>1.2.0-M3</spring-modulith.version>
 	</properties>
