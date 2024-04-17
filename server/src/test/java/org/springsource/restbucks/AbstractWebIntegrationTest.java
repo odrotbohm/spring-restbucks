@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 the original author or authors.
+ * Copyright 2013-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,23 @@
  */
 package org.springsource.restbucks;
 
-import static org.assertj.core.api.Assertions.*;
-
-import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.util.Locale;
-import java.util.Optional;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.client.LinkDiscoverer;
 import org.springframework.hateoas.client.LinkDiscoverers;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.assertj.AssertableMockMvc;
+import org.springframework.test.web.servlet.assertj.AssertableMvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -48,66 +45,43 @@ public abstract class AbstractWebIntegrationTest {
 	@Autowired WebApplicationContext context;
 	@Autowired LinkDiscoverers links;
 
-	protected MockMvc mvc;
+	protected AssertableMockMvc mvc;
 
 	@BeforeEach
 	void setUp() {
 
-		mvc = MockMvcBuilders.webAppContextSetup(context).//
+		this.mvc = AssertableMockMvc.create(MockMvcBuilders.webAppContextSetup(context).//
 				defaultRequest(MockMvcRequestBuilders.get("/").locale(Locale.US)).//
-				build();
+				build());
 	}
 
 	/**
-	 * Creates a {@link ResultMatcher} that checks for the presence of a link with the given rel.
+	 * Creates a AssertJ {@link Condition} that checks for the presence of a {@link Link} with the given
+	 * {@link LinkRelation}.
 	 *
-	 * @param rel
-	 * @return
+	 * @param rel must not be {@literal null}.
+	 * @return will never be {@literal null}.
 	 */
-	protected ResultMatcher linkWithRelIsPresent(LinkRelation rel) {
-		return new LinkWithRelMatcher(rel, true);
+	protected Condition<AssertableMvcResult> linkWithRel(LinkRelation rel) {
+
+		Assert.notNull(rel, "LinkRelation must not be null!");
+
+		return new Condition<>(it -> hasLink(it, rel), "Expected to find link with relation %s!", rel);
 	}
 
-	/**
-	 * Creates a {@link ResultMatcher} that checks for the non-presence of a link with the given rel.
-	 *
-	 * @param rel
-	 * @return
-	 */
-	protected ResultMatcher linkWithRelIsNotPresent(LinkRelation rel) {
-		return new LinkWithRelMatcher(rel, false);
-	}
-
+	@SuppressWarnings("null")
 	protected LinkDiscoverer getDiscovererFor(MockHttpServletResponse response) {
 		return links.getRequiredLinkDiscovererFor(response.getContentType());
 	}
 
-	@RequiredArgsConstructor
-	private class LinkWithRelMatcher implements ResultMatcher {
+	@SneakyThrows
+	@SuppressWarnings("null")
+	private boolean hasLink(AssertableMvcResult result, LinkRelation rel) {
 
-		private final LinkRelation rel;
-		private final boolean present;
+		var response = result.getResponse();
+		var content = response.getContentAsString();
+		var discoverer = links.getRequiredLinkDiscovererFor(response.getContentType());
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.test.web.servlet.ResultMatcher#match(org.springframework.test.web.servlet.MvcResult)
-		 */
-		@Override
-		public void match(MvcResult result) throws Exception {
-
-			MockHttpServletResponse response = result.getResponse();
-			String content = response.getContentAsString();
-			LinkDiscoverer discoverer = links.getRequiredLinkDiscovererFor(response.getContentType());
-
-			Optional<Link> link = discoverer.findLinkWithRel(rel, content);
-
-			assertThat(link).matches(it -> it.isPresent() == present, getMessage(link));
-		}
-
-		private String getMessage(Optional<Link> link) {
-
-			return String.format("Expected to %s link with relation %s, but found %s!",
-					present ? "find" : "not find", rel, present ? link.get() : "none");
-		}
+		return discoverer.findLinkWithRel(rel, content).isPresent();
 	}
 }
