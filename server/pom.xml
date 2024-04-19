@@ -23,7 +23,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<lombok.version>1.18.32</lombok.version>
 		<jmolecules.version>2023.2.0-SNAPSHOT</jmolecules.version>
 		<spring-framework.version>6.2.0-M1</spring-framework.version>
-		<spring-modulith.version>1.2.0-M3</spring-modulith.version>
+		<spring-modulith.version>1.2.0-RC1</spring-modulith.version>
 	</properties>
 
 	<dependencyManagement>
