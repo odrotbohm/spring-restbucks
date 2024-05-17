@@ -33,10 +33,10 @@ class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 	@Test
 	void exposesOrdersResourceViaRootResource() throws Exception {
 
-		var result = assertThat(mvc.perform(get("/"))); //
+		var result = mvc.perform(get("/")); //
 
-		result.hasStatus(HttpStatus.OK);
-		result.contentType().isCompatibleWith(MediaTypes.HAL_JSON);
-		result.body().jsonPath().extractingPath("$._links.restbucks:orders.href").isNotNull();
+		assertThat(result).hasStatus(HttpStatus.OK);
+		assertThat(result).contentType().isCompatibleWith(MediaTypes.HAL_JSON);
+		assertThat(result).bodyJson().hasPath("$._links.restbucks:orders.href").isNotNull();
 	}
 }

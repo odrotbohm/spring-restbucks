@@ -27,8 +27,9 @@ import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.client.LinkDiscoverer;
 import org.springframework.hateoas.client.LinkDiscoverers;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.assertj.AssertableMockMvc;
-import org.springframework.test.web.servlet.assertj.AssertableMvcResult;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
+import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Assert;
@@ -45,12 +46,12 @@ public abstract class AbstractWebIntegrationTest {
 	@Autowired WebApplicationContext context;
 	@Autowired LinkDiscoverers links;
 
-	protected AssertableMockMvc mvc;
+	protected MockMvcTester mvc;
 
 	@BeforeEach
 	void setUp() {
 
-		this.mvc = AssertableMockMvc.create(MockMvcBuilders.webAppContextSetup(context).//
+		this.mvc = MockMvcTester.create(MockMvcBuilders.webAppContextSetup(context).//
 				defaultRequest(MockMvcRequestBuilders.get("/").locale(Locale.US)).//
 				build());
 	}
@@ -62,11 +63,11 @@ public abstract class AbstractWebIntegrationTest {
 	 * @param rel must not be {@literal null}.
 	 * @return will never be {@literal null}.
 	 */
-	protected Condition<AssertableMvcResult> linkWithRel(LinkRelation rel) {
+	protected Condition<MvcTestResult> linkWithRel(LinkRelation rel) {
 
 		Assert.notNull(rel, "LinkRelation must not be null!");
 
-		return new Condition<>(it -> hasLink(it, rel), "Expected to find link with relation %s!", rel);
+		return new Condition<>(it -> hasLink(it.getMvcResult(), rel), "Expected to find link with relation %s!", rel);
 	}
 
 	@SuppressWarnings("null")
@@ -76,7 +77,7 @@ public abstract class AbstractWebIntegrationTest {
 
 	@SneakyThrows
 	@SuppressWarnings("null")
-	private boolean hasLink(AssertableMvcResult result, LinkRelation rel) {
+	private boolean hasLink(MvcResult result, LinkRelation rel) {
 
 		var response = result.getResponse();
 		var content = response.getContentAsString();
