@@ -131,7 +131,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				.hasStatus(HttpStatus.OK)
 				.has(linkWithRel(ORDERS_REL));
 
-		return response.getResponse();
+		return response.getMvcResult().getResponse();
 	}
 
 	/**
@@ -154,7 +154,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		var drinksTemplate = parse.read("$._templates.default.properties[0].options.link.href", String.class);
 		var drinksOptionsUri = Link.of(drinksTemplate).expand().getHref();
 		var drinksOptionsResponse = mvc.perform(get(drinksOptionsUri))
-				.getResponse().getContentAsString();
+				.getMvcResult().getResponse().getContentAsString();
 		var drinkUri = JsonPath.parse(drinksOptionsResponse).read("$._embedded.drinks[0].value", String.class);
 
 		// Select location
@@ -172,7 +172,8 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				.hasStatus(HttpStatus.CREATED)
 				.headers().containsHeader(HttpHeaders.LOCATION);
 
-		return mvc.perform(get(response.getResponse().getHeader(HttpHeaders.LOCATION))).getResponse();
+		return mvc.perform(get(response.getMvcResult().getResponse().getHeader(HttpHeaders.LOCATION)))
+				.getMvcResult().getResponse();
 	}
 
 	/**
@@ -190,11 +191,11 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		LOG.info("Root resource returned: " + content);
 		LOG.info(String.format("Found orders link pointing to %s… Following…", ordersLink));
 
-		var perform = mvc.perform(get(ordersLink.expand().getHref()));
+		var result = mvc.perform(get(ordersLink.expand().getHref()));
 
-		assertThat(perform).hasStatus(HttpStatus.OK);
+		assertThat(result).hasStatus(HttpStatus.OK);
 
-		var response = perform.getResponse();
+		var response = result.getMvcResult().getResponse();
 
 		LOG.info("Found orders: " + response.getContentAsString());
 		return response;
@@ -228,15 +229,15 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		LOG.info(String.format("Picking first order using JSONPath expression %s…", FIRST_ORDER_EXPRESSION));
 		LOG.info(String.format("Discovered self link pointing to %s… Following", orderLink));
 
-		var perform = mvc.perform(get(orderLink.getHref()));
+		var result = mvc.perform(get(orderLink.getHref()));
 
-		assertThat(perform)
+		assertThat(result)
 				.has(linkWithRel(IanaLinkRelations.SELF))
 				.has(linkWithRel(CANCEL_REL))
 				.has(linkWithRel(UPDATE_REL))
 				.has(linkWithRel(PAYMENT_REL));
 
-		return perform.getResponse();
+		return result.getMvcResult().getResponse();
 	}
 
 	/**
@@ -279,7 +280,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		assertThat(mvc.perform(delete(selfLink.getHref())))
 				.hasStatus(HttpStatus.METHOD_NOT_ALLOWED);
 
-		return action.getResponse();
+		return action.getMvcResult().getResponse();
 	}
 
 	/**
@@ -313,7 +314,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 			LOG.info("Poll state of order until receipt is ready…");
 
 			var action = mvc.perform(get(orderLink.expand().getHref()).headers(headers));
-			pollResponse = action.getResponse();
+			pollResponse = action.getMvcResult().getResponse();
 
 			var status = pollResponse.getStatus();
 			etag = pollResponse.getHeader("ETag");
@@ -358,7 +359,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		assertThat(result).hasStatus(HttpStatus.OK);
 
-		var receiptResponse = result.getResponse();
+		var receiptResponse = result.getMvcResult().getResponse();
 
 		LOG.info("Accessing receipt, got:" + receiptResponse.getContentAsString());
 		LOG.info("Taking receipt…");
@@ -367,7 +368,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		assertThat(result).hasStatus(HttpStatus.OK);
 
-		return result.getResponse();
+		return result.getMvcResult().getResponse();
 	}
 
 	/**
@@ -388,9 +389,9 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				.doesNotHave(linkWithRel(UPDATE_REL))
 				.doesNotHave(linkWithRel(CANCEL_REL))
 				.doesNotHave(linkWithRel(PAYMENT_REL))
-				.body().jsonPath().extractingPath("$.status").isEqualTo("Delivered");
+				.bodyJson().hasPathSatisfying("$.status", it -> assertThat(it).isEqualTo("Delivered"));
 
-		LOG.info("Final order state: " + result.getResponse().getContentAsString());
+		LOG.info("Final order state: " + result.getMvcResult().getResponse().getContentAsString());
 	}
 
 	/**
