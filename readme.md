@@ -15,12 +15,40 @@ mvn clean package
 java -jar target/*.jar
 ```
 
-The application ships with the [HAL browser](https://github.com/mikekelly/hal-browser) embedded, so simply browsing to [http://localhost:8080/browser/index.html](http://localhost:8080/browser/index.html) will allow you to explore the web service.
+To send requests to the server application, you have several choices:
+
+**1. Run the `order_and_pay.sh` script.**
+
+This script will create several orders and then immediately submit payment for all of them.
+This script uses "valid" and "invalid" credit card numbers at random, with a valid number being used approximately 80% of the time.
+The other 20% of payments will fail with different errors, depending on the reason the card is rejected (card not in DB vs invalid format).
+```
+./order_and_pay.sh
+```
+
+**2. Use the embedded [HAL browser](https://github.com/mikekelly/hal-browser).** 
+
+The application ships with [HAL browser](https://github.com/mikekelly/hal-browser) embedded, so simply browsing to [http://localhost:8080/explorer/index.html#uri=/](http://localhost:8080/explorer/index.html#uri=/) will allow you to explore the web service.
+
+To get or create an order via HAL Explorer, you can start by either getting existing orders or placing a new order:
+- To get existing orders, click on the HTTP Get Request button for the `restbucks:orders` relation under `Links`. In the pop-up, click `Go!`, then expand any of the orders listed under `Embedded Resources` and click on `self`. 
+- To place a new order, click on the HTTP Request button under the template titled `Place an order` under `HAL-FORMS Template Elements`.
+
+Once you have an order displayed in HAL Explorer, you can submit payment:
+- Click on the HTTP Request for the template titled `Go to checkout` under `HAL-FORMS Template Elements`. This template appears for all orders with status `Payment expected`.
+- Enter any 16-digit number into the `Credit card nuumber` field and click `Go!`
+- You will see an error, because the card number is not in the database.
+- Enter `1234123412341234` and the payment will succeed. [Ollie has got you covered :)](server/src/main/java/org/springsource/restbucks/payment/PaymentInitializer.java)
 
 > Note, that the curie links in the representations are currently not backed by any documents served but they will be in the future. Imagine simple HTML pages being served documenting the individual relation types.
 
-## IDE setup
+**3. Use the Android client.**
 
+Refer to the section `The Android client` below for more information.
+
+## IDE setup notes
+
+### Eclipse
 For the usage inside an IDE do the following:
 
 1. Make sure you have an Eclipse with m2e installed (preferably [STS](http://spring.io/sts)).
@@ -31,6 +59,11 @@ For the usage inside an IDE do the following:
    4. Restart Eclipse.
 
 3. Import the checked out code through *File > Import > Existing Maven Project…*
+
+### IntelliJ
+
+1. After opening the project in IntelliJ, right click on `server/pom.xml` and select `Add as Maven Project`.
+2. If you would like to execute tests in the `Run` panel (activated by right-clicking on `server/src/test/java/org/springsource/restbucks` and selecting `Run Tests in 'restbucks'`), you will need to edit Maven plugin configurations. Open the Maven tool window and find the list of plugins included in the project. Expand `byte-buddy`, right click on `transform-extended`, and select `Execute After Build` and `Execute After Rebuild`.
 
 ## Project description
 
@@ -44,6 +77,7 @@ The project uses:
 - [Spring Plugin](http://github.com/spring-projects/spring-plugin)
 - [Spring Security](http://github.com/spring-projects/spring-security)
 - [Spring Session](http://github.com/spring-projects/spring-session)
+- [Spring Modulith](http://github.com/spring-projects/spring-modulith)
 
 The implementation consists of mainly two parts, the `order` and the `payment` part. The `Orders` are exposed as REST resources using Spring Data RESTs capability to automatically expose Spring Data JPA repositories contained in the application. The `Payment` process and the REST application protocol described in the book are implemented manually using a Spring MVC controller (`PaymentController`).
 
@@ -98,6 +132,15 @@ HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
 –
 ```
+
+### Spring Modulith
+
+Spring Modulith supports modular architecture in monoliths. It treats each root-level package as a separate module with top-level public members exposed as API and all other code protected as module-internal (unless explicitly specified otherwise). Through tests, it verifies compliance to modular architecture rules and also generates documentation for architecturally relevant components of the system. See `DocumentationTest` and also `target/spring-modulith-docs/`, once the test has been executed.
+
+Additionally, we are using Spring Modulith to isolate a single module for integration testing in `OrdersIntegrationTest`. We are also using Spring Modulith, together with Spring Framework's in-memory messaging capabilities, to handle event-driven interactions between modules with additional support for transaction management. See the use of `ApplicationModuleListener` in `Engine`.
+
+Finally, Spring Modulith is being used to extract distributed tracing from module interactions. To enable this functionality, see the `Observability` section below. 
+
 
 ### Documentation / Client Stub Generation
 
