@@ -120,7 +120,7 @@ The project uses [Lombok](http://projectlombok.org) to reduce the amount of boil
 
 ## Observability
 
-The project uses [Spring Moduliths'](https://github.com/spring-projects-experimental/spring-modulith) observability features to inspect the runtime interaction between the logical modules of RESTBucks.
+The project uses [Spring Modulith's](https://github.com/spring-projects-experimental/spring-modulith) observability features to inspect the runtime interaction between the logical modules of RESTBucks.
 To use and see this, run the application with the `observability` Maven profile enabled:
 
 ```
@@ -128,8 +128,8 @@ $ mvn spring-boot:run -Pobservability
 ```
 
 That profile adds some dependencies, like Spring Cloud Sleuth as well as its integration with Zipkin.
-Make sure you have Zipkin running as described [here](https://zipkin.io/pages/quickstart.html).
-Interactions with the system will now expose the logical module invocation and their choreography
+It also includes docker-compose support and will start Zipkin for you when the application starts.
+Interactions with the system will now expose the logical module invocation and their choreography.
 
 ![A sample Zipkin trace](server/docs/images/observability.png "A sample Zipkin trace")
 
