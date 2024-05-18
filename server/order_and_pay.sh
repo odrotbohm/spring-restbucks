@@ -16,7 +16,8 @@ while true; do
   # If the value is null, exit the loop
   if [ -z "$value" ] || [ "$value" = "null" ]; then break; fi
   drinks+=($(echo "${drinks_http_response}" | jq --argjson idx "$index" '._embedded.drinks[$idx].value'))
-  drink_names+=($(echo "${drinks_http_response}" | jq -r --argjson idx "$index" '._embedded.drinks[$idx].prompt'))
+  drink_names+=("$(echo "${drinks_http_response}" | jq -r --argjson idx "$index" '._embedded.drinks[$idx].prompt')")
+
   ((index++))
 done
 
