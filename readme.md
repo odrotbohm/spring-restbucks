@@ -16,7 +16,18 @@ java -jar target/*.jar
 ```
 To send requests to the server application, you have several choices:
 
-**1. Use the embedded [HAL Explorer](https://github.com/toedter/hal-explorer).**
+To send requests to the server application, you have several choices:
+
+**1. Run the `order_and_pay.sh` script.**
+
+This script will create several orders and then immediately submit payment for all of them.
+This script uses "valid" and "invalid" credit card numbers at random, with a valid number being used approximately 80% of the time.
+The other 20% of payments will fail with different errors, depending on the reason the card is rejected (card not in DB vs invalid format).
+```
+./order_and_pay.sh
+```
+
+**2. Use the embedded [HAL Explorer](https://github.com/toedter/hal-explorer).**
 
 The application ships with [HAL Explorer](https://github.com/toedter/hal-explorer) embedded, so simply browsing to [http://localhost:8080/explorer/index.html#uri=/](http://localhost:8080/explorer/index.html#uri=/) will allow you to explore the web service.
 
@@ -32,7 +43,7 @@ Once you have an order displayed in HAL Explorer, you can submit payment:
 
 > Note, that the curie links in the representations are currently not backed by any documents served but they will be in the future. Imagine simple HTML pages being served documenting the individual relation types.
 
-**2. Use the Android client.**
+**3. Use the Android client.**
 
 Refer to the section `The Android client` below for more information.
 
