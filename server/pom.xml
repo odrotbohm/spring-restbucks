@@ -264,6 +264,18 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<optional>true</optional>
 				</dependency>
 
+				<!--
+					For Event Publication Registry, also leveraging Docker Compose
+					so that the app can be killed to show incompleted event publications
+					and the re-submission of those on restart.
+				-->
+
+				<dependency>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+
 			</dependencies>
 		</profile>
 

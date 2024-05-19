@@ -180,6 +180,42 @@ Interactions with the system will now expose the logical module invocation and t
 
 See how the triggering of the payment for an order changes the order state, kicks of the preparation engine and tweaks the order's state in turn at the start and end of the process.
 
+## Event Publication Registry
+
+The project uses [Spring Modulith's Event Publication Registry](https://docs.spring.io/spring-modulith/reference/events.html#publication-registry) to persist events in-flight between modules of RESTbucks.
+After an event is processed, the completion timestamp of the persisted event is updated.
+
+The project is also configured to republish pending events when the application restarts.
+See `application.properties`.
+
+To use and see this, run the application with the `observability` Maven profile enabled:
+
+```
+$ mvn spring-boot:run -Pobservability
+```
+
+This profile adds necessary dependencies and uses docker-compose support to start a postgres database automatically when the application starts.
+
+Events are generated when an order is paid (see `OrderPaid`).
+The `Engine` uses Spring Modulith's `@ApplicationModuleListener` annotation as a shortcut for the recommended configuration for integration of modules via events.
+However, to avoid the potential of losing messages if the application fails, it is advisable to use the Event Publication Registry.
+
+Generate payment traffic for the application.
+You may use, for example, the script `order_and_pay.sh`.
+
+Use your IDE or a SQL client to view the events in the database.
+```sql
+select * from event_publication;
+```
+
+Stop the application while events are still pending.
+> Tip: If you need more time to stop the application, use the `restbucks.engine.processing` property in `application.properties`.
+
+![Event Publication Registry with pending events](server/docs/images/eventPubReg-pending.png "A sample Zipkin trace")
+
+Restart the application and the events will be republished and completed.
+![Event Publication Registry with all completed events](server/docs/images/eventPubReg-completed.png "A sample Zipkin trace")
+
 ## Hypermedia
 
 A core focus of this sample app is to demonstrate how easy resources can be modeled in a hypermedia driven way. There are two major aspects to this challenge in Java web-frameworks:
