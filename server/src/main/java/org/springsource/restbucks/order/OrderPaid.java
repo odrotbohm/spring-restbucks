@@ -15,6 +15,8 @@
  */
 package org.springsource.restbucks.order;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -40,7 +42,8 @@ public class OrderPaid implements DomainEvent {
 	 *
 	 * @param orderId the id of the order that just has been payed
 	 */
-	public OrderPaid(OrderIdentifier orderId) {
+	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES) // Needed for republishing events from registry
+	public OrderPaid(@JsonProperty OrderIdentifier orderId) {
 		this.orderId = orderId;
 	}
 }
