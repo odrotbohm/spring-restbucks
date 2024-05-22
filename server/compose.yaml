@@ -1,0 +1,16 @@
+version: '2'
+services:
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9411:9411
+  postgres:
+    image: 'postgres:latest'
+    container_name: events
+    environment:
+      - 'POSTGRES_DB=db'
+      - 'POSTGRES_PASSWORD=pw'
+      - 'POSTGRES_USER=user'
+    ports:
+      - '5432:5432'

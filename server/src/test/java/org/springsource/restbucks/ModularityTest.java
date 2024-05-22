@@ -27,7 +27,7 @@ import org.springframework.modulith.docs.Documenter;
 /**
  * @author Oliver Drotbohm
  */
-public class DocumentationTest {
+public class ModularityTest {
 
 	@Test
 	void createModulithsDocumentation() throws IOException {
@@ -35,6 +35,12 @@ public class DocumentationTest {
 		((Logger) org.slf4j.LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)) //
 				.setLevel(Level.ERROR);
 
-		new Documenter(ApplicationModules.of(Restbucks.class).verify()).writeDocumentation();
+		var modules = ApplicationModules.of(Restbucks.class);
+
+		System.out.println(modules);
+
+		modules.verify();
+
+		new Documenter(modules).writeDocumentation();
 	}
 }
