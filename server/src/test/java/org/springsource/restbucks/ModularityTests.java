@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,29 @@
  */
 package org.springsource.restbucks;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-
-import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
 
 /**
+ * Verifying modulithic structure and creating documentation for {@link ApplicationModules}.
+ *
  * @author Oliver Drotbohm
  */
-public class DocumentationTest {
+class ModularityTests {
+
+	ApplicationModules modules = ApplicationModules.of(Restbucks.class);
 
 	@Test
-	void createModulithsDocumentation() throws IOException {
+	void verifiesArchitecture() {
 
-		((Logger) org.slf4j.LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)) //
-				.setLevel(Level.ERROR);
+		// System.out.println(modules);
 
-		new Documenter(ApplicationModules.of(Restbucks.class).verify()).writeDocumentation();
+		modules.verify();
+	}
+
+	@Test
+	void createDocumentation() {
+		new Documenter(modules).writeDocumentation();
 	}
 }
