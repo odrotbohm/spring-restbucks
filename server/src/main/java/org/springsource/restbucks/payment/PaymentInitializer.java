@@ -15,13 +15,10 @@
  */
 package org.springsource.restbucks.payment;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Month;
 import java.time.Year;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
 
@@ -32,13 +29,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-@RequiredArgsConstructor
 class PaymentInitializer {
 
-	private final CreditCards creditCards;
-
-	@PostConstruct
-	public void init() {
+	public PaymentInitializer(CreditCards creditCards) {
 
 		if (creditCards.count() > 0) {
 			return;
