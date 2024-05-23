@@ -20,7 +20,7 @@ import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.lang.Nullable;
-import org.springsource.restbucks.drinks.Drink;
+import org.springsource.restbucks.legacy.model.Drink;
 
 /**
  * Additional configuration needed to produce Graal metadata to let some application properly work on it.

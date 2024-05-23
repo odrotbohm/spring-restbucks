@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks.drinks;
+package org.springsource.restbucks.legacy.persistence;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.util.Streamable;
 import org.springframework.lang.Nullable;
-import org.springsource.restbucks.drinks.Drink.DrinkIdentifier;
+import org.springsource.restbucks.legacy.model.Drink;
+import org.springsource.restbucks.legacy.model.Drink.DrinkIdentifier;
 
 /**
  * @author Oliver Drotbohm

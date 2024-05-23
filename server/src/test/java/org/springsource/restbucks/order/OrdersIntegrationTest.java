@@ -31,7 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Oliver Gierke
  */
 @Transactional
-@ApplicationModuleTest(mode = BootstrapMode.DIRECT_DEPENDENCIES)
+//@ApplicationModuleTest(mode = BootstrapMode.DIRECT_DEPENDENCIES)
+@ApplicationModuleTest
 class OrdersIntegrationTest {
 
 	@Autowired Orders repository;

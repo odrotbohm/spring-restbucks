@@ -35,7 +35,7 @@ import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Identifier;
 import org.jmolecules.event.types.DomainEvent;
 import org.springframework.data.domain.AbstractAggregateRoot;
-import org.springsource.restbucks.drinks.Drink;
+import org.springsource.restbucks.legacy.model.Drink;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
 
 /**

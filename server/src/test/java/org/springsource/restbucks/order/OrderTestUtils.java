@@ -19,9 +19,9 @@ import static org.springsource.restbucks.core.Currencies.*;
 
 import org.javamoney.moneta.Money;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springsource.restbucks.drinks.Drink;
-import org.springsource.restbucks.drinks.Milk;
-import org.springsource.restbucks.drinks.Size;
+import org.springsource.restbucks.legacy.model.Drink;
+import org.springsource.restbucks.legacy.model.Milk;
+import org.springsource.restbucks.legacy.model.Size;
 import org.springsource.restbucks.order.Order.Status;
 
 /**

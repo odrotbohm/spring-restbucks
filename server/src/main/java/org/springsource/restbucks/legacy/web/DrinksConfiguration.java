@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks.drinks;
+package org.springsource.restbucks.legacy.web;
 
 import javax.money.MonetaryAmount;
 
@@ -21,6 +21,9 @@ import org.springframework.boot.jackson.JsonMixin;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springsource.restbucks.legacy.model.Drink;
+import org.springsource.restbucks.legacy.model.Milk;
+import org.springsource.restbucks.legacy.model.Size;
 
 /**
  * Customizations for the drinks module.

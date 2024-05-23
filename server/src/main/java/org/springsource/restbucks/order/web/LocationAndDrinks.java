@@ -21,7 +21,7 @@ import lombok.Data;
 import java.util.Collections;
 import java.util.List;
 
-import org.springsource.restbucks.drinks.Drink;
+import org.springsource.restbucks.legacy.model.Drink;
 import org.springsource.restbucks.order.Location;
 import org.springsource.restbucks.order.Order;
 

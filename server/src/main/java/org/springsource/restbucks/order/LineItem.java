@@ -25,10 +25,10 @@ import javax.money.MonetaryAmount;
 import org.jmolecules.ddd.types.Association;
 import org.jmolecules.ddd.types.Entity;
 import org.jmolecules.ddd.types.Identifier;
-import org.springsource.restbucks.drinks.Drink;
-import org.springsource.restbucks.drinks.Drink.DrinkIdentifier;
-import org.springsource.restbucks.drinks.Milk;
-import org.springsource.restbucks.drinks.Size;
+import org.springsource.restbucks.legacy.model.Drink;
+import org.springsource.restbucks.legacy.model.Drink.DrinkIdentifier;
+import org.springsource.restbucks.legacy.model.Milk;
+import org.springsource.restbucks.legacy.model.Size;
 import org.springsource.restbucks.order.LineItem.LineItemIdentifier;
 
 /**

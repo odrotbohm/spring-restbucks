@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks.drinks;
+package org.springsource.restbucks.legacy.web;
 
 import static org.springframework.data.domain.Sort.*;
 
@@ -30,6 +30,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springsource.restbucks.legacy.model.Drink;
+import org.springsource.restbucks.legacy.persistence.Drinks;
 
 /**
  * @author Oliver Drotbohm

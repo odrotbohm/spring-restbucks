@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks.drinks;
+package org.springsource.restbucks.legacy.model;
 
 /**
  * @author Oliver Gierke
  */
-public enum Size {
+public enum Milk {
 
-	SMALL, LARGE;
+	WHOLE, SEMI;
 }
