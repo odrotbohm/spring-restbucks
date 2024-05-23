@@ -33,6 +33,7 @@ import javax.money.MonetaryAmount;
 import org.javamoney.moneta.Money;
 import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Identifier;
+import org.jmolecules.event.types.DomainEvent;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springsource.restbucks.drinks.Drink;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
@@ -228,4 +229,12 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	}
 
 	public record OrderIdentifier(UUID id) implements Identifier {}
+
+	/**
+	 * Event to be thrown when an {@link Order} has been paid.
+	 *
+	 * @author Oliver Gierke
+	 * @author Stéphane Nicoll
+	 */
+	public record OrderPaid(OrderIdentifier orderIdentifier) implements DomainEvent {}
 }
