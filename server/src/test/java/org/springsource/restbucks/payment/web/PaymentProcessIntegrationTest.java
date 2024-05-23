@@ -389,7 +389,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 				.doesNotHave(linkWithRel(UPDATE_REL))
 				.doesNotHave(linkWithRel(CANCEL_REL))
 				.doesNotHave(linkWithRel(PAYMENT_REL))
-				.bodyJson().hasPathSatisfying("$.status", it -> assertThat(it).isEqualTo("Delivered"));
+				.bodyJson().extractingPath("$.status").isEqualTo("Delivered");
 
 		LOG.info("Final order state: " + result.getMvcResult().getResponse().getContentAsString());
 	}
