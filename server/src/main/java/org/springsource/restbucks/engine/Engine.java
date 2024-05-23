@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springsource.restbucks.order.Order;
-import org.springsource.restbucks.order.OrderPaid;
+import org.springsource.restbucks.order.Order.OrderPaid;
 import org.springsource.restbucks.order.Orders;
 
 /**
@@ -48,7 +48,7 @@ class Engine {
 	@ApplicationModuleListener
 	public void handleOrderPaidEvent(OrderPaid event) {
 
-		var order = orders.markInPreparation(event.getOrderId());
+		var order = orders.markInPreparation(event.orderIdentifier());
 		var processingTime = settings.getProcessingTime();
 
 		ordersInProgress.add(order);
