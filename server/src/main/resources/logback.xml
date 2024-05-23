@@ -10,9 +10,7 @@
 		<appender-ref ref="CONSOLE" />
 	</root>
 
-    <logger name="org.javamoney" level="WARN" />
-	<logger name="com.tngtech.archunit" level="WARN" />
 	<logger name="org.springframework.modulith" level="DEBUG" />
-    <logger name="org.springframework.modulith.observability" level="TRACE" />
+	<logger name="org.springframework.modulith.observability" level="TRACE" />
 
 </configuration>
