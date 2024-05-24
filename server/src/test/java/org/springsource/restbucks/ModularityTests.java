@@ -45,7 +45,7 @@ class ModularityTests {
     @Test
     void verifiesArchitecture() {
 
-        // System.out.println(modules);
+        System.out.println(modules);
 
         modules.verify();
     }
