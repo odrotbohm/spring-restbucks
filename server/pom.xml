@@ -251,11 +251,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<artifactId>opentelemetry-exporter-zipkin</artifactId>
 				</dependency>
 
-				<dependency>
-					<groupId>net.ttddyy.observation</groupId>
-					<artifactId>datasource-micrometer-spring-boot</artifactId>
-					<version>${datasourceMicrometerSpringBootVersion}</version>
-				</dependency>
+				<!-- Comment in to produce database spans -->
+<!--				<dependency>-->
+<!--					<groupId>net.ttddyy.observation</groupId>-->
+<!--					<artifactId>datasource-micrometer-spring-boot</artifactId>-->
+<!--					<version>${datasourceMicrometerSpringBootVersion}</version>-->
+<!--				</dependency>-->
 
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
