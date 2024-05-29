@@ -22,7 +22,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<lombok.version>1.18.32</lombok.version>
 		<jmolecules.version>2023.1.3</jmolecules.version>
 		<spring-framework.version>6.2.0-M3</spring-framework.version>
-		<spring-modulith.version>1.2.0-SNAPSHOT</spring-modulith.version>
+		<spring-modulith.version>1.2.0</spring-modulith.version>
 	</properties>
 
 	<dependencyManagement>
@@ -267,7 +267,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 				<!--
 					For Event Publication Registry, also leveraging Docker Compose
-					so that the app can be killed to show incompleted event publications
+					so that the app can be killed to show incomplete event publications
 					and the re-submission of those on restart.
 				-->
 
