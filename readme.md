@@ -218,6 +218,21 @@ Stop the application while events are still pending.
 Restart the application and the events will be republished and completed.
 ![Event Publication Registry with all completed events](server/docs/images/eventPubReg-completed.png "A sample Zipkin trace")
 
+## Externalized event
+
+This profile adds necessary dependencies and uses docker-compose support to start kafka automatically when the application starts.
+
+The `PaymentReceived` event type is annotated as `@Externalized` and published through `PaymentServiceImpl`.
+These events are published to Kafka rather than Spring Framework's in-memory Spring ApplicationEvents infrastructure.
+
+These events are also persisted to the Event Publication Registry described in the previous section.
+
+Generate payment traffic for the application.
+You may use, for example, the script `order_and_pay.sh`.
+
+Use your IDE or a Kafka client to connect to Kafa on port `9092` and view the events.
+You will see the Message Count increase every time you submit payment for an order.
+
 ## Hypermedia
 
 A core focus of this sample app is to demonstrate how easy resources can be modeled in a hypermedia driven way. There are two major aspects to this challenge in Java web-frameworks:

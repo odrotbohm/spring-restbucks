@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
 import org.jmolecules.ddd.annotation.Service;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Orders;
@@ -41,6 +42,7 @@ class PaymentServiceImpl implements PaymentService {
 	private final @NonNull CreditCards cards;
 	private final @NonNull Payments payments;
 	private final @NonNull Orders orders;
+	private final @NonNull ApplicationEventPublisher events;
 
 	/*
 	 * (non-Javadoc)
@@ -63,6 +65,8 @@ class PaymentServiceImpl implements PaymentService {
 		}
 
 		orders.markPaid(order);
+
+		events.publishEvent(new PaymentReceived(order.getPrice()));
 
 		return payments.save(new CreditCardPayment(creditCardNumber, order));
 	}

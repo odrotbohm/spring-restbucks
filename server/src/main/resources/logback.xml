@@ -11,6 +11,8 @@
 	</root>
 
 	<logger name="org.springframework.modulith" level="DEBUG" />
+	<logger name="org.springframework.kafka" level="DEBUG" />
+	<logger name="org.apache.kafka" level="DEBUG" />
 	<logger name="org.springframework.modulith.observability" level="TRACE" />
 
 </configuration>

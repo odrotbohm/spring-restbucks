@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.OrderTestUtils;
 import org.springsource.restbucks.order.Orders;
@@ -42,23 +43,27 @@ class PaymentServiceImplUnitTest {
 	@Mock CreditCards creditCardRepository;
 	@Mock Orders orderRepository;
 
+	@Mock
+	ApplicationEventPublisher events;
+
+
 	@BeforeEach
 	void setUp() {
-		this.paymentService = new PaymentServiceImpl(creditCardRepository, paymentRepository, orderRepository);
+		this.paymentService = new PaymentServiceImpl(creditCardRepository, paymentRepository, orderRepository, events);
 	}
 
 	@Test
 	void rejectsNullPaymentRepository() {
 
 		assertThatExceptionOfType(IllegalArgumentException.class) //
-				.isThrownBy(() -> new PaymentServiceImpl(creditCardRepository, null, orderRepository));
+				.isThrownBy(() -> new PaymentServiceImpl(creditCardRepository, null, orderRepository, events));
 	}
 
 	@Test
 	void rejectsNullCreditCardRepository() {
 
 		assertThatExceptionOfType(IllegalArgumentException.class) //
-				.isThrownBy(() -> new PaymentServiceImpl(null, paymentRepository, orderRepository));
+				.isThrownBy(() -> new PaymentServiceImpl(null, paymentRepository, orderRepository, events));
 	}
 
 	@Test

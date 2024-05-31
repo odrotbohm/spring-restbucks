@@ -277,6 +277,15 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<scope>runtime</scope>
 				</dependency>
 
+				<!--
+					For event externalization
+				-->
+
+				<dependency>
+					<groupId>org.springframework.modulith</groupId>
+					<artifactId>spring-modulith-events-kafka</artifactId>
+				</dependency>
+
 			</dependencies>
 		</profile>
 

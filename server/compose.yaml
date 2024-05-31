@@ -13,3 +13,8 @@ services:
       - 'POSTGRES_USER=user'
     ports:
       - '5432:5432'
+  kafka:
+    image:  'apache/kafka:3.7.0'
+    container_name: kafka
+    ports:
+      - '9092:9092'
