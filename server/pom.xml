@@ -363,7 +363,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 									<BP_SPRING_AOT_ENABLED>true</BP_SPRING_AOT_ENABLED>
 								</env>
 								<buildpacks>
-									<buildpack>paketobuildpacks/java</buildpack>
+<!--				Why not simply 	<buildpack>paketobuildpacks/java</buildpack> ? well, it's because you will hit this bug
+ https://github.com/spring-projects/spring-boot/issues/40697
+ until SB 3.3.1		or 3.3.2		-->
+									<buildpack>paketobuildpacks/bellsoft-liberica:latest</buildpack>
+									<buildpack>paketobuildpacks/syft:latest</buildpack>
+									<buildpack>paketobuildpacks/executable-jar:latest </buildpack>
+									<buildpack>paketobuildpacks/spring-boot:latest</buildpack>
 								</buildpacks>
 								<builder>paketobuildpacks/builder-jammy-buildpackless-tiny</builder>
 							</image>
