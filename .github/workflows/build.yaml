@@ -45,7 +45,7 @@ jobs:
       - name: Build with Maven
         run: |
           cd server
-          ./mvnw -Pbuildpacks
+          ./mvnw -D spring-boot.build-image.publish -D spring-boot.build-image.imageName=ttl.sh/restbucks-${GITHUB_WORKFLOW_SHA}:1d -Pbuildpacks
 
   buildpacks-native:
     name: Build Native Image with Buildpacks
@@ -65,4 +65,4 @@ jobs:
       - name: Build with Maven
         run: |
           cd server
-          ./mvnw -Pbuildpacks-native
+          ./mvnw -D spring-boot.build-image.publish=true -D spring-boot.build-image.imageName=ttl.sh/restbucks-native-${GITHUB_WORKFLOW_SHA}:1d -Pbuildpacks-native
