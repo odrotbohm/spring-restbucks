@@ -360,7 +360,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 							<image>
 								<env>
 									<BP_JVM_CDS_ENABLED>true</BP_JVM_CDS_ENABLED>
-									<BP_SPRING_AOT_ENABLED>true</BP_SPRING_AOT_ENABLED>
 								</env>
 								<buildpacks>
 <!--				Why not simply 	<buildpack>paketobuildpacks/java</buildpack> ? well, it's because you will hit this bug
@@ -374,14 +373,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 								<builder>paketobuildpacks/builder-jammy-buildpackless-tiny</builder>
 							</image>
 						</configuration>
-						<executions>
-							<execution>
-								<id>process-aot</id>
-								<goals>
-									<goal>process-aot</goal>
-								</goals>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 
