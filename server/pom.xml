@@ -403,6 +403,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 								<builder>paketobuildpacks/builder-jammy-buildpackless-tiny</builder>
 								<env>
 									<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+									<BP_NATIVE_IMAGE_BUILD_ARGUMENTS>-H:-AddAllFileSystemProviders</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
 								</env>
 							</image>
 						</configuration>
