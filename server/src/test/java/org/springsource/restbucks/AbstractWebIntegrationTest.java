@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -51,8 +50,8 @@ public abstract class AbstractWebIntegrationTest {
 	@BeforeEach
 	void setUp() {
 
-		this.mvc = MockMvcTester.create(MockMvcBuilders.webAppContextSetup(context).//
-				defaultRequest(MockMvcRequestBuilders.get("/").locale(Locale.US)).//
+		this.mvc = MockMvcTester.from(context, builder ->//
+				builder.defaultRequest(MockMvcRequestBuilders.get("/").locale(Locale.US)).//
 				build());
 	}
 
