@@ -274,6 +274,29 @@ $ ./cds.sh
 … : Started Restbucks in 1.475 seconds (process running for 1.636)
 ```
 
+## Building Docker Images Using Buildpacks
+
+The project is configured to produce Docker images using [Paketo Buildpacks](https://buildpacks.io/).
+To create an image with a CDS-enabled archive run the build using the `buildpacks` profile.
+
+```
+$ ./mvnw -Pbuildpacks
+…
+$ docker run -p 8080:8080 docker.io/library/restbucks:1.0.0-SNAPSHOT
+…
+… I -     main : Started Restbucks in 1.724 seconds (process running for 1.939)
+```
+
+A Docker image containing a GraalVM native image can be created running the build using the `buildpacks-native` profile.
+
+```
+$ ./mvnw -Pbuildpacks-native
+…
+$ docker run -p 8080:8080 docker.io/library/restbucks:1.0.0-SNAPSHOT
+…
+… I -     main : Started Restbucks in 0.23 seconds (process running for 0.233)
+```
+
 ## The Android client
 
 The Android sample client can be found in `android-client` and is a most rudimentary implementation of a client application that leverages hypermedia elements to avoid strong coupling to the server.
