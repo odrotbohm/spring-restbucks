@@ -3,7 +3,7 @@
 ##### MAKE PAYMENTS
 
 pending_orders_json=$(http ":8080/orders/search/findByStatus?status=PAYMENT_EXPECTED")
-pending_order_links=($(echo "$pending_orders_json" | jq -r '._embedded["restbucks:orders"][].["_links"]["self"]["href"]'))
+pending_order_links=($(echo "$pending_orders_json" | jq -r '._embedded["restbucks:orders"][]._links.self.href'))
 
 echo "Orders pending payment: ${#pending_order_links[@]}"
 
