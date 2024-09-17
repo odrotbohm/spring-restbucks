@@ -16,7 +16,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</parent>
 
 	<properties>
-		<bytebuddy.version>1.14.13</bytebuddy.version>
+		<bytebuddy.version>1.15.1</bytebuddy.version>
 		<datasourceMicrometerSpringBootVersion>1.0.2</datasourceMicrometerSpringBootVersion>
 		<java.version>22</java.version>
 		<lombok.version>1.18.32</lombok.version>
