@@ -18,7 +18,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<properties>
 		<bytebuddy.version>1.15.1</bytebuddy.version>
 		<datasourceMicrometerSpringBootVersion>1.0.5</datasourceMicrometerSpringBootVersion>
-		<java.version>22</java.version>
+		<java.version>21</java.version>
 		<jmolecules.version>2023.1.6</jmolecules.version>
 		<!-- For HAL FORMS integration fix -->
 		<spring-data-bom.version>2024.1.0-SNAPSHOT</spring-data-bom.version>
@@ -469,9 +469,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<enablePreview>true</enablePreview>
-				</configuration>
 			</plugin>
 
 			<plugin>
