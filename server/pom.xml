@@ -12,7 +12,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0-M3</version>
+		<version>3.4.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -368,10 +368,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 									<BP_JVM_CDS_ENABLED>true</BP_JVM_CDS_ENABLED>
 									<BP_SPRING_AOT_ENABLED>true</BP_SPRING_AOT_ENABLED>
 								</env>
-								<buildpacks>
-									<buildpack>paketobuildpacks/java</buildpack>
-								</buildpacks>
-								<builder>paketobuildpacks/builder-jammy-buildpackless-tiny</builder>
 							</image>
 						</configuration>
 						<executions>
@@ -419,10 +415,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<configuration>
 							<image>
-								<buildpacks>
-									<buildpack>paketobuildpacks/java-native-image</buildpack>
-								</buildpacks>
-								<builder>paketobuildpacks/builder-jammy-buildpackless-tiny</builder>
 								<env>
 									<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
 								</env>
