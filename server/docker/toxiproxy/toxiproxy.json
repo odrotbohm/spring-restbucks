@@ -1,0 +1,14 @@
+[
+    {
+        "name": "water-db",
+        "listen": "[::]:3307",
+        "upstream": "host.docker.internal:3306",
+        "enabled": true
+    },
+    {
+        "name": "tealeaf-db",
+        "listen": "[::]:3308",
+        "upstream": "host.docker.internal:3306",
+        "enabled": true
+    }
+]

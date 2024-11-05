@@ -1,0 +1,62 @@
+apiVersion: 1
+
+datasources:
+    - name: Prometheus
+      type: prometheus
+      uid: prometheus
+      access: proxy
+      url: http://host.docker.internal:9090
+      editable: true
+      jsonData:
+        httpMethod: POST
+        exemplarTraceIdDestinations:
+          - name: trace_id
+            datasourceUid: tempo
+            # if you want to use zipkin
+            # url: http://localhost:9411/zipkin/traces/$${__value.raw}
+    - name: Tempo
+      type: tempo
+      uid: tempo
+      access: proxy
+      url: http://host.docker.internal:3200
+      isDefault: true
+      editable: true
+      jsonData:
+        httpMethod: GET
+        tracesToMetrics:
+          datasourceUid: prometheus
+          tags: [{ key: 'service.name', value: 'application' }, { key: 'org' }, { key: 'method' }, { key: 'uri' }, { key: 'outcome' }, { key: 'status' }, { key: 'exception' }]
+          queries:
+            - name: 'Throughput'
+              query: 'sum(rate(http_server_requests_seconds_count{$$__tags}[$$__rate_interval]))'
+            - name: 'Latency'
+              query: 'histogram_quantile(1.00, sum(rate(http_server_requests_seconds_bucket{$$__tags}[$$__rate_interval])) by (le))'
+          spanStartTimeShift: '-10m'
+          spanEndTimeShift: '10m'
+        tracesToLogs:
+          datasourceUid: loki
+          mappedTags: [{ key: 'org' }]
+          mapTagNamesEnabled: true
+          filterByTraceID: true
+          filterBySpanID: false
+          spanStartTimeShift: '-10m'
+          spanEndTimeShift: '10m'
+        lokiSearch:
+          datasourceUid: loki
+        serviceMap:
+          datasourceUid: prometheus
+        nodeGraph:
+          enabled: true
+    - name: Loki
+      type: loki
+      uid: loki
+      access: proxy
+      url: http://host.docker.internal:3100
+      editable: true
+      jsonData:
+        maxLines: 50
+        derivedFields:
+          - datasourceUid: tempo
+            matcherRegex: '.+ --- \[.+\] \[.+\] \[(\w*)-\w*\] .+'
+            name: traceId
+            url: $${__value.raw}

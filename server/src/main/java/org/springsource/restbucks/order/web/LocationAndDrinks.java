@@ -35,6 +35,7 @@ public class LocationAndDrinks {
 
 	@NotNull //
 	private Location location;
+	@NotNull
 	private List<Drink> drinks;
 
 	public Order toOrder() {

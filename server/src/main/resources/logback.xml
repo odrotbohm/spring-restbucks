@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<property name="CONSOLE_LOG_PATTERN" value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(%1.-1level){green} - %8.8t : %m%n%wEx" />
+<!--	<property name="CONSOLE_LOG_PATTERN" value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(%1.-1level){green} - %8.8t : %m%n%wEx" />-->
 
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
 	<include resource="org/springframework/boot/logging/logback/console-appender.xml" />
@@ -12,5 +12,22 @@
 
 	<logger name="org.springframework.modulith" level="DEBUG" />
 	<logger name="org.springframework.modulith.observability" level="TRACE" />
+
+	<springProperty scope="context" name="appName" source="spring.application.name"/>
+
+	<appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+		<http>
+			<url>http://localhost:3100/loki/api/v1/push</url>
+		</http>
+		<format>
+			<label>
+				<pattern>app=${appName},host=${HOSTNAME},level=%level</pattern>
+			</label>
+			<message>
+				<pattern>${FILE_LOG_PATTERN}</pattern>
+			</message>
+			<sortByTime>true</sortByTime>
+		</format>
+	</appender>
 
 </configuration>

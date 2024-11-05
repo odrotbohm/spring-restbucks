@@ -233,6 +233,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 			<id>observability</id>
 
+			<properties>
+				<spring.docker.compose.enabled>true</spring.docker.compose.enabled>
+				<spring.docker.compose.file>classpath:docker-compose.yaml</spring.docker.compose.file>
+			</properties>
+
 			<dependencies>
 
 				<dependency>
@@ -247,12 +252,17 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 				<dependency>
 					<groupId>io.micrometer</groupId>
-					<artifactId>micrometer-tracing-bridge-otel</artifactId>
+					<artifactId>micrometer-registry-prometheus</artifactId>
 				</dependency>
 
 				<dependency>
-					<groupId>io.opentelemetry</groupId>
-					<artifactId>opentelemetry-exporter-zipkin</artifactId>
+					<groupId>io.micrometer</groupId>
+					<artifactId>micrometer-tracing-bridge-brave</artifactId>
+				</dependency>
+
+				<dependency>
+					<groupId>io.zipkin.reporter2</groupId>
+					<artifactId>zipkin-reporter-brave</artifactId>
 				</dependency>
 
 				<dependency>
@@ -266,6 +276,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<artifactId>spring-boot-docker-compose</artifactId>
 					<scope>runtime</scope>
 					<optional>true</optional>
+				</dependency>
+
+				<!-- Logs shipping -->
+				<dependency>
+					<groupId>com.github.loki4j</groupId>
+					<artifactId>loki-logback-appender</artifactId>
+					<version>1.5.2</version>
+					<scope>runtime</scope>
 				</dependency>
 
 			</dependencies>
