@@ -15,19 +15,20 @@
  */
 package org.springsource.restbucks.engine;
 
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
-import org.springframework.modulith.events.ApplicationModuleListener;
-import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springsource.restbucks.order.Order;
 import org.springsource.restbucks.order.Order.OrderPaid;
 import org.springsource.restbucks.order.Orders;
+
+import org.springframework.modulith.events.ApplicationModuleListener;
+import org.springframework.stereotype.Service;
 
 /**
  * Simple {@link OrderPaid} listener marking the according {@link Order} as in process, sleeping for 5 seconds and
@@ -41,12 +42,21 @@ import org.springsource.restbucks.order.Orders;
 @AllArgsConstructor
 class Engine {
 
+	private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
+
 	private final @NonNull Orders orders;
 	private final @NonNull EngineSettings settings;
 	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
 
 	@ApplicationModuleListener
 	public void handleOrderPaidEvent(OrderPaid event) {
+
+		if (settings.isFailRandomly()) {
+			int i = RANDOM.nextInt(0, 9);
+			if (i < 3) {
+				throw new IllegalStateException("Simulates random failure");
+			}
+		}
 
 		var order = orders.markInPreparation(event.orderIdentifier());
 		var processingTime = settings.getProcessingTime();

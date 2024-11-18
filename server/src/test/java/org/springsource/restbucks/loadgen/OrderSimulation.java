@@ -1,8 +1,18 @@
 package org.springsource.restbucks.loadgen;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.gatling.javaapi.core.ScenarioBuilder;
+import io.gatling.javaapi.core.Simulation;
+import io.gatling.javaapi.http.HttpProtocolBuilder;
+
 import static io.gatling.http.HeaderValues.ApplicationJson;
 import static io.gatling.javaapi.core.CoreDsl.StringBody;
-import static io.gatling.javaapi.core.CoreDsl.atOnceUsers;
 import static io.gatling.javaapi.core.CoreDsl.bodyString;
 import static io.gatling.javaapi.core.CoreDsl.constantUsersPerSec;
 import static io.gatling.javaapi.core.CoreDsl.exec;
@@ -10,20 +20,10 @@ import static io.gatling.javaapi.core.CoreDsl.scenario;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.gatling.javaapi.core.ScenarioBuilder;
-import io.gatling.javaapi.core.Simulation;
-import io.gatling.javaapi.http.HttpProtocolBuilder;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class OrderSimulation extends Simulation {
 
   final Duration duration = Duration.ofMinutes(120);
-  static int usersAtOnce = 5;
+  static int usersAtOnce = 2;
 
   // Jackson object mapper for JSON parsing
   private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -82,10 +82,6 @@ public class OrderSimulation extends Simulation {
             String orderRequestBody = String.format("{\"drinks\":[\"%s\"],\"location\":\"%s\"}",
                 selectedDrink, location);
 
-            // Increment counter
-            int counter = session.contains("counter") ? session.getInt("counter") + 1 : 1;
-            session = session.set("counter", counter);
-
             // Save the request body to session
             return session.set("orderRequestBody", orderRequestBody);
           })
@@ -94,6 +90,42 @@ public class OrderSimulation extends Simulation {
                       .post("/orders")
                       .body(StringBody(session -> session.getString("orderRequestBody"))).asJson()
                       .check(status().in(200, 201, 400, 500)) // Expecting valid status or errors
+                      .check(bodyString().saveAs("orderResponse")) // Save order response to session
+              )
+              .exec(session -> {
+                // Extract the order ID from the order response
+                String orderResponse = session.getString("orderResponse");
+                String orderId = null;
+                try {
+                  JsonNode rootNode = objectMapper.readTree(orderResponse);
+                  JsonNode orderLinkNode = rootNode.at("/_links/self/href");
+                  if (orderLinkNode != null) {
+                    // Extract the order ID from the URL (assuming last segment is the ID)
+                    String orderLink = orderLinkNode.asText();
+                    orderId = orderLink.substring(orderLink.lastIndexOf('/') + 1);
+                  }
+                } catch (Exception e) {
+                  throw new RuntimeException(e);
+                }
+
+                // Save the order ID to the session
+                return session.set("orderId", orderId);
+              })
+              .exec(session -> {
+                // The only valid credit card
+                String creditCardNumber = "1234123412341234";
+
+                // Create payment request body
+                String paymentRequestBody = String.format("{\"number\":\"%s\"}", creditCardNumber);
+
+                // Save the payment request body to session
+                return session.set("paymentRequestBody", paymentRequestBody);
+              })
+              .exec(
+                  http("Submit Payment")
+                      .put(session -> "/payment/" + session.getString("orderId"))
+                      .body(StringBody(session -> session.getString("paymentRequestBody"))).asJson()
+                      .check(status().in(200, 201)) // Expecting valid status or errors
               )
       );
 

@@ -15,9 +15,9 @@
  */
 package org.springsource.restbucks.engine;
 
-import lombok.Value;
-
 import java.time.Duration;
+
+import lombok.Value;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -36,10 +36,13 @@ class EngineSettings {
 	 */
 	private final Duration processingTime;
 
+	private final boolean failRandomly;
+
 	/**
 	 * @param processingTime must not be {@literal null}.
 	 */
-	public EngineSettings(@DefaultValue("2s") Duration processingTime) {
+	public EngineSettings(@DefaultValue("2s") Duration processingTime, boolean failRandomly) {
 		this.processingTime = processingTime;
+		this.failRandomly = failRandomly;
 	}
 }

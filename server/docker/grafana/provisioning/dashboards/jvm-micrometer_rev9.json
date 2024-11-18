@@ -3386,9 +3386,7 @@
         "list": [
             {
                 "current": {
-                    "selected": false,
-                    "text": "tea-service",
-                    "value": "tea-service"
+                    "selected": false
                 },
                 "datasource": {
                     "type": "prometheus",
@@ -3417,9 +3415,7 @@
             {
                 "allFormat": "glob",
                 "current": {
-                    "selected": false,
-                    "text": "192.168.0.113:tea-service:8090",
-                    "value": "192.168.0.113:tea-service:8090"
+                    "selected": false
                 },
                 "datasource": {
                     "type": "prometheus",

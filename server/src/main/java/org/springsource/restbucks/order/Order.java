@@ -15,13 +15,6 @@
  */
 package org.springsource.restbucks.order;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.OrderColumn;
-import jakarta.persistence.Table;
-import jakarta.persistence.Version;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,13 +23,20 @@ import java.util.UUID;
 
 import javax.money.MonetaryAmount;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.Getter;
+import lombok.ToString;
 import org.javamoney.moneta.Money;
 import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Identifier;
 import org.jmolecules.event.types.DomainEvent;
-import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springsource.restbucks.drinks.Drink;
 import org.springsource.restbucks.order.Order.OrderIdentifier;
+
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 /**
  * An order.
@@ -71,6 +71,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		this.status = Status.PAYMENT_EXPECTED;
 		this.lineItems.addAll(lineItems);
 		this.orderedDate = LocalDateTime.now();
+		registerEvent(new OrderCreated(id, location));
 	}
 
 	/**
@@ -103,12 +104,16 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		lineItems.stream()
 				.filter(it -> it.refersTo(drink))
 				.findFirst()
-				.map(it -> it.increaseAmount())
+				.map(it -> {
+					registerEvent(new OrderLineItemCreated(getId(), it));
+					return it.increaseAmount();
+				})
 
 				.orElseGet(() -> {
 
 					LineItem item = new LineItem(drink);
 					this.lineItems.add(item);
+					registerEvent(new OrderLineItemCreated(getId(), item));
 					return item;
 				});
 
@@ -142,7 +147,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		}
 
 		this.status = Status.PREPARING;
-
+		registerEvent(new OrderInPreparation(id));
 		return this;
 	}
 
@@ -157,7 +162,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		}
 
 		this.status = Status.READY;
-
+		registerEvent(new OrderPrepared(id));
 		return this;
 	}
 
@@ -169,7 +174,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		}
 
 		this.status = Status.TAKEN;
-
+		registerEvent(new OrderTaken(id));
 		return this;
 	}
 
@@ -237,4 +242,40 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	 * @author Stéphane Nicoll
 	 */
 	public record OrderPaid(OrderIdentifier orderIdentifier) implements DomainEvent {}
+
+	/**
+	 * Event to be thrown when an {@link Order} has been created.
+	 *
+	 * @author Marcin Grzejszczak
+	 */
+	public record OrderCreated(Order.OrderIdentifier id, Location location) implements DomainEvent { }
+
+	/**
+	 * Event to be thrown when an {@link LineItem} was added to an {@link Order}.
+	 *
+	 * @author Marcin Grzejszczak
+	 */
+	public record OrderLineItemCreated(Order.OrderIdentifier id, LineItem lineItem) implements DomainEvent { }
+
+	/**
+	 * Event to be thrown when an {@link Order} is in preparation.
+	 *
+	 * @author Marcin Grzejszczak
+	 */
+	public record OrderInPreparation(Order.OrderIdentifier id) implements DomainEvent { }
+
+	/**
+	 * Event to be thrown when an {@link Order} has been prepared.
+	 *
+	 * @author Marcin Grzejszczak
+	 */
+	public record OrderPrepared(Order.OrderIdentifier id) implements DomainEvent { }
+
+	/**
+	 * Event to be thrown when an {@link Order} has been taken.
+	 *
+	 * @author Marcin Grzejszczak
+	 */
+	public record OrderTaken(Order.OrderIdentifier id) implements DomainEvent { }
+
 }

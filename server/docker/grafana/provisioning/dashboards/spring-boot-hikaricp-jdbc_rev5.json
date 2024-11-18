@@ -805,9 +805,7 @@
         "list": [
             {
                 "current": {
-                    "selected": false,
-                    "text": "tealeaf-service",
-                    "value": "tealeaf-service"
+                    "selected": false
                 },
                 "datasource": {
                     "type": "prometheus",
