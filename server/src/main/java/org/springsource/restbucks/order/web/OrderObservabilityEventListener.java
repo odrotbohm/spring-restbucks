@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 @ConditionalOnClass(MeterRegistry.class)
 @Profile("observability")
-class OrderEventListener {
+class OrderObservabilityEventListener {
 
 	private final MeterRegistry registry;
 
-	OrderEventListener(MeterRegistry registry) {
+	OrderObservabilityEventListener(MeterRegistry registry) {
 		this.registry = registry;
 	}
 
@@ -29,7 +29,7 @@ class OrderEventListener {
 
 	@ApplicationModuleListener
 	public void onOrderLineItemCreated(Order.OrderLineItemCreated event) {
-		Counter.builder("order.line-item.created") //
+		Counter.builder("order.line-item.added") //
 				.tags("name", event.lineItem().getName()) //
 				.tags("milk", event.lineItem().getMilk().name()) //
 				.tags("size", event.lineItem().getSize().name()) //

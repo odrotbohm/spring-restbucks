@@ -123,7 +123,7 @@
           "datasource": "Prometheus",
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(order_line_item_created_total[$__rate_interval])) by (name, milk, size)",
+          "expr": "sum(rate(order_line_item_added_total[$__rate_interval])) by (name, milk, size)",
           "legendFormat": "{{name}} {{milk}} {{size}}",
           "range": true,
           "refId": "A"
