@@ -29,5 +29,5 @@ You have your application running together with the whole machinery. You can che
 Now it's time for the load tests. Run this command to start load tests. Check the `OrderSimulation.java` class for configuration parameters.
 
 ```bash
-$ ./mvnw gatling-test -Pload-gen
+$ ./mvnw gatling:test -Pload-gen
 ```
