@@ -363,6 +363,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 						<configuration>
 							<image>
 								<env>
+									<BPL_JVM_CDS_ENABLED>true</BPL_JVM_CDS_ENABLED>
+									<BPL_SPRING_AOT_ENABLED>true</BPL_SPRING_AOT_ENABLED>
 									<BP_JVM_CDS_ENABLED>true</BP_JVM_CDS_ENABLED>
 									<BP_SPRING_AOT_ENABLED>true</BP_SPRING_AOT_ENABLED>
 								</env>
