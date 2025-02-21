@@ -109,6 +109,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 		<dependency>
 			<groupId>org.springframework.modulith</groupId>
+			<artifactId>spring-modulith-observability</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.modulith</groupId>
 			<artifactId>spring-modulith-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -243,11 +248,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<id>observability</id>
 
 			<dependencies>
-
-				<dependency>
-					<groupId>org.springframework.modulith</groupId>
-					<artifactId>spring-modulith-observability</artifactId>
-				</dependency>
 
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
