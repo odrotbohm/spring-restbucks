@@ -20,11 +20,14 @@ import de.odrotbohm.restbucks.payment.Payment.Receipt;
 
 import java.util.Optional;
 
+import org.jmolecules.ddd.annotation.Service;
+
 /**
  * Interface to collect payment services.
  *
  * @author Oliver Gierke
  */
+@Service
 public interface PaymentService {
 
 	/**

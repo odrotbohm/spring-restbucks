@@ -23,7 +23,7 @@ import org.springframework.data.rest.core.config.Projection;
 
 /**
  * Projection interface to render {@link Order} summaries.
- * 
+ *
  * @author Oliver Gierke
  */
 @Projection(name = "summary", types = Order.class)

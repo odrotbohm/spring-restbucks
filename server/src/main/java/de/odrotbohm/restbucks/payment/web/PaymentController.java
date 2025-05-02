@@ -17,12 +17,13 @@ package de.odrotbohm.restbucks.payment.web;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import de.odrotbohm.restbucks.DTO;
 import de.odrotbohm.restbucks.order.Order;
 import de.odrotbohm.restbucks.order.Orders;
 import de.odrotbohm.restbucks.payment.CreditCardNumber;
 import de.odrotbohm.restbucks.payment.Payment;
-import de.odrotbohm.restbucks.payment.PaymentService;
 import de.odrotbohm.restbucks.payment.Payment.Receipt;
+import de.odrotbohm.restbucks.payment.PaymentService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -156,7 +157,7 @@ class PaymentController {
 
 	@Value
 	@RequiredArgsConstructor(onConstructor = @__(@JsonCreator))
-	static class PaymentForm {
+	static class PaymentForm implements DTO {
 		CreditCardNumber number;
 	}
 }
