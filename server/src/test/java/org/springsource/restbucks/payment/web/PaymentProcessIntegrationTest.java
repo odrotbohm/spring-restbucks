@@ -25,6 +25,7 @@ import net.minidev.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -65,6 +66,8 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 	private static final String FIRST_ORDER_EXPRESSION = String
 			.format("$._embedded.%s[?(@.status == 'Payment expected')]", ORDERS_REL);
+
+	private static final Random RANDOM = new Random();
 
 	/**
 	 * Processes the first existing {@link Order} found.
@@ -152,13 +155,20 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		// Find drink to add place the order
 		var drinksTemplate = parse.read("$._templates.default.properties[0].options.link.href", String.class);
+
 		var drinksOptionsUri = Link.of(drinksTemplate).expand().getHref();
 		var drinksOptionsResponse = mvc.perform(get(drinksOptionsUri))
-				.getMvcResult().getResponse().getContentAsString();
-		var drinkUri = JsonPath.parse(drinksOptionsResponse).read("$._embedded.drinks[0].value", String.class);
+				.getMvcResult()
+				.getResponse()
+				.getContentAsString();
+
+		var drinkUris = JsonPath.parse(drinksOptionsResponse)
+				.read("$._embedded['restbucks:drinks'][*].value", String[].class);
+		var drinkUri = drinkUris[RANDOM.nextInt(drinkUris.length)];
 
 		// Select location
-		var location = parse.read("$._templates.default.properties[1].options.inline[0]");
+		var locations = parse.read("$._templates.default.properties[1].options.inline", String[].class);
+		var location = locations[RANDOM.nextInt(locations.length)];
 
 		var payload = Map.of("drinks", List.of(drinkUri), "location", location);
 

@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.mediatype.hal.HalLinkRelation;
 import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
 import org.springframework.hateoas.mediatype.hal.forms.HalFormsPromptedValue;
 import org.springframework.hateoas.server.EntityLinks;
@@ -30,12 +31,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springsource.restbucks.Restbucks;
 
 /**
  * @author Oliver Drotbohm
  */
 @BasePathAwareController
 public class DrinksOptions {
+
+	public static final LinkRelation DRINKS_REL = HalLinkRelation.curied(Restbucks.CURIE_NAMESPACE, "drinks");
 
 	private final Drinks drinks;
 	private final TypedEntityLinks<Drink> links;
@@ -72,7 +76,7 @@ public class DrinksOptions {
 				.toList();
 
 		var model = HalModelBuilder.halModel()
-				.embed(options, LinkRelation.of("drinks"))
+				.embed(options, DRINKS_REL)
 				.build();
 
 		return ResponseEntity.ok(model);
