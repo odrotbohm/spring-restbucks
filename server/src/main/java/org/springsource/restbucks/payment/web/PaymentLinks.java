@@ -33,12 +33,13 @@ import org.springsource.restbucks.order.Order;
  * @author Oliver Gierke
  */
 @Component
-class PaymentLinks {
+public class PaymentLinks {
+
+	public static final LinkRelation PAYMENT_REL = HalLinkRelation.curied(Restbucks.CURIE_NAMESPACE, "payment");
+	public static final LinkRelation RECEIPT_REL = HalLinkRelation.curied(Restbucks.CURIE_NAMESPACE, "receipt");
 
 	static final String PAYMENT = "/payment";
 	static final String RECEIPT = "/receipt";
-	static final LinkRelation PAYMENT_REL = HalLinkRelation.curied(Restbucks.CURIE_NAMESPACE, "payment");
-	static final LinkRelation RECEIPT_REL = HalLinkRelation.curied(Restbucks.CURIE_NAMESPACE, "receipt");
 
 	private final @Getter TypedEntityLinks<Order> orderLinks;
 
