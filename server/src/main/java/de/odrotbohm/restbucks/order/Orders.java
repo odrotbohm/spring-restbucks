@@ -20,6 +20,7 @@ import de.odrotbohm.restbucks.order.Order.Status;
 
 import java.util.List;
 
+import org.jmolecules.architecture.hexagonal.SecondaryPort;
 import org.jmolecules.ddd.integration.AssociationResolver;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -32,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Oliver Gierke
  */
+@SecondaryPort
 @RepositoryRestResource(excerptProjection = OrderProjection.class)
 public interface Orders extends CrudRepository<Order, OrderIdentifier>,
 		AssociationResolver<Order, OrderIdentifier>,

@@ -17,12 +17,13 @@ package de.odrotbohm.restbucks.payment.web;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import de.odrotbohm.restbucks.DTO;
 import de.odrotbohm.restbucks.order.Order;
 import de.odrotbohm.restbucks.order.Orders;
 import de.odrotbohm.restbucks.payment.CreditCardNumber;
 import de.odrotbohm.restbucks.payment.Payment;
-import de.odrotbohm.restbucks.payment.PaymentService;
 import de.odrotbohm.restbucks.payment.Payment.Receipt;
+import de.odrotbohm.restbucks.payment.PaymentService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -31,6 +32,7 @@ import lombok.Value;
 
 import javax.money.MonetaryAmount;
 
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.ExposesResourceFor;
@@ -53,6 +55,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @author Oliver Gierke
  */
 @Controller
+@PrimaryAdapter
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
 @RequiredArgsConstructor
@@ -156,7 +159,7 @@ class PaymentController {
 
 	@Value
 	@RequiredArgsConstructor(onConstructor = @__(@JsonCreator))
-	static class PaymentForm {
+	public static class PaymentForm implements DTO {
 		CreditCardNumber number;
 	}
 }

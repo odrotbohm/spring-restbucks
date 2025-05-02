@@ -19,7 +19,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<bytebuddy.version>1.17.6</bytebuddy.version>
 		<datasource-micrometer.version>1.1.0</datasource-micrometer.version>
 		<java.version>21</java.version>
-		<jmolecules.version>2025.0.0-SNAPSHOT</jmolecules.version>
+		<jmolecules.version>2025.0.0-STEREOTYPE-SNAPSHOT</jmolecules.version>
 		<spring-hateoas.version>3.0.0-SNAPSHOT</spring-hateoas.version>
 		<spring-modulith.version>2.0.0-SNAPSHOT</spring-modulith.version>
 		
@@ -63,6 +63,21 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<dependency>
 			<groupId>org.jmolecules.integrations</groupId>
 			<artifactId>jmolecules-starter-ddd</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jmolecules</groupId>
+			<artifactId>jmolecules-ddd</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jmolecules</groupId>
+			<artifactId>jmolecules-hexagonal-architecture</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-stereotype</artifactId>
 		</dependency>
 
 		<dependency>

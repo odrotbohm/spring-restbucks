@@ -80,6 +80,8 @@ public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 	 *
 	 * @author Oliver Gierke
 	 */
+	// TODO: Cannot be a ValueObject as Spring Data REST filters association objects and we'd end up with only one
+	// property to serialize, which would cause unwrapping into the EntityModel.
 	@Value
 	public static class Receipt {
 
