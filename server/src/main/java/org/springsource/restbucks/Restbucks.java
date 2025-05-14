@@ -19,7 +19,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.mediatype.hal.CurieProvider;
 import org.springframework.hateoas.mediatype.hal.DefaultCurieProvider;
@@ -38,7 +37,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ConfigurationPropertiesScan
 @Modulithic(sharedModules = "core")
 @SpringBootApplication
-@ImportRuntimeHints(NativeConfiguration.class)
 public class Restbucks {
 
 	public static String CURIE_NAMESPACE = "restbucks";

@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springsource.restbucks;
+package org.springsource.restbucks.drinks;
 
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.lang.Nullable;
-import org.springsource.restbucks.drinks.Drink;
 
 /**
  * Additional configuration needed to produce Graal metadata to let some application properly work on it.
  *
  * @author Oliver Drotbohm
  */
-class NativeConfiguration implements RuntimeHintsRegistrar {
+@Configuration
+@ImportRuntimeHints(DrinksNativeConfiguration.class)
+class DrinksNativeConfiguration implements RuntimeHintsRegistrar {
 
 	@Override
 	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
