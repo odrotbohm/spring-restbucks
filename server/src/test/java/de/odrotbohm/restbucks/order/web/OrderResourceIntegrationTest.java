@@ -37,7 +37,7 @@ class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 		var result = mvc.perform(get("/")); //
 
 		assertThat(result).hasStatus(HttpStatus.OK);
-		assertThat(result).contentType().isCompatibleWith(MediaTypes.HAL_JSON);
+		assertThat(result).contentType().isCompatibleWith(MediaTypes.VND_HAL_JSON);
 		assertThat(result).bodyJson().hasPath("$._links.restbucks:orders.href").isNotNull();
 	}
 }
