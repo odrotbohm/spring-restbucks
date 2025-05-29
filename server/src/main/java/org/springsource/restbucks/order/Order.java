@@ -126,7 +126,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 
 		this.status = Status.PAID;
 
-		registerEvent(new OrderPaid(id));
+		registerEvent(new OrderPaid(id, getPrice()));
 
 		return this;
 	}
@@ -236,5 +236,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	 * @author Oliver Gierke
 	 * @author Stéphane Nicoll
 	 */
-	public record OrderPaid(OrderIdentifier orderIdentifier) implements DomainEvent {}
+	public record OrderPaid(
+			OrderIdentifier orderIdentifier,
+			MonetaryAmount total) implements DomainEvent {}
 }
