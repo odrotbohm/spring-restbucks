@@ -53,12 +53,15 @@ class PaymentOrderModelProcessor implements RepresentationModelProcessor<EntityM
 			return model;
 		}
 
+		var controller = methodOn(PaymentController.class);
+
 		Function<Link, Link> mapper = link -> link
-				.andAffordance(afford(methodOn(PaymentController.class).submitPayment(order, null)));
+				.andAffordance(afford(controller.submitPayment(order, null)));
 
 		return model
 				.mapLinkIf(!order.isPaid(), IanaLinkRelations.SELF, mapper)
 				.addIf(!order.isPaid(), () -> paymentLinks.getPaymentLink(order))
-				.addIf(order.isReady(), () -> paymentLinks.getReceiptLink(order));
+				.addIf(order.isReady(), () -> paymentLinks.getReceiptLink(order)
+						.andAffordance(afford(controller.takeReceipt(order))));
 	}
 }

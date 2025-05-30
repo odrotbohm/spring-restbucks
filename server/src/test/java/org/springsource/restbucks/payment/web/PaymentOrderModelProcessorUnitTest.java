@@ -21,6 +21,8 @@ import static org.springsource.restbucks.order.Order.Status.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -96,6 +98,8 @@ class PaymentOrderModelProcessorUnitTest {
 		Order order = OrderTestUtils.createPreparedOrder();
 
 		EntityModel<Order> resource = processor.process(EntityModel.of(order));
-		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL)).hasValue(receiptLink);
+		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL))
+				.map(it -> it.withAffordances(Collections.emptyList()))
+				.hasValue(receiptLink);
 	}
 }
