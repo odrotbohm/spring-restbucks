@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mock.Strictness;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.hateoas.EntityModel;
@@ -48,7 +49,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @ExtendWith(MockitoExtension.class)
 class PaymentOrderModelProcessorUnitTest {
 
-	@Mock(lenient = true) //
+	@Mock(strictness =  Strictness.LENIENT) //
 	PaymentLinks paymentLinks;
 
 	PaymentOrderModelProcessor processor;
@@ -57,14 +58,15 @@ class PaymentOrderModelProcessorUnitTest {
 	@BeforeEach
 	void setUp() {
 
-		HttpServletRequest request = new MockHttpServletRequest();
-		ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
+		var request = new MockHttpServletRequest();
+		var requestAttributes = new ServletRequestAttributes(request);
 		RequestContextHolder.setRequestAttributes(requestAttributes);
 
 		paymentLink = Link.of("payment", PaymentLinks.PAYMENT_REL);
 		receiptLink = Link.of("receipt", PaymentLinks.RECEIPT_REL);
 
 		processor = new PaymentOrderModelProcessor(paymentLinks);
+
 		when(paymentLinks.getPaymentLink(Mockito.any(Order.class))).thenReturn(paymentLink);
 		when(paymentLinks.getReceiptLink(Mockito.any(Order.class))).thenReturn(receiptLink);
 	}
@@ -78,8 +80,8 @@ class PaymentOrderModelProcessorUnitTest {
 				continue;
 			}
 
-			Order order = OrderTestUtils.createExistingOrderWithStatus(status);
-			EntityModel<Order> resource = processor.process(EntityModel.of(order));
+			var order = OrderTestUtils.createExistingOrderWithStatus(status);
+			var resource = processor.process(EntityModel.of(order));
 
 			assertThat(resource.hasLinks()).isFalse();
 		}
@@ -88,18 +90,18 @@ class PaymentOrderModelProcessorUnitTest {
 	@Test
 	void addsPaymentLinkForFreshOrder() {
 
-		Order order = OrderTestUtils.createExistingOrder();
+		var order = OrderTestUtils.createExistingOrder();
+		var resource = processor.process(EntityModel.of(order));
 
-		EntityModel<Order> resource = processor.process(EntityModel.of(order));
 		assertThat(resource.getLink(PaymentLinks.PAYMENT_REL)).hasValue(paymentLink);
 	}
 
 	@Test
 	void addsReceiptLinkForPaidOrder() {
 
-		Order order = OrderTestUtils.createPreparedOrder();
+		var order = OrderTestUtils.createPreparedOrder();
+		var resource = processor.process(EntityModel.of(order));
 
-		EntityModel<Order> resource = processor.process(EntityModel.of(order));
 		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL)).hasValueSatisfying(it -> {
 			assertThat(it.isSameAs(receiptLink));
 		});
