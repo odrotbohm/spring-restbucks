@@ -100,8 +100,8 @@ class PaymentOrderModelProcessorUnitTest {
 		Order order = OrderTestUtils.createPreparedOrder();
 
 		EntityModel<Order> resource = processor.process(EntityModel.of(order));
-		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL))
-				.map(it -> it.withAffordances(Collections.emptyList()))
-				.hasValue(receiptLink);
+		assertThat(resource.getLink(PaymentLinks.RECEIPT_REL)).hasValueSatisfying(it -> {
+			assertThat(it.isSameAs(receiptLink));
+		});
 	}
 }
