@@ -154,7 +154,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		var parse = JsonPath.parse(content);
 
 		// Find drink to add place the order
-		var drinksTemplate = parse.read("$._templates.default.properties[0].options.link.href", String.class);
+		var drinksTemplate = parse.read("$._templates.placeOrder.properties[0].options.link.href", String.class);
 
 		var drinksOptionsUri = Link.of(drinksTemplate).expand().getHref();
 		var drinksOptionsResponse = mvc.perform(get(drinksOptionsUri))
@@ -167,7 +167,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 		var drinkUri = drinkUris[RANDOM.nextInt(drinkUris.length)];
 
 		// Select location
-		var locations = parse.read("$._templates.default.properties[1].options.inline", String[].class);
+		var locations = parse.read("$._templates.placeOrder.properties[1].options.inline", String[].class);
 		var location = locations[RANDOM.nextInt(locations.length)];
 
 		var payload = Map.of("drinks", List.of(drinkUri), "location", location);
