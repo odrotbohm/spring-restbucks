@@ -17,7 +17,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<properties>
 		<bytebuddy.version>1.17.6</bytebuddy.version>
-		<datasourceMicrometerSpringBootVersion>1.1.0</datasourceMicrometerSpringBootVersion>
+		<datasource-micrometer.version>1.1.0</datasource-micrometer.version>
 		<java.version>21</java.version>
 		<jmolecules.version>2025.0.0-RC4</jmolecules.version>
 		<spring-modulith.version>1.4.0</spring-modulith.version>
@@ -261,7 +261,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<dependency>
 					<groupId>net.ttddyy.observation</groupId>
 					<artifactId>datasource-micrometer-spring-boot</artifactId>
-					<version>${datasourceMicrometerSpringBootVersion}</version>
+					<version>${datasource-micrometer.version}</version>
 				</dependency>
 
 				<dependency>
