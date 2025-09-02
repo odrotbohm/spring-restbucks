@@ -16,8 +16,8 @@
 package de.odrotbohm.restbucks.engine;
 
 import de.odrotbohm.restbucks.order.Order;
-import de.odrotbohm.restbucks.order.Orders;
 import de.odrotbohm.restbucks.order.Order.OrderPaid;
+import de.odrotbohm.restbucks.order.Orders;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +26,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jmolecules.ddd.annotation.Service;
 import org.springframework.modulith.events.ApplicationModuleListener;
-import org.springframework.stereotype.Service;
 
 /**
  * Simple {@link OrderPaid} listener marking the according {@link Order} as in process, sleeping for 5 seconds and
