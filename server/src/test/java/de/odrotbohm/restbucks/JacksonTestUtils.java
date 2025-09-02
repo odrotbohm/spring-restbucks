@@ -15,12 +15,9 @@
  */
 package de.odrotbohm.restbucks;
 
-import de.odrotbohm.restbucks.JacksonCustomizations;
+import tools.jackson.databind.JacksonModule;
 
-import java.util.Map;
 import java.util.Set;
-
-import com.fasterxml.jackson.databind.Module;
 
 /**
  * Helper to expose custom Jackson modules for unit tests.
@@ -29,7 +26,7 @@ import com.fasterxml.jackson.databind.Module;
  */
 public class JacksonTestUtils extends JacksonCustomizations {
 
-	public static Set<Module> getModules(Map<Class<?>, Class<?>> mixins) {
+	public static Set<JacksonModule> getModules() {
 		return Set.of(new MoneyModule());
 	}
 }

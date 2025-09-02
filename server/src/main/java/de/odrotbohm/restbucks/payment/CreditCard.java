@@ -26,13 +26,15 @@ import java.time.Year;
 
 import org.jmolecules.ddd.types.AggregateRoot;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Abstraction of a credit card.
  *
  * @author Oliver Gierke
  */
 @ToString(callSuper = true)
-@AllArgsConstructor
+@AllArgsConstructor(onConstructor = @__(@JsonCreator))
 public class CreditCard implements AggregateRoot<CreditCard, CreditCardNumber> {
 
 	private final @Getter @Column(unique = true) CreditCardNumber number;

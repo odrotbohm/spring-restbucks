@@ -19,9 +19,9 @@ import static org.assertj.core.api.Assertions.*;
 
 import de.odrotbohm.restbucks.JacksonTestUtils;
 import de.odrotbohm.restbucks.core.Currencies;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Locale;
-import java.util.Map;
 
 import javax.money.MonetaryAmount;
 
@@ -30,8 +30,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * Unit tests for serialization and deserialization of {@link MonetaryAmount} values.
  *
@@ -39,13 +37,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 class MoneySerializationTest {
 
-	ObjectMapper mapper;
+	JsonMapper mapper;
 
 	@BeforeEach
 	void setUp() {
 
-		this.mapper = new ObjectMapper();
-		this.mapper.registerModules(JacksonTestUtils.getModules(Map.of()));
+		this.mapper = JsonMapper.builder()
+				.addModules(JacksonTestUtils.getModules())
+				.build();
 
 		LocaleContextHolder.setLocale(Locale.ROOT);
 	}

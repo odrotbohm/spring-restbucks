@@ -23,6 +23,7 @@ import de.odrotbohm.restbucks.Restbucks;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
 /**
@@ -176,7 +176,7 @@ class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {
 
 		var response = mvc.perform(post(ordersLink.expand().getHref()) //
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().writeValueAsString(payload)));
+				.content(new JsonMapper().writeValueAsString(payload)));
 
 		assertThat(response)
 				.hasStatus(HttpStatus.CREATED)

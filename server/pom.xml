@@ -12,16 +12,16 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.0-M1</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
 		<bytebuddy.version>1.17.6</bytebuddy.version>
 		<datasource-micrometer.version>1.1.0</datasource-micrometer.version>
 		<java.version>21</java.version>
-		<jmolecules.version>2025.0.0-RC4</jmolecules.version>
+		<jmolecules.version>2025.0.0-SNAPSHOT</jmolecules.version>
 		<spring-hateoas.version>3.0.0-SNAPSHOT</spring-hateoas.version>
-		<spring-modulith.version>2.0.0-M1</spring-modulith.version>
+		<spring-modulith.version>2.0.0-SNAPSHOT</spring-modulith.version>
 		
 		<!-- Enable full annotation processing on Java 23+ -->
 		<maven.compiler.proc>full</maven.compiler.proc>
@@ -68,7 +68,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 		<dependency>
 			<groupId>org.jmolecules.integrations</groupId>
-			<artifactId>jmolecules-jackson</artifactId>
+			<artifactId>jmolecules-jackson3</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -143,18 +143,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<version>0.2.0</version>
 		</dependency>
 
-		<!-- JDK 8 DateTime support for Jackson -->
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-parameter-names</artifactId>
-		</dependency>
-
 		<!-- Database -->
 
 		<dependency>
@@ -227,6 +215,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-actuator</artifactId>
+					<exclusions>
+						<exclusion>
+							<groupId>com.fasterxml.jackson.core</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 
 			</dependencies>

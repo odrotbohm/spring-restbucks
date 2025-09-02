@@ -22,19 +22,16 @@ import de.odrotbohm.restbucks.payment.CreditCardNumber;
 import de.odrotbohm.restbucks.payment.Payment.Receipt;
 import de.odrotbohm.restbucks.payment.web.PaymentConfiguration.CreditCardMixin;
 import de.odrotbohm.restbucks.payment.web.PaymentConfiguration.ReceiptMixin;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 
-import org.jmolecules.jackson.JMoleculesModule;
+import org.jmolecules.jackson3.JMoleculesModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
@@ -48,17 +45,16 @@ class CreditCardMarshallingTest {
 
 	static final String REFERENCE = "{\"number\":\"1234123412341234\",\"cardHolderName\":\"Oliver Gierke\",\"expirationDate\":[2013,11,1]}";
 
-	ObjectMapper mapper = new ObjectMapper();
+	JsonMapper mapper;
 
 	@BeforeEach
 	void setUp() {
 
-		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		mapper.registerModule(new JavaTimeModule());
-		mapper.registerModule(new ParameterNamesModule());
-		mapper.registerModule(new JMoleculesModule());
-		mapper.addMixIn(Receipt.class, ReceiptMixin.class);
-		mapper.addMixIn(CreditCard.class, CreditCardMixin.class);
+		this.mapper = JsonMapper.builder()
+				.addModule(new JMoleculesModule())
+				.addMixIn(Receipt.class, ReceiptMixin.class)
+				.addMixIn(CreditCard.class, CreditCardMixin.class)
+				.build();
 	}
 
 	@Test

@@ -15,7 +15,14 @@
  */
 package de.odrotbohm.restbucks;
 
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.deser.ValueInstantiator.Base;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.std.StdSerializer;
+
 import java.util.regex.Pattern;
 
 import javax.money.MonetaryAmount;
@@ -28,15 +35,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
 import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
 import org.springframework.data.util.TypeInformation;
-import org.springframework.lang.Nullable;
-
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.deser.ValueInstantiator;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
  * Configures custom serialization and deserialization of {@link Money} instances
@@ -47,7 +45,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 class JacksonCustomizations {
 
 	@Bean
-	Module moneyModule() {
+	MoneyModule moneyModule() {
 		return new MoneyModule();
 	}
 
@@ -89,17 +87,17 @@ class JacksonCustomizations {
 			}
 
 			/*
-			 * (non-Javadoc)
-			 * @see com.fasterxml.jackson.databind.ser.std.StdSerializer#serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)
-			 */
+			   * (non-Javadoc)
+			   * @see tools.jackson.databind.ValueSerializer#serialize(java.lang.Object, tools.jackson.core.JsonGenerator, tools.jackson.databind.SerializationContext)
+			   */
 			@Override
-			public void serialize(@Nullable MonetaryAmount value, JsonGenerator jgen, SerializerProvider provider)
-					throws IOException {
+			public void serialize(MonetaryAmount value, JsonGenerator gen, SerializationContext ctxt)
+					throws JacksonException {
 
 				if (value != null) {
-					jgen.writeString(MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale()).format(value));
+					gen.writeString(MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale()).format(value));
 				} else {
-					jgen.writeNull();
+					gen.writeNull();
 				}
 			}
 
@@ -113,15 +111,10 @@ class JacksonCustomizations {
 			}
 		}
 
-		static class MoneyInstantiator extends ValueInstantiator {
+		static class MoneyInstantiator extends Base {
 
-			/*
-			 * (non-Javadoc)
-			 * @see com.fasterxml.jackson.databind.deser.ValueInstantiator#getValueTypeDesc()
-			 */
-			@Override
-			public String getValueTypeDesc() {
-				return MonetaryAmount.class.toString();
+			public MoneyInstantiator() {
+				super(MonetaryAmount.class);
 			}
 
 			/*
@@ -135,10 +128,10 @@ class JacksonCustomizations {
 
 			/*
 			 * (non-Javadoc)
-			 * @see com.fasterxml.jackson.databind.deser.ValueInstantiator#createFromString(com.fasterxml.jackson.databind.DeserializationContext, java.lang.String)
+			 * @see tools.jackson.databind.deser.ValueInstantiator#createFromString(tools.jackson.databind.DeserializationContext, java.lang.String)
 			 */
 			@Override
-			public Object createFromString(DeserializationContext context, String value) throws IOException {
+			public Object createFromString(DeserializationContext ctxt, String value) throws JacksonException {
 				return Money.parse(value, MonetaryFormats.getAmountFormat(LocaleContextHolder.getLocale()));
 			}
 		}
