@@ -20,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.Month;
 import java.time.Year;
 
-import org.springframework.stereotype.Service;
+import org.jmolecules.ddd.annotation.Service;
+
 
 /**
  * Initializing component to create a default {@link CreditCard} in the system.
