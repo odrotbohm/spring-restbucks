@@ -17,15 +17,14 @@ package de.odrotbohm.restbucks.order.web;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-import de.odrotbohm.restbucks.order.Order;
-
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link RepresentationModelProcessor} to add an {@link Order} creation link to the root resource.
+ * {@link RepresentationModelProcessor} to add an {@link de.odrotbohm.restbucks.order.Order} creation link to the root
+ * resource.
  *
  * @author Oliver Drotbohm
  */

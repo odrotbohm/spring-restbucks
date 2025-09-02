@@ -15,13 +15,13 @@
  */
 package de.odrotbohm.restbucks.drinks;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportRuntimeHints;
-import org.springframework.lang.Nullable;
 
 /**
  * Additional configuration needed to produce Graal metadata to let some application properly work on it.

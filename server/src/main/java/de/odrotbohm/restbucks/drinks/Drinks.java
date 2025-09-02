@@ -17,10 +17,10 @@ package de.odrotbohm.restbucks.drinks;
 
 import de.odrotbohm.restbucks.drinks.Drink.DrinkIdentifier;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.util.Streamable;
-import org.springframework.lang.Nullable;
 
 /**
  * @author Oliver Drotbohm
