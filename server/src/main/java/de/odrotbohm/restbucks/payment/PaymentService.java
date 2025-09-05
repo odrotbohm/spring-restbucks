@@ -29,7 +29,6 @@ import org.jmolecules.ddd.annotation.Service;
  * @author Oliver Gierke
  */
 @Service
-@PrimaryPort
 public interface PaymentService {
 
 	/**

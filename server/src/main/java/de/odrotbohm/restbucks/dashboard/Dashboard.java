@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Oliver Drotbohm
  */
-@PrimaryAdapter
 @RestController
 @RequiredArgsConstructor
 class Dashboard implements RepresentationModelProcessor<RepositoryLinksResource> {

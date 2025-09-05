@@ -29,7 +29,6 @@ import org.springframework.stereotype.Component;
  * @author Oliver Drotbohm
  */
 @Component
-@PrimaryAdapter
 class DrinksModelProcessor implements RepresentationModelProcessor<CollectionModel<EntityModel<Drink>>> {
 
 	/*

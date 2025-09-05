@@ -55,7 +55,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @author Oliver Gierke
  */
 @Controller
-@PrimaryAdapter
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
 @RequiredArgsConstructor

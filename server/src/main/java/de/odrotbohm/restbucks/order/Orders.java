@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Oliver Gierke
  */
-@SecondaryPort
 @RepositoryRestResource(excerptProjection = OrderProjection.class)
 public interface Orders extends CrudRepository<Order, OrderIdentifier>,
 		AssociationResolver<Order, OrderIdentifier>,

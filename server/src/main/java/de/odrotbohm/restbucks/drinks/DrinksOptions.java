@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author Oliver Drotbohm
  */
-@PrimaryAdapter
 @BasePathAwareController
 public class DrinksOptions {
 

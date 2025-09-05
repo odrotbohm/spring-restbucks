@@ -26,7 +26,6 @@ import org.springframework.data.util.Streamable;
 /**
  * @author Oliver Drotbohm
  */
-@SecondaryPort
 public interface Drinks extends CrudRepository<Drink, DrinkIdentifier> {
 
 	@Nullable

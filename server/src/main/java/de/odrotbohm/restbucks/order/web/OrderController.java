@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * @author Oliver Drotbohm
  */
-@PrimaryAdapter
 @BasePathAwareController
 @RequiredArgsConstructor
 class OrderController {

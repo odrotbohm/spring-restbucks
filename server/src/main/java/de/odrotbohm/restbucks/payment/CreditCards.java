@@ -25,7 +25,6 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author Oliver Gierke
  */
-@SecondaryPort
 interface CreditCards extends CrudRepository<CreditCard, CreditCardNumber> {
 
 	/**

@@ -31,7 +31,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  *
  * @author Oliver Gierke
  */
-@SecondaryPort
 interface Payments
 		extends CrudRepository<Payment<?>, PaymentIdentifier>, PagingAndSortingRepository<Payment<?>, PaymentIdentifier> {
 
