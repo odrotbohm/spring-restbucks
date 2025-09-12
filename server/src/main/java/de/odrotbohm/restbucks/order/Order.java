@@ -17,7 +17,9 @@ package de.odrotbohm.restbucks.order;
 
 import de.odrotbohm.restbucks.drinks.Drink;
 import de.odrotbohm.restbucks.order.Order.OrderIdentifier;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -56,6 +58,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 
 	@OrderColumn //
 	@Column(unique = true) //
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) //
 	private final List<LineItem> lineItems = new ArrayList<>();
 
 	/**

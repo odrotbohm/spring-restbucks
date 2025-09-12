@@ -25,6 +25,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -54,5 +55,10 @@ class OrderController {
 				.mapIfValid(orders::save)
 				.mapIfValid(assembler::toFullResource)
 				.concludeIfValid(it -> ResponseEntity.created(it.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(it));
+	}
+
+	@GetMapping("/orders/foo")
+	HttpEntity<?> foo() {
+		return ResponseEntity.ok(orders.findAll());
 	}
 }
