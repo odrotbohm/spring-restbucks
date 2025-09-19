@@ -20,6 +20,7 @@ import de.odrotbohm.restbucks.payment.Payment.Receipt;
 
 import java.util.Optional;
 
+import org.jmolecules.architecture.hexagonal.PrimaryPort;
 import org.jmolecules.ddd.annotation.Service;
 
 /**
@@ -28,6 +29,7 @@ import org.jmolecules.ddd.annotation.Service;
  * @author Oliver Drotbohm
  */
 @Service
+@PrimaryPort
 public interface PaymentService {
 
 	/**

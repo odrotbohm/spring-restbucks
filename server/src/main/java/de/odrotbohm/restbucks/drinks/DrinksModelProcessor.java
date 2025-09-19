@@ -19,6 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.util.Optional;
 
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
  * @author Oliver Drotbohm
  */
 @Component
+@PrimaryAdapter
 class DrinksModelProcessor implements RepresentationModelProcessor<CollectionModel<EntityModel<Drink>>> {
 
 	/*

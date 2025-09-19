@@ -21,6 +21,7 @@ import de.odrotbohm.restbucks.payment.Payment.PaymentIdentifier;
 
 import java.util.Optional;
 
+import org.jmolecules.architecture.hexagonal.SecondaryPort;
 import org.jmolecules.ddd.types.Association;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -30,6 +31,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  *
  * @author Oliver Drotbohm
  */
+@SecondaryPort
 interface Payments
 		extends CrudRepository<Payment<?>, PaymentIdentifier>, PagingAndSortingRepository<Payment<?>, PaymentIdentifier> {
 

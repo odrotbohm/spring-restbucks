@@ -17,6 +17,7 @@ package de.odrotbohm.restbucks.order.web;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
  * @author Oliver Drotbohm
  */
 @Component
+@PrimaryAdapter
 class RootResourceModelProcessor implements RepresentationModelProcessor<RepositoryLinksResource> {
 
 	/*

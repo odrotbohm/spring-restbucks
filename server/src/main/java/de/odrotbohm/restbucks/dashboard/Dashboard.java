@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.money.MonetaryAmount;
 
 import org.javamoney.moneta.Money;
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.modulith.events.ApplicationModuleListener;
@@ -42,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Oliver Drotbohm
  */
+@PrimaryAdapter
 @RestController
 @RequiredArgsConstructor
 class Dashboard implements RepresentationModelProcessor<RepositoryLinksResource> {

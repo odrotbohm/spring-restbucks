@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.money.MonetaryAmount;
 
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.ExposesResourceFor;
@@ -54,6 +55,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Oliver Drotbohm
  */
 @Controller
+@PrimaryAdapter
 @RequestMapping("/orders/{id}")
 @ExposesResourceFor(Payment.class)
 @RequiredArgsConstructor

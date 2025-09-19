@@ -17,6 +17,7 @@ package de.odrotbohm.restbucks.drinks;
 
 import de.odrotbohm.restbucks.drinks.Drink.DrinkIdentifier;
 
+import org.jmolecules.architecture.hexagonal.SecondaryPort;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
@@ -25,6 +26,7 @@ import org.springframework.data.util.Streamable;
 /**
  * @author Oliver Drotbohm
  */
+@SecondaryPort
 public interface Drinks extends CrudRepository<Drink, DrinkIdentifier> {
 
 	@Nullable
