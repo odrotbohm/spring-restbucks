@@ -19,6 +19,7 @@ import de.odrotbohm.restbucks.order.Orders;
 import de.odrotbohm.spring.web.model.MappedPayloads;
 import lombok.RequiredArgsConstructor;
 
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 /**
  * @author Oliver Drotbohm
  */
+@PrimaryAdapter
 @BasePathAwareController
 @RequiredArgsConstructor
 class OrderController {
