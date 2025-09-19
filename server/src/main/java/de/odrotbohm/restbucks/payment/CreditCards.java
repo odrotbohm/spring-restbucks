@@ -17,6 +17,7 @@ package de.odrotbohm.restbucks.payment;
 
 import java.util.Optional;
 
+import org.jmolecules.architecture.hexagonal.SecondaryPort;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author Oliver Drotbohm
  */
+@SecondaryPort
 interface CreditCards extends CrudRepository<CreditCard, CreditCardNumber> {
 
 	/**

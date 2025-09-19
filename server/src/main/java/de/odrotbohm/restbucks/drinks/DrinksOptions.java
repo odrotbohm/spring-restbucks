@@ -21,6 +21,7 @@ import de.odrotbohm.restbucks.Restbucks;
 
 import java.util.Optional;
 
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.hal.HalLinkRelation;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * @author Oliver Drotbohm
  */
+@PrimaryAdapter
 @BasePathAwareController
 public class DrinksOptions {
 
