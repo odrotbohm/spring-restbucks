@@ -19,6 +19,7 @@ import de.odrotbohm.restbucks.order.Order;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import org.jmolecules.architecture.hexagonal.PrimaryAdapter;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Component;
  * @author Oliver Drotbohm
  */
 @Component
+@PrimaryAdapter
 @RequiredArgsConstructor
 class CoreOrderResourceProcessor implements RepresentationModelProcessor<EntityModel<Order>> {
 
