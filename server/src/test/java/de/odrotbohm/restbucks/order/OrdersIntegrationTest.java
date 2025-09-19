@@ -19,9 +19,6 @@ import static de.odrotbohm.restbucks.order.Order.Status.*;
 import static de.odrotbohm.restbucks.order.OrderTestUtils.*;
 import static org.assertj.core.api.Assertions.*;
 
-import de.odrotbohm.restbucks.order.Order;
-import de.odrotbohm.restbucks.order.Orders;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.modulith.test.ApplicationModuleTest;
