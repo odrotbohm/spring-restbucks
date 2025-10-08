@@ -45,6 +45,12 @@ class Engine {
 	private final @NonNull EngineSettings settings;
 	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
 
+	/**
+	 * Starts preparing the drinks contained in the order that was just paid. Simulates busy work by sleeping for the
+	 * duration configured in {@link EngineSettings}.
+	 *
+	 * @param event must not be {@literal null}.
+	 */
 	@ApplicationModuleListener
 	public void handleOrderPaidEvent(OrderPaid event) {
 

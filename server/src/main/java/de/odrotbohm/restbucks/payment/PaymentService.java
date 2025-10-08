@@ -33,16 +33,16 @@ public interface PaymentService {
 	/**
 	 * Pay the given {@link Order} with the {@link CreditCard} identified by the given {@link CreditCardNumber}.
 	 *
-	 * @param order
-	 * @param creditCardNumber
-	 * @return
+	 * @param order must not be {@literal null}.
+	 * @param creditCardNumber must not be {@literal null}.
+	 * @return will never be {@literal null}.
 	 */
 	CreditCardPayment pay(Order order, CreditCardNumber creditCardNumber);
 
 	/**
 	 * Returns the {@link Payment} for the given {@link Order}.
 	 *
-	 * @param order
+	 * @param order must not be {@literal null}.
 	 * @return the {@link Payment} for the given {@link Order} or {@link Optional#empty()} if the Order hasn't been payed
 	 *         yet.
 	 */
@@ -51,8 +51,8 @@ public interface PaymentService {
 	/**
 	 * Takes the receipt
 	 *
-	 * @param order
-	 * @return
+	 * @param order must not be {@literal null}.
+	 * @return will never be {@literal null}.
 	 */
 	Optional<Receipt> takeReceiptFor(Order order);
 }
