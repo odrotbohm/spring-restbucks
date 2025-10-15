@@ -15,11 +15,11 @@ jobs:
     - name: Check out sources
       uses: actions/checkout@v4
 
-    - name: Set up JDK 21
+    - name: Set up JDK 25
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: 21
+        java-version: 25
         cache: 'maven'
 
     - name: Build with Maven
