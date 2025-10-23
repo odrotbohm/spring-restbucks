@@ -17,7 +17,7 @@ package de.odrotbohm.restbucks.drinks;
 
 import javax.money.MonetaryAmount;
 
-import org.springframework.boot.jackson.JsonMixin;
+import org.springframework.boot.jackson.JacksonMixin;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 @Configuration(proxyBeanMethods = false)
 class DrinksConfiguration {
 
-	@JsonMixin(Drink.class)
+	@JacksonMixin(Drink.class)
 	static abstract class DrinkMixin {
 
 		@JsonCreator

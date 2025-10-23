@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 import javax.money.MonetaryAmount;
 
-import org.springframework.boot.jackson.JsonMixin;
+import org.springframework.boot.jackson.JacksonMixin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.Link;
@@ -64,7 +64,7 @@ class OrderConfiguration {
 						__ -> HalFormsOptions.remote(drinkOptionsLink.get()).withMinItems(1L));
 	}
 
-	@JsonMixin(Order.class)
+	@JacksonMixin(Order.class)
 	@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 	static abstract class OrderMixin {
 
@@ -72,7 +72,7 @@ class OrderConfiguration {
 		public OrderMixin(Collection<LineItem> lineItems, Location location) {}
 	}
 
-	@JsonMixin(LineItem.class)
+	@JacksonMixin(LineItem.class)
 	static abstract class LineItemMixin {
 
 		@JsonCreator

@@ -19,7 +19,7 @@ import de.odrotbohm.restbucks.payment.CreditCard;
 import de.odrotbohm.restbucks.payment.CreditCardNumber;
 import de.odrotbohm.restbucks.payment.Payment.Receipt;
 
-import org.springframework.boot.jackson.JsonMixin;
+import org.springframework.boot.jackson.JacksonMixin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.mediatype.MediaTypeConfigurationCustomizer;
@@ -39,14 +39,14 @@ class PaymentConfiguration {
 		return config -> config.withPattern(CreditCardNumber.class, CreditCardNumber.REGEX);
 	}
 
-	@JsonMixin(Receipt.class)
+	@JacksonMixin(Receipt.class)
 	static abstract class ReceiptMixin {
 
 		@JsonIgnore
 		abstract Object getOrder();
 	}
 
-	@JsonMixin(CreditCard.class)
+	@JacksonMixin(CreditCard.class)
 	@JsonAutoDetect(isGetterVisibility = JsonAutoDetect.Visibility.NONE)
 	static abstract class CreditCardMixin {}
 }

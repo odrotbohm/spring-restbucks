@@ -12,7 +12,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.0-M3</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -20,6 +20,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<datasource-micrometer.version>1.1.0</datasource-micrometer.version>
 		<java.version>25</java.version>
 		<jmolecules.version>2025.0.0-RC5</jmolecules.version>
+		<spring-framework.version>7.0.0-SNAPSHOT</spring-framework.version>
 		<spring-hateoas.version>3.0.0-SNAPSHOT</spring-hateoas.version>
 		<spring-modulith.version>2.0.0-M3</spring-modulith.version>
 		
@@ -182,7 +183,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 		<dependency>
 			<groupId>org.testcontainers</groupId>
-			<artifactId>postgresql</artifactId>
+			<artifactId>testcontainers-postgresql</artifactId>
 		</dependency>
 
 	</dependencies>
