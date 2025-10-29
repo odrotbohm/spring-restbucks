@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Base class to implement transactional integration tests using the root application configuration.
  * 
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Transactional
 @SpringBootTest

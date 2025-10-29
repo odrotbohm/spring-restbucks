@@ -28,7 +28,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 /**
  * Repository interface to manage {@link Payment} instances.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 interface Payments
 		extends CrudRepository<Payment<?>, PaymentIdentifier>, PagingAndSortingRepository<Payment<?>, PaymentIdentifier> {

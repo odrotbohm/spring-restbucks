@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 /**
  * {@link ResourceProcessor} to enrich {@link Order} {@link Resource}s with links to the {@link PaymentController}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Component
 @RequiredArgsConstructor

@@ -39,11 +39,11 @@ import com.jayway.jsonpath.Option;
 /**
  * Integration tests for marshaling of {@link CreditCard}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class CreditCardMarshallingTest {
 
-	static final String REFERENCE = "{\"number\":\"1234123412341234\",\"cardHolderName\":\"Oliver Gierke\",\"expirationDate\":[2013,11,1]}";
+	static final String REFERENCE = "{\"number\":\"1234123412341234\",\"cardHolderName\":\"Oliver Drotbohm\",\"expirationDate\":[2013,11,1]}";
 
 	JsonMapper mapper;
 
@@ -60,13 +60,13 @@ class CreditCardMarshallingTest {
 	@Test
 	void serializesCreditCardWithOutIdAndWithAppropriateMontshAndYears() throws Exception {
 
-		CreditCard creditCard = new CreditCard(CreditCardNumber.of("1234123412341234"), "Oliver Gierke", Month.NOVEMBER,
+		CreditCard creditCard = new CreditCard(CreditCardNumber.of("1234123412341234"), "Oliver Drotbohm", Month.NOVEMBER,
 				Year.of(2013));
 
 		String result = mapper.writeValueAsString(creditCard);
 
 		assertThat(JsonPath.<String> read(result, "$.number")).isEqualTo("1234123412341234");
-		assertThat(JsonPath.<String> read(result, "$.cardHolderName")).isEqualTo("Oliver Gierke");
+		assertThat(JsonPath.<String> read(result, "$.cardHolderName")).isEqualTo("Oliver Drotbohm");
 		assertThat(JsonPath.<String> read(result, "$.expirationDate")).isEqualTo("2013-11-01");
 
 		Configuration configuration = Configuration.defaultConfiguration().addOptions(Option.SUPPRESS_EXCEPTIONS);

@@ -31,7 +31,7 @@ import org.javamoney.moneta.Money;
  * all entity properties of type {@link MonetaryAmount}.
  *
  * @author Oliver Trosien
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Converter(autoApply = true)
 public class MonetaryAmountAttributeConverter implements AttributeConverter<MonetaryAmount, String> {

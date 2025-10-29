@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * Exception being thrown in case an {@link Order} has already been paid and a payment is reattempted.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 class OrderAlreadyPaid extends RuntimeException {

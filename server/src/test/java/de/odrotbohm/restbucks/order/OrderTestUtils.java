@@ -29,7 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 /**
  * Utility methods for testing.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 public class OrderTestUtils {
 

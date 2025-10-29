@@ -22,7 +22,7 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * Repository to access {@link CreditCard} instances.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 interface CreditCards extends CrudRepository<CreditCard, CreditCardNumber> {
 

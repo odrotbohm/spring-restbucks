@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
 /**
  * Helper component to create links to the {@link Payment} and {@link Receipt}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Component
 public class PaymentLinks {

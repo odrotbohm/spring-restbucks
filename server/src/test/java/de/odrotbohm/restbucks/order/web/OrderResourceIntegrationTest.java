@@ -27,7 +27,7 @@ import org.springframework.http.HttpStatus;
 /**
  * Integration test for REST resources exposed by Spring Data REST.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link MonetaryAmountAttributeConverter}
  *
  * @author Oliver Trosien
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class MonetaryAmountAttributeConverterTest {
 

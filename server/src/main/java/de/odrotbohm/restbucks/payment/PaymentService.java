@@ -25,7 +25,7 @@ import org.jmolecules.ddd.annotation.Service;
 /**
  * Interface to collect payment services.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Service
 public interface PaymentService {

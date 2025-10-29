@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Implementation of {@link PaymentService} delegating persistence operations to {@link Payments} and
  * {@link CreditCards}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  * @author Stéphane Nicoll
  */
 @Service

@@ -31,7 +31,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  *
  * @see #main(String[])
  * @see SpringApplication
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @EnableAsync
 @ConfigurationPropertiesScan

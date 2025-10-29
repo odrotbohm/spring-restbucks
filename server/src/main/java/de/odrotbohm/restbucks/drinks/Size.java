@@ -16,7 +16,7 @@
 package de.odrotbohm.restbucks.drinks;
 
 /**
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 public enum Size {
 

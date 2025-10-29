@@ -21,7 +21,7 @@ import javax.money.Monetary;
 /**
  * Interface to contain {@link CurrencyUnit} constants.
  * 
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 public interface Currencies {
 

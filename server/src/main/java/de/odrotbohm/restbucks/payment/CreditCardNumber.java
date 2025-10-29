@@ -25,7 +25,7 @@ import org.jmolecules.ddd.types.ValueObject;
 /**
  * Value object to represent a {@link CreditCardNumber}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Value(staticConstructor = "of")
 public class CreditCardNumber implements Identifier, ValueObject {

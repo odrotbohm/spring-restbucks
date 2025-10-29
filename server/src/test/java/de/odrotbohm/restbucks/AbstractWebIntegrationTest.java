@@ -37,7 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 /**
  * Base class to derive concrete web test classes from.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @SpringBootTest
 public abstract class AbstractWebIntegrationTest {

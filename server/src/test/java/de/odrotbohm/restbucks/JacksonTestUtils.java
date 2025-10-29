@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Helper to expose custom Jackson modules for unit tests.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 public class JacksonTestUtils extends JacksonCustomizations {
 

@@ -44,7 +44,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 /**
  * Unit test for {@link PaymentOrderModelProcessorUnitTest}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @ExtendWith(MockitoExtension.class)
 class PaymentOrderModelProcessorUnitTest {

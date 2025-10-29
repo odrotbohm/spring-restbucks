@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Repository to manage {@link Order} instances.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @RepositoryRestResource(excerptProjection = OrderProjection.class)
 public interface Orders extends CrudRepository<Order, OrderIdentifier>,

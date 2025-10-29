@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 /**
  * Event listener to reject {@code DELETE} requests to Spring Data REST.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Component
 class OrderControllerEventListener extends AbstractRepositoryEventListener<Order> {

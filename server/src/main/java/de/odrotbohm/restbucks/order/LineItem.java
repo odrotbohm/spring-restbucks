@@ -34,7 +34,7 @@ import org.jmolecules.ddd.types.Identifier;
 /**
  * A line item.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Getter
 @AllArgsConstructor

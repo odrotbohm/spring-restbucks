@@ -34,7 +34,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 /**
  * Initializer to set up two {@link Order}s.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Service
 @RequiredArgsConstructor

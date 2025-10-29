@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Integration tests for {@link CreditCards}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class CreditCardsIntegrationTest extends AbstractIntegrationTest {
 
@@ -54,6 +54,6 @@ class CreditCardsIntegrationTest extends AbstractIntegrationTest {
 	}
 
 	public static CreditCard createCreditCard() {
-		return new CreditCard(createCreditCardNumber(), "Oliver Gierke", Month.DECEMBER, Year.now().plusYears(1));
+		return new CreditCard(createCreditCardNumber(), "Oliver Drotbohm", Month.DECEMBER, Year.now().plusYears(1));
 	}
 }

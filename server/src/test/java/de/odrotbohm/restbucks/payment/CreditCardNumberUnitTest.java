@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link CreditCardNumber}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class CreditCardNumberUnitTest {
 

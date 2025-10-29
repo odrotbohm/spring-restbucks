@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Integration tests for {@link PaymentServiceImpl}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class PaymentServiceIntegrationTest extends AbstractIntegrationTest {
 

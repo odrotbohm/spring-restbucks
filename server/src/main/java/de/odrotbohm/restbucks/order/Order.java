@@ -41,7 +41,7 @@ import org.springframework.data.domain.AbstractAggregateRoot;
 /**
  * An order.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Getter
 @ToString(exclude = "lineItems")
@@ -198,7 +198,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	/**
 	 * Enumeration for all the statuses an {@link Order} can be in.
 	 *
-	 * @author Oliver Gierke
+	 * @author Oliver Drotbohm
 	 */
 	public static enum Status {
 
@@ -233,7 +233,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	/**
 	 * Event to be thrown when an {@link Order} has been paid.
 	 *
-	 * @author Oliver Gierke
+	 * @author Oliver Drotbohm
 	 * @author Stéphane Nicoll
 	 */
 	public record OrderPaid(

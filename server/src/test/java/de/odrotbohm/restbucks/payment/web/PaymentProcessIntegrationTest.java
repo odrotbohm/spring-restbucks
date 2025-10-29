@@ -50,7 +50,7 @@ import com.jayway.jsonpath.JsonPath;
  * Hypermedia design with Spring.
  *
  * @see http://bit.ly/UIcDvq
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Slf4j
 class PaymentProcessIntegrationTest extends AbstractWebIntegrationTest {

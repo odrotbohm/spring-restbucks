@@ -21,7 +21,7 @@ import lombok.Getter;
 import org.springframework.util.Assert;
 
 /**
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Getter
 public class PaymentFailed extends RuntimeException {

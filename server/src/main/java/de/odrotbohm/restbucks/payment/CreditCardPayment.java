@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 /**
  * A {@link Payment} done through a {@link CreditCard}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Getter
 public class CreditCardPayment extends Payment<CreditCardPayment> {

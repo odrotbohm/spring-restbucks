@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
  * {@link ResourceProcessor} implementation to add links to the {@link Order} representation that indicate that the
  * Order can be updated or cancelled as long as it has not been paid yet.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Component
 @RequiredArgsConstructor

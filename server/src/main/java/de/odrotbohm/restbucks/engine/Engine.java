@@ -33,7 +33,7 @@ import org.springframework.modulith.events.ApplicationModuleListener;
  * Simple {@link OrderPaid} listener marking the according {@link Order} as in process, sleeping for 5 seconds and
  * marking the order as processed right after that.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  * @author Stéphane Nicoll
  */
 @Slf4j

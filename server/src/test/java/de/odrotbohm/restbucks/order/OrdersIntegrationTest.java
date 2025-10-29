@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for Spring Data based {@link Orders}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Transactional
 @ApplicationModuleTest(mode = BootstrapMode.DIRECT_DEPENDENCIES)

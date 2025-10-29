@@ -51,7 +51,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 /**
  * Spring MVC controller to handle payments for an {@link Order}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Controller
 @RequestMapping("/orders/{id}")
@@ -145,7 +145,7 @@ class PaymentController {
 	/**
 	 * EntityModel implementation for payment results.
 	 *
-	 * @author Oliver Gierke
+	 * @author Oliver Drotbohm
 	 */
 	@Data
 	@EqualsAndHashCode(callSuper = true)

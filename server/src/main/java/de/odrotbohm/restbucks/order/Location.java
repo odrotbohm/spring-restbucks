@@ -16,7 +16,7 @@
 package de.odrotbohm.restbucks.order;
 
 /**
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 public enum Location {
 

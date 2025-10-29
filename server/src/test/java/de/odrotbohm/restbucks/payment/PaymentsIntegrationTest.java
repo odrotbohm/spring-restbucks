@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Integration tests for {@link Payments}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class PaymentsIntegrationTest extends AbstractIntegrationTest {
 

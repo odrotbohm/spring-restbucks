@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 /**
  * Abstraction of a credit card.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @ToString(callSuper = true)
 @AllArgsConstructor(onConstructor = @__(@JsonCreator))

@@ -33,7 +33,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 /**
  * Unit tests for serialization and deserialization of {@link MonetaryAmount} values.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class MoneySerializationTest {
 

@@ -26,7 +26,7 @@ import org.jmolecules.ddd.annotation.Service;
 /**
  * Initializing component to create a default {@link CreditCard} in the system.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Service
 @Slf4j
@@ -39,7 +39,7 @@ class PaymentInitializer {
 		}
 
 		CreditCardNumber number = CreditCardNumber.of("1234123412341234");
-		CreditCard creditCard = new CreditCard(number, "Oliver Gierke", Month.DECEMBER, Year.of(2099));
+		CreditCard creditCard = new CreditCard(number, "Oliver Drotbohm", Month.DECEMBER, Year.of(2099));
 
 		creditCard = creditCards.save(creditCard);
 

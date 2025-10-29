@@ -37,7 +37,7 @@ import org.springframework.util.Assert;
 /**
  * Baseclass for payment implementations.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Getter
 @ToString
@@ -78,7 +78,7 @@ public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 	/**
 	 * A receipt for an {@link Order} and a payment date.
 	 *
-	 * @author Oliver Gierke
+	 * @author Oliver Drotbohm
 	 */
 	// TODO: Cannot be a ValueObject as Spring Data REST filters association objects and we'd end up with only one
 	// property to serialize, which would cause unwrapping into the EntityModel.

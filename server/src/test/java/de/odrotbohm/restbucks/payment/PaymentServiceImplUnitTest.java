@@ -36,7 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * Unit tests for {@link PaymentServiceImpl}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceImplUnitTest {

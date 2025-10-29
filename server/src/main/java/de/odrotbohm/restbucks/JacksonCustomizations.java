@@ -39,7 +39,7 @@ import org.springframework.data.util.TypeInformation;
 /**
  * Configures custom serialization and deserialization of {@link Money} instances
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 @Configuration(proxyBeanMethods = false)
 class JacksonCustomizations {
@@ -62,7 +62,7 @@ class JacksonCustomizations {
 		 * A dedicated serializer to render {@link MonetaryAmount} instances as formatted {@link String}. Also implements
 		 * {@link JsonSchemaPropertyCustomizer} to expose the different rendering to the schema exposed by Spring Data REST.
 		 *
-		 * @author Oliver Gierke
+		 * @author Oliver Drotbohm
 		 */
 		static class MonetaryAmountSerializer extends StdSerializer<MonetaryAmount>
 				implements JsonSchemaPropertyCustomizer {

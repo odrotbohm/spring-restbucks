@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link CreditCard}.
  *
- * @author Oliver Gierke
+ * @author Oliver Drotbohm
  */
 class CreditCardUnitTest {
 
@@ -38,7 +38,7 @@ class CreditCardUnitTest {
 	@Test
 	void discoversExpiredCreditCard() {
 
-		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Gierke", Month.DECEMBER, Year.of(2016));
+		CreditCard creditCard = new CreditCard(NUMBER, "Oliver Drotbohm", Month.DECEMBER, Year.of(2016));
 
 		assertThat(creditCard.isValid(LocalDate.of(2016, 1, 1))).isTrue();
 		assertThat(creditCard.isValid(LocalDate.of(2016, 12, 1))).isFalse();
