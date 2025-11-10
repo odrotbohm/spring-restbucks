@@ -32,9 +32,9 @@ import org.javamoney.moneta.Money;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.core.TypeInformation;
 import org.springframework.data.rest.webmvc.json.JsonSchema.JsonSchemaProperty;
 import org.springframework.data.rest.webmvc.json.JsonSchemaPropertyCustomizer;
-import org.springframework.data.util.TypeInformation;
 
 /**
  * Configures custom serialization and deserialization of {@link Money} instances
