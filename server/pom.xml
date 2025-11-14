@@ -16,7 +16,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</parent>
 
 	<properties>
-		<bytebuddy.version>1.17.7</bytebuddy.version>
+		<bytebuddy.version>1.18.1</bytebuddy.version>
 		<datasource-micrometer.version>1.1.0</datasource-micrometer.version>
 		<java.version>25</java.version>
 		<jmolecules.version>2025.0.0-RC5</jmolecules.version>
