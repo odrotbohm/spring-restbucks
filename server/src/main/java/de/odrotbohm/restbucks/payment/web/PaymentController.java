@@ -28,7 +28,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 import javax.money.MonetaryAmount;
 
@@ -45,8 +44,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * Spring MVC controller to handle payments for an {@link Order}.
@@ -79,7 +76,7 @@ class PaymentController {
 			return ResponseEntity.notFound().build();
 		}
 
-		var payment = paymentService.pay(order, form.getNumber());
+		var payment = paymentService.pay(order, form.number());
 		var model = new PaymentModel(order.getPrice(), payment.getCreditCardNumber().getId()) //
 				.add(paymentLinks.getOrderLinks().linkToItemResource(order));
 
@@ -155,9 +152,5 @@ class PaymentController {
 		private final CreditCardNumber creditCardNumber;
 	}
 
-	@Value
-	@RequiredArgsConstructor(onConstructor = @__(@JsonCreator))
-	static class PaymentForm implements DTO {
-		CreditCardNumber number;
-	}
+	record PaymentForm(CreditCardNumber number) implements DTO {}
 }
