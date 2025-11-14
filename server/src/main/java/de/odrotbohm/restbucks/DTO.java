@@ -20,5 +20,5 @@ import org.jmolecules.stereotype.Stereotype;
 /**
  * @author Oliver Drotbohm
  */
-@Stereotype(groups = "restbucks")
+@Stereotype(id = "restbucks.DTO", groups = "restbucks")
 public interface DTO {}
