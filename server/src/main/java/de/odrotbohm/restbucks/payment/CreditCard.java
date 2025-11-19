@@ -15,7 +15,6 @@
  */
 package de.odrotbohm.restbucks.payment;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -37,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 @AllArgsConstructor(onConstructor = @__(@JsonCreator))
 public class CreditCard implements AggregateRoot<CreditCard, CreditCardNumber> {
 
-	private final @Getter @Column(unique = true) CreditCardNumber number;
+	private final @Getter CreditCardNumber number;
 	private final @Getter String cardHolderName;
 
 	private Month expiryMonth;

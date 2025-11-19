@@ -18,9 +18,6 @@ package de.odrotbohm.restbucks.payment;
 import de.odrotbohm.restbucks.order.Order;
 import de.odrotbohm.restbucks.order.Order.OrderIdentifier;
 import de.odrotbohm.restbucks.payment.Payment.PaymentIdentifier;
-import jakarta.persistence.Column;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -32,6 +29,7 @@ import java.util.UUID;
 import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Association;
 import org.jmolecules.ddd.types.Identifier;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.util.Assert;
 
 /**
@@ -42,13 +40,11 @@ import org.springframework.util.Assert;
 @Getter
 @ToString
 @NoArgsConstructor(force = true)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table("CREDIT_CARD_PAYMENT")
 public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 		implements AggregateRoot<T, PaymentIdentifier> {
 
 	private final PaymentIdentifier id;
-
-	@Column(name = "rborder") //
 	private final Association<Order, OrderIdentifier> order;
 	private final LocalDateTime paymentDate;
 
