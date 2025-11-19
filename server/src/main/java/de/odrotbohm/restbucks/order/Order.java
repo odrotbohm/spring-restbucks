@@ -17,10 +17,8 @@ package de.odrotbohm.restbucks.order;
 
 import de.odrotbohm.restbucks.drinks.Drink;
 import de.odrotbohm.restbucks.order.Order.OrderIdentifier;
-import jakarta.persistence.Column;
-import jakarta.persistence.OrderColumn;
-import jakarta.persistence.Table;
-import jakarta.persistence.Version;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -36,7 +34,10 @@ import org.javamoney.moneta.Money;
 import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Identifier;
 import org.jmolecules.event.types.DomainEvent;
+import org.springframework.data.annotation.PersistenceCreator;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.domain.AbstractAggregateRoot;
+import org.springframework.data.relational.core.mapping.Column;
 
 /**
  * An order.
@@ -45,7 +46,7 @@ import org.springframework.data.domain.AbstractAggregateRoot;
  */
 @Getter
 @ToString(exclude = "lineItems")
-@Table(name = "RBOrder")
+@AllArgsConstructor(onConstructor = @__(@PersistenceCreator), access = AccessLevel.PRIVATE)
 public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot<Order, OrderIdentifier> {
 
 	private final OrderIdentifier id;
@@ -54,9 +55,8 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	private Status status;
 	private @Version Long version;
 
-	@OrderColumn //
-	@Column(unique = true) //
-	private final List<LineItem> lineItems = new ArrayList<>();
+	@Column //
+	private final List<LineItem> lineItems;
 
 	/**
 	 * Creates a new {@link Order} for the given {@link LineItem}s and {@link Location}.
@@ -69,7 +69,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		this.id = new OrderIdentifier(UUID.randomUUID());
 		this.location = location == null ? Location.TAKE_AWAY : location;
 		this.status = Status.PAYMENT_EXPECTED;
-		this.lineItems.addAll(lineItems);
+		this.lineItems = new ArrayList<>(lineItems);
 		this.orderedDate = LocalDateTime.now();
 		registerEvent(new OrderCreated(id, location));
 	}

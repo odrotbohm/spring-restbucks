@@ -16,9 +16,9 @@
 package de.odrotbohm.restbucks.order;
 
 import de.odrotbohm.restbucks.drinks.Drink;
+import de.odrotbohm.restbucks.drinks.Drink.DrinkIdentifier;
 import de.odrotbohm.restbucks.drinks.Milk;
 import de.odrotbohm.restbucks.drinks.Size;
-import de.odrotbohm.restbucks.drinks.Drink.DrinkIdentifier;
 import de.odrotbohm.restbucks.order.LineItem.LineItemIdentifier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +30,7 @@ import javax.money.MonetaryAmount;
 import org.jmolecules.ddd.types.Association;
 import org.jmolecules.ddd.types.Entity;
 import org.jmolecules.ddd.types.Identifier;
+import org.springframework.data.annotation.PersistenceCreator;
 
 /**
  * A line item.
@@ -37,7 +38,7 @@ import org.jmolecules.ddd.types.Identifier;
  * @author Oliver Drotbohm
  */
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(onConstructor = @__(@PersistenceCreator))
 public class LineItem implements Entity<Order, LineItemIdentifier> {
 
 	private final LineItemIdentifier id;
