@@ -94,6 +94,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<artifactId>jmolecules-bytebuddy-nodep</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>io.github.pfichtner</groupId>
+			<artifactId>vaadoo-bytebuddy</artifactId>
+			<version>0.0.1-alpha-2</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- Spring Modulith -->
 
