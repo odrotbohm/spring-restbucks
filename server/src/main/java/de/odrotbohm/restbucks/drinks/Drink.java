@@ -16,6 +16,7 @@
 package de.odrotbohm.restbucks.drinks;
 
 import de.odrotbohm.restbucks.drinks.Drink.DrinkIdentifier;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -46,5 +47,5 @@ public class Drink implements AggregateRoot<Drink, DrinkIdentifier> {
 		this.price = price;
 	}
 
-	public record DrinkIdentifier(UUID id) implements Identifier {}
+	public record DrinkIdentifier(@NotNull UUID id) implements Identifier {}
 }
