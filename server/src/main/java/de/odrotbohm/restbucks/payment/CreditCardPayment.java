@@ -15,7 +15,7 @@
  */
 package de.odrotbohm.restbucks.payment;
 
-import de.odrotbohm.restbucks.order.Order;
+import de.odrotbohm.restbucks.order.Order.OrderIdentifier;
 import lombok.Getter;
 
 import org.jmolecules.ddd.types.Association;
@@ -35,11 +35,11 @@ public class CreditCardPayment extends Payment<CreditCardPayment> {
 	 * Creates a new {@link CreditCardPayment} for the given {@link CreditCardNumber} and {@link Order}.
 	 *
 	 * @param creditCardNumber must not be {@literal null}.
-	 * @param order
+	 * @param orderIdentifier must not be {@literal null}.
 	 */
-	public CreditCardPayment(CreditCardNumber creditCardNumber, Order order) {
+	public CreditCardPayment(CreditCardNumber creditCardNumber, OrderIdentifier orderIdentifier) {
 
-		super(order);
+		super(orderIdentifier);
 
 		Assert.notNull(creditCardNumber, "Credit card number must not be null!");
 

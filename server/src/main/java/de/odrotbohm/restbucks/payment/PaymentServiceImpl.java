@@ -64,7 +64,7 @@ class PaymentServiceImpl implements PaymentService {
 
 		orders.markPaid(order);
 
-		return payments.save(new CreditCardPayment(creditCardNumber, order));
+		return payments.save(new CreditCardPayment(creditCardNumber, order.getId()));
 	}
 
 	/*

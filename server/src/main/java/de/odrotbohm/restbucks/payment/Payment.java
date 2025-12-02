@@ -57,12 +57,12 @@ public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 	 *
 	 * @param order must not be {@literal null}.
 	 */
-	protected Payment(Order order) {
+	protected Payment(OrderIdentifier orderIdentifier) {
 
-		Assert.notNull(order, "Order must not be null!");
+		Assert.notNull(orderIdentifier, "OrderIdentifier must not be null!");
 
 		this.id = new PaymentIdentifier(UUID.randomUUID());
-		this.order = Association.forAggregate(order);
+		this.order = Association.forId(orderIdentifier);
 		this.paymentDate = LocalDateTime.now();
 	}
 

@@ -15,15 +15,14 @@
  */
 package de.odrotbohm.restbucks.payment;
 
-import static de.odrotbohm.restbucks.order.OrderTestUtils.*;
 import static de.odrotbohm.restbucks.payment.CreditCardsIntegrationTest.*;
 import static org.assertj.core.api.Assertions.*;
 
 import de.odrotbohm.restbucks.AbstractIntegrationTest;
+import de.odrotbohm.restbucks.order.Order.OrderIdentifier;
 import de.odrotbohm.restbucks.order.Orders;
-import de.odrotbohm.restbucks.payment.CreditCardPayment;
-import de.odrotbohm.restbucks.payment.CreditCards;
-import de.odrotbohm.restbucks.payment.Payments;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +42,11 @@ class PaymentsIntegrationTest extends AbstractIntegrationTest {
 	void savesCreditCardPayment() {
 
 		var creditCardNumber = createCreditCardNumber();
-		var order = orders.save(createOrder());
+		var orderIdentifier = new OrderIdentifier(UUID.randomUUID());
 
-		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCardNumber, order));
+		CreditCardPayment payment = payments.save(new CreditCardPayment(creditCardNumber, orderIdentifier));
 
 		assertThat(payment.getId()).isNotNull();
-		assertThat(payments.findByOrder(order.getId())).hasValue(payment);
+		assertThat(payments.findByOrder(orderIdentifier)).hasValue(payment);
 	}
 }
