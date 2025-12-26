@@ -12,7 +12,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.0</version>
+		<version>4.0.1</version>
 	</parent>
 
 	<properties>
@@ -20,8 +20,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<datasource-micrometer.version>2.0.0</datasource-micrometer.version>
 		<java.version>25</java.version>
 		<jmolecules.version>2025.0.2-SNAPSHOT</jmolecules.version>
-		<spring-data-bom.version>2025.1.1-SNAPSHOT</spring-data-bom.version>
-		<spring-framework.version>7.0.2-SNAPSHOT</spring-framework.version>
 		<spring-modulith.version>2.0.1</spring-modulith.version>
 		
 		<!-- Enable full annotation processing on Java 23+ -->
