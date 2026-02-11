@@ -10,15 +10,17 @@ set -euo pipefail
 # 5) Poll until a receipt link appears, read it, then complete the order
 #
 # Usage:
-#   ./scripts/generate-traffic.sh [--verbose|-v] [--force-error [INVALID_CARD|DOUBLE_PAY]] [--scenarios FILE] [--scenario NAME] [--cycle] [--base-url URL]
+#   ./scripts/generate-traffic.sh [--verbose|-v] [--force-error [INVALID_CARD|DOUBLE_PAY]] [--scenarios FILE] [--scenario NAME] [--random-scenario] [--cycle] [--base-url URL]
 # Examples:
 #   ./scripts/generate-traffic.sh
 #   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --verbose
 #   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --cycle
+#   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --random-scenario --cycle
 #   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --scenario java_chip_takeaway --force-error INVALID_CARD --base-url http://staging:8080
 # Scenarios:
 #   --scenarios FILE  Load scenarios from FILE (JSON array). Also accepts --scenarios=FILE. Without --scenario, execute all scenarios in order (force-error ignored).
 #   --scenario NAME   Run only the named scenario (also accepts --scenario=NAME; force-error/base-url/verbose overrides apply).
+#   --random-scenario  With --scenarios and no --scenario: run one scenario chosen at random. With --cycle, pick a new random scenario each iteration.
 #   --cycle           With --scenarios: run scenarios repeatedly until interrupted (Ctrl+C). Without --scenario, cycles through all; with --scenario NAME, repeats that scenario only.
 # Error-path option:
 #   --force-error     INVALID_CARD (default if no value) or DOUBLE_PAY.
@@ -43,6 +45,7 @@ SCENARIO_FORCE_ERROR=""
 SCENARIO_LOCATION=""
 SCENARIO_DRINK_NAMES=()
 CYCLE=false
+RANDOM_SCENARIO=false
 
 log_with_level() {
   local level="$1"; shift
@@ -218,6 +221,10 @@ while [[ $# -gt 0 ]]; do
       CYCLE=true
       shift
       ;;
+    --random-scenario)
+      RANDOM_SCENARIO=true
+      shift
+      ;;
     *)
       BASE_URL="$1"
       shift
@@ -228,7 +235,7 @@ done
 set_error_flags
 
 log_info "Verbose mode: ${VERBOSE}"
-log_info "Options: force-error=${FORCE_ERROR:-none}, scenarios=${SCENARIOS_PATH:-none}, scenario=${SCENARIO_NAME:-none}, cycle=${CYCLE}, base-url=${BASE_URL}"
+log_info "Options: force-error=${FORCE_ERROR:-none}, scenarios=${SCENARIOS_PATH:-none}, scenario=${SCENARIO_NAME:-none}, random-scenario=${RANDOM_SCENARIO}, cycle=${CYCLE}, base-url=${BASE_URL}"
 log_info "Hitting root at ${BASE_URL}/ …"
 ROOT_PAYLOAD="$(curl -fsSL -H "Accept: ${ACCEPT_HAL_FORMS}" "${BASE_URL}/")"
 log_debug_json "Root payload" "${ROOT_PAYLOAD}"
@@ -266,20 +273,36 @@ fi
 
 load_scenario
 
+if [[ "${RANDOM_SCENARIO}" == "true" ]]; then
+  if [[ -z "${SCENARIOS_PATH}" ]] || [[ "${RUN_ALL_SCENARIOS}" != "true" ]]; then
+    printf '--random-scenario requires --scenarios FILE and cannot be combined with --scenario.\n' >&2
+    exit 1
+  fi
+  log_info "Random scenario: will pick one of ${SCENARIO_COUNT} scenarios at random."
+fi
+
 if [[ "${CYCLE}" == "true" ]]; then
   if [[ -z "${SCENARIOS_PATH}" ]]; then
     printf '--cycle requires --scenarios FILE.\n' >&2
     exit 1
   fi
   if [[ "${RUN_ALL_SCENARIOS}" == "true" ]]; then
-    log_info "Cycle mode: will repeat all ${SCENARIO_COUNT} scenarios until interrupted (Ctrl+C)."
+    if [[ "${RANDOM_SCENARIO}" == "true" ]]; then
+      log_info "Cycle mode: will pick a new random scenario each iteration until interrupted (Ctrl+C)."
+    else
+      log_info "Cycle mode: will repeat all ${SCENARIO_COUNT} scenarios until interrupted (Ctrl+C)."
+    fi
   else
     log_info "Cycle mode: will repeat scenario '${SCENARIO_NAME}' until interrupted (Ctrl+C)."
   fi
 fi
 
 if [[ "${RUN_ALL_SCENARIOS}" == "true" ]]; then
-  SCENARIO_ITERATIONS="${SCENARIO_COUNT}"
+  if [[ "${RANDOM_SCENARIO}" == "true" ]]; then
+    SCENARIO_ITERATIONS=1
+  else
+    SCENARIO_ITERATIONS="${SCENARIO_COUNT}"
+  fi
 else
   SCENARIO_ITERATIONS=1
 fi
@@ -293,6 +316,9 @@ while true; do
 
   for ((SCENARIO_IDX=0; SCENARIO_IDX<SCENARIO_ITERATIONS; SCENARIO_IDX++)); do
   if [[ "${RUN_ALL_SCENARIOS}" == "true" ]]; then
+    if [[ "${RANDOM_SCENARIO}" == "true" ]]; then
+      SCENARIO_IDX=$((RANDOM % SCENARIO_COUNT))
+    fi
     SCENARIO_JSON="$(echo "${SCENARIOS_RAW}" | jq --argjson i "${SCENARIO_IDX}" '.[$i]')"
   fi
 
