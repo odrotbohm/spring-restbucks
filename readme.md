@@ -36,6 +36,34 @@ Once you have an order displayed in HAL Explorer, you can submit payment:
 
 Refer to the section `The Android client` below for more information.
 
+**3. Use the provided bash script.**
+
+A bash script to generate traffic is provided. 
+By default, the script will place a single order using the first available drink option and default location; pay with the built-in demo card (`1234123412341234`); and poll until a receipt link appears.
+Optionally, you can submit multiple and varied orders, force failures, and more.
+
+Usage Examples:
+- Single, default order (orders first available drink using default location, pays with built-in demo card):  
+  `./scripts/generate-traffic.sh`
+- All orders from file:  
+  `./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json`
+- Single order from file with override to force error:  
+  `./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --scenario java_chip_takeaway --force-error INVALID_CARD`
+
+Dependencies: `curl` and `jq`. 
+
+Optional flags:
+- `--force-error [INVALID_CARD|DOUBLE_PAY]`  
+  - INVALID_CARD: use an invalid card, expect HTTP 500.  
+  - DOUBLE_PAY: pay twice, second payment HTTP 404.  
+  - If the flag is provided with no value, defaults to INVALID_CARD.
+- `--scenarios <FILE>` load scenarios from a JSON file (e.g., `scripts/order-scenarios.json`).  
+  - With `--scenario <NAME>`: run only the specified scenario.  
+  - Without `--scenario`: execute all scenarios in the file, in order. In this mode, `--force-error` is ignored.
+- `--base-url <URL>` override the target base URL (default `http://localhost:8080`).
+- `--verbose` / `-v` for DEBUG-level payload dumps.
+
+
 ## IDE setup notes
 
 ### Eclipse
@@ -308,6 +336,8 @@ The Android sample client can be found in `android-client` and is a most rudimen
 3. Make sure the server runs.
 4. In Android Studio, run the application in the simulator.
 5. In the application, browse existing orders, trigger payments and cancellations.
+
+Tip: If you only want to drive the API without bringing up Android Studio, use the provided bash traffic script as described in the Quickstart section.
 
 The main abstraction working with hypermedia elements is `HypermediaRemoteResource`.
 It allows to define client behavior conditionally based on the presence of links in the representations.
