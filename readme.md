@@ -36,32 +36,51 @@ Once you have an order displayed in HAL Explorer, you can submit payment:
 
 Refer to the section `The Android client` below for more information.
 
-**3. Use the provided bash script.**
+**3. Use the provided bash scripts.**
 
-A bash script to generate traffic is provided. 
-By default, the script will place a single order using the first available drink option and default location; pay with the built-in demo card (`1234123412341234`); and poll until a receipt link appears.
-Optionally, you can submit multiple and varied orders, force failures, and more.
+Two bash scripts are provided to generate traffic. Both require `curl` and `jq`.
 
-Usage Examples:
-- Single, default order (orders first available drink using default location, pays with built-in demo card):  
+**Single-run script: `scripts/generate-traffic.sh`**
+
+By default it places a single order (first available drink, default location), pays with the built-in demo card (`1234123412341234`), and polls until a receipt link appears. You can run multiple or varied scenarios, force errors, add delays, and more.
+
+Usage examples:
+- Single, default order:  
   `./scripts/generate-traffic.sh`
-- All orders from file:  
+- All scenarios from file (in order):  
   `./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json`
-- Single order from file with override to force error:  
+- One scenario by name with forced error:  
   `./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --scenario java_chip_takeaway --force-error INVALID_CARD`
+- Cycle through all scenarios repeatedly (stop with Ctrl+C):  
+  `./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --cycle`
+- One random scenario per run:  
+  `./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --random-scenario`
+- Cycle with a new random scenario each time (0–3 s delay between runs by default):  
+  `./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --random-scenario --cycle`
+- No delay between runs:  
+  `./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --cycle --no-delay`
 
-Dependencies: `curl` and `jq`. 
+Options for `generate-traffic.sh`:
+- `--scenarios <FILE>` or `--scenarios=<FILE>` — JSON file of scenarios (e.g. `scripts/order-scenarios.json`). Without `--scenario`, runs all scenarios in order; with `--scenario <NAME>`, runs only that scenario.
+- `--scenario <NAME>` or `--scenario=<NAME>` — Run only the named scenario.
+- `--cycle` — With `--scenarios`: repeat indefinitely (Ctrl+C to stop). Without `--scenario` cycles through all; with `--scenario` repeats that scenario.
+- `--random-scenario` — With `--scenarios` and no `--scenario`: run one scenario chosen at random. With `--cycle`, pick a new random scenario each iteration.
+- `--delay-max <MS>` — Random delay 0..MS milliseconds between scenario runs (default 3000). Use `--no-delay` for no delay.
+- `--force-error [INVALID_CARD|DOUBLE_PAY]` — INVALID_CARD: invalid card, expect failure. DOUBLE_PAY: pay twice, second payment fails. Omitted value defaults to INVALID_CARD.
+- `--base-url <URL>` — Target base URL (default `http://localhost:8080`).
+- `--verbose` / `-v` — DEBUG-level payload dumps.
 
-Optional flags:
-- `--force-error [INVALID_CARD|DOUBLE_PAY]`  
-  - INVALID_CARD: use an invalid card, expect HTTP 500.  
-  - DOUBLE_PAY: pay twice, second payment HTTP 404.  
-  - If the flag is provided with no value, defaults to INVALID_CARD.
-- `--scenarios <FILE>` load scenarios from a JSON file (e.g., `scripts/order-scenarios.json`).  
-  - With `--scenario <NAME>`: run only the specified scenario.  
-  - Without `--scenario`: execute all scenarios in the file, in order. In this mode, `--force-error` is ignored.
-- `--base-url <URL>` override the target base URL (default `http://localhost:8080`).
-- `--verbose` / `-v` for DEBUG-level payload dumps.
+**Parallel users: `scripts/run-parallel-traffic.sh`**
+
+Runs multiple “users” in parallel, each executing `generate-traffic.sh` with `--scenarios scripts/order-scenarios.json --random-scenario --cycle`. Output is prefixed with `[n]>` for user number `n`. A single Ctrl+C stops all users.
+
+Usage (run from the `server` directory):
+- Default 5 parallel users:  
+  `./scripts/run-parallel-traffic.sh`
+- 10 parallel users:  
+  `./scripts/run-parallel-traffic.sh 10`
+- With verbose output per user:  
+  `./scripts/run-parallel-traffic.sh 3 --verbose`
 
 
 ## IDE setup notes
