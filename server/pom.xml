@@ -17,7 +17,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 	<properties>
 		<bytebuddy.version>1.18.4</bytebuddy.version>
-		<datasource-micrometer.version>2.0.1</datasource-micrometer.version>
+		<datasource-micrometer.version>2.1.1</datasource-micrometer.version>
 		<java.version>25</java.version>
 		<jmolecules.version>2025.0.2</jmolecules.version>
 		<spring-modulith.version>2.0.2</spring-modulith.version>
@@ -39,6 +39,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<groupId>org.springframework.modulith</groupId>
 				<artifactId>spring-modulith-bom</artifactId>
 				<version>${spring-modulith.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>net.ttddyy.observation</groupId>
+				<artifactId>datasource-micrometer-bom</artifactId>
+				<version>${datasource-micrometer.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -253,22 +260,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				</dependency>
 
 				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-zipkin</artifactId>
+					<groupId>net.ttddyy.observation</groupId>
+					<artifactId>datasource-micrometer-opentelemetry</artifactId>
 				</dependency>
 
-				<dependency>
-					<groupId>io.opentelemetry</groupId>
-					<artifactId>opentelemetry-exporter-zipkin</artifactId>
-				</dependency>
-
-				<!--
 				<dependency>
 					<groupId>net.ttddyy.observation</groupId>
 					<artifactId>datasource-micrometer-spring-boot</artifactId>
-					<version>${datasource-micrometer.version}</version>
 				</dependency>
-				-->
 
 				<dependency>
 					<groupId>org.springframework.boot</groupId>

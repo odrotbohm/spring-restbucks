@@ -1,6 +1,7 @@
 services:
-  zipkin:
-    image: openzipkin/zipkin:latest
-    container_name: zipkin
+  grafana-lgtm:
+    image: 'grafana/otel-lgtm:latest'
     ports:
-      - 9411:9411
+      - '3000:3000' # UI
+      - '4317:4317'
+      - '4318:4318'
