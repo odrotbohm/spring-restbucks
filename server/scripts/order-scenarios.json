@@ -1,0 +1,54 @@
+[
+  {
+    "name": "cappuchino_instore",
+    "drinks": ["Cappuchino"],
+    "location": "IN_STORE"
+  },
+  {
+    "name": "cappuchino_takeaway",
+    "drinks": ["Cappuchino"],
+    "location": "TAKE_AWAY"
+  },
+  {
+    "name": "java_chip_instore",
+    "drinks": ["Java Chip"],
+    "location": "IN_STORE"
+  },
+  {
+    "name": "java_chip_takeaway",
+    "drinks": ["Java Chip"],
+    "location": "TAKE_AWAY"
+  },
+  {
+    "name": "cappuchino_repeat_instore",
+    "drinks": ["Cappuchino", "Cappuchino"],
+    "location": "IN_STORE"
+  },
+  {
+    "name": "java_chip_repeat_takeaway",
+    "drinks": ["Java Chip", "Java Chip"],
+    "location": "TAKE_AWAY"
+  },
+  {
+    "name": "java_chip_cappuchino_instore",
+    "drinks": ["Java Chip", "Cappuchino"],
+    "location": "IN_STORE"
+  },
+  {
+    "name": "java_chip_cappuchino_takeaway",
+    "drinks": ["Java Chip", "Cappuchino"],
+    "location": "TAKE_AWAY"
+  },
+  {
+    "name": "cappuchino_instore_fail_card",
+    "drinks": ["Cappuchino"],
+    "location": "IN_STORE",
+    "force_error": "INVALID_CARD"
+  },
+  {
+    "name": "java_chip_takeaway_double_pay",
+    "drinks": ["Java Chip"],
+    "location": "TAKE_AWAY",
+    "force_error": "DOUBLE_PAY"
+  }
+]
