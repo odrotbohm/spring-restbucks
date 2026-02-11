@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+	<include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+	<springProfile name="observability">
+		<appender name="OpenTelemetry"
+				class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+		</appender>
+	</springProfile>
+
+	<logger name="org.springframework.modulith" level="DEBUG"/>
+	<logger name="org.springframework.modulith.observability" level="TRACE"/>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE"/>
+		<springProfile name="observability">
+			<appender-ref ref="OpenTelemetry"/>
+		</springProfile>
+	</root>
+
+</configuration>

@@ -254,6 +254,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				</dependency>
 
 				<dependency>
+					<groupId>io.opentelemetry.instrumentation</groupId>
+					<artifactId>opentelemetry-logback-appender-1.0</artifactId>
+					<version>2.21.0-alpha</version>
+				</dependency>
+
+				<dependency>
 					<groupId>net.ttddyy.observation</groupId>
 					<artifactId>datasource-micrometer-opentelemetry</artifactId>
 				</dependency>
@@ -271,6 +277,19 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				</dependency>
 
 			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<profiles>
+								<profile>observability</profile>
+							</profiles>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 
 		<profile>
