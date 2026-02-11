@@ -22,6 +22,7 @@ set -euo pipefail
 #   --scenario NAME   Run only the named scenario (also accepts --scenario=NAME; force-error/base-url/verbose overrides apply).
 #   --random-scenario  With --scenarios and no --scenario: run one scenario chosen at random. With --cycle, pick a new random scenario each iteration.
 #   --cycle           With --scenarios: run scenarios repeatedly until interrupted (Ctrl+C). Without --scenario, cycles through all; with --scenario NAME, repeats that scenario only.
+#   --delay-max MS    Sleep a random 0..MS milliseconds between scenario runs (default: 3000). Use --no-delay for no delay.
 # Error-path option:
 #   --force-error     INVALID_CARD (default if no value) or DOUBLE_PAY.
 #
@@ -46,6 +47,7 @@ SCENARIO_LOCATION=""
 SCENARIO_DRINK_NAMES=()
 CYCLE=false
 RANDOM_SCENARIO=false
+DELAY_MAX_MS=3000
 
 log_with_level() {
   local level="$1"; shift
@@ -221,6 +223,27 @@ while [[ $# -gt 0 ]]; do
       CYCLE=true
       shift
       ;;
+    --delay-max)
+      if [[ $# -gt 1 && "$2" =~ ^[0-9]+$ ]]; then
+        DELAY_MAX_MS="$2"
+        shift 2
+      else
+        printf '--delay-max requires a non-negative number (milliseconds).\n' >&2
+        exit 1
+      fi
+      ;;
+    --delay-max=*)
+      DELAY_MAX_MS="${1#--delay-max=}"
+      if [[ ! "${DELAY_MAX_MS}" =~ ^[0-9]+$ ]]; then
+        printf '--delay-max requires a non-negative number (milliseconds).\n' >&2
+        exit 1
+      fi
+      shift
+      ;;
+    --no-delay)
+      DELAY_MAX_MS=0
+      shift
+      ;;
     --random-scenario)
       RANDOM_SCENARIO=true
       shift
@@ -235,7 +258,7 @@ done
 set_error_flags
 
 log_info "Verbose mode: ${VERBOSE}"
-log_info "Options: force-error=${FORCE_ERROR:-none}, scenarios=${SCENARIOS_PATH:-none}, scenario=${SCENARIO_NAME:-none}, random-scenario=${RANDOM_SCENARIO}, cycle=${CYCLE}, base-url=${BASE_URL}"
+log_info "Options: force-error=${FORCE_ERROR:-none}, scenarios=${SCENARIOS_PATH:-none}, scenario=${SCENARIO_NAME:-none}, random-scenario=${RANDOM_SCENARIO}, cycle=${CYCLE}, delay-max-ms=${DELAY_MAX_MS}, base-url=${BASE_URL}"
 log_info "Hitting root at ${BASE_URL}/ …"
 ROOT_PAYLOAD="$(curl -fsSL -H "Accept: ${ACCEPT_HAL_FORMS}" "${BASE_URL}/")"
 log_debug_json "Root payload" "${ROOT_PAYLOAD}"
@@ -495,6 +518,13 @@ log_info "Taking receipt (completing order) …"
 curl -fsSL -X DELETE "${RECEIPT_URL}" >/dev/null
 
 log_info "Done. Order lifecycle completed successfully."
+
+  if [[ "${DELAY_MAX_MS}" -gt 0 ]]; then
+    delay_ms=$((RANDOM % (DELAY_MAX_MS + 1)))
+    delay_sec="$(awk "BEGIN {printf \"%.3f\", ${delay_ms}/1000}")"
+    log_debug "Sleeping ${delay_ms} ms before next run …"
+    sleep "$delay_sec"
+  fi
   done
 
   if [[ "${CYCLE}" != "true" ]]; then
