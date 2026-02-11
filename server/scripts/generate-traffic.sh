@@ -16,8 +16,8 @@ set -euo pipefail
 #   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --verbose
 #   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --scenario java_chip_takeaway --force-error INVALID_CARD --base-url http://staging:8080
 # Scenarios:
-#   --scenarios FILE  Load scenarios from FILE (JSON array). Without --scenario, execute all scenarios in order (force-error ignored).
-#   --scenario NAME   Run only the named scenario (force-error/base-url/verbose overrides apply).
+#   --scenarios FILE  Load scenarios from FILE (JSON array). Also accepts --scenarios=FILE. Without --scenario, execute all scenarios in order (force-error ignored).
+#   --scenario NAME   Run only the named scenario (also accepts --scenario=NAME; force-error/base-url/verbose overrides apply).
 # Error-path option:
 #   --force-error     INVALID_CARD (default if no value) or DOUBLE_PAY.
 #
@@ -182,16 +182,34 @@ while [[ $# -gt 0 ]]; do
       fi
       ;;
     --scenarios)
-      SCENARIOS_PATH="$2"
-      shift 2
+      if [[ $# -gt 1 && "$2" != --* ]]; then
+        SCENARIOS_PATH="$2"
+        shift 2
+      else
+        printf '--scenarios requires a file path (e.g. --scenarios path/to/file.json)\n' >&2
+        exit 1
+      fi
+      ;;
+    --scenarios=*)
+      SCENARIOS_PATH="${1#--scenarios=}"
+      shift
       ;;
     --base-url)
       BASE_URL="$2"
       shift 2
       ;;
     --scenario)
-      SCENARIO_NAME="$2"
-      shift 2
+      if [[ $# -gt 1 && "$2" != --* ]]; then
+        SCENARIO_NAME="$2"
+        shift 2
+      else
+        printf '--scenario requires a scenario name\n' >&2
+        exit 1
+      fi
+      ;;
+    --scenario=*)
+      SCENARIO_NAME="${1#--scenario=}"
+      shift
       ;;
     *)
       BASE_URL="$1"
