@@ -10,14 +10,16 @@ set -euo pipefail
 # 5) Poll until a receipt link appears, read it, then complete the order
 #
 # Usage:
-#   ./scripts/generate-traffic.sh [--verbose|-v] [--force-error [INVALID_CARD|DOUBLE_PAY]] [--scenarios FILE] [--scenario NAME] [--base-url URL]
+#   ./scripts/generate-traffic.sh [--verbose|-v] [--force-error [INVALID_CARD|DOUBLE_PAY]] [--scenarios FILE] [--scenario NAME] [--cycle] [--base-url URL]
 # Examples:
 #   ./scripts/generate-traffic.sh
 #   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --verbose
+#   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --cycle
 #   ./scripts/generate-traffic.sh --scenarios scripts/order-scenarios.json --scenario java_chip_takeaway --force-error INVALID_CARD --base-url http://staging:8080
 # Scenarios:
 #   --scenarios FILE  Load scenarios from FILE (JSON array). Also accepts --scenarios=FILE. Without --scenario, execute all scenarios in order (force-error ignored).
 #   --scenario NAME   Run only the named scenario (also accepts --scenario=NAME; force-error/base-url/verbose overrides apply).
+#   --cycle           With --scenarios: run scenarios repeatedly until interrupted (Ctrl+C). Without --scenario, cycles through all; with --scenario NAME, repeats that scenario only.
 # Error-path option:
 #   --force-error     INVALID_CARD (default if no value) or DOUBLE_PAY.
 #
@@ -40,6 +42,7 @@ SCENARIO_JSON=""
 SCENARIO_FORCE_ERROR=""
 SCENARIO_LOCATION=""
 SCENARIO_DRINK_NAMES=()
+CYCLE=false
 
 log_with_level() {
   local level="$1"; shift
@@ -211,6 +214,10 @@ while [[ $# -gt 0 ]]; do
       SCENARIO_NAME="${1#--scenario=}"
       shift
       ;;
+    --cycle)
+      CYCLE=true
+      shift
+      ;;
     *)
       BASE_URL="$1"
       shift
@@ -221,7 +228,7 @@ done
 set_error_flags
 
 log_info "Verbose mode: ${VERBOSE}"
-log_info "Options: force-error=${FORCE_ERROR:-none}, scenarios=${SCENARIOS_PATH:-none}, scenario=${SCENARIO_NAME:-none}, base-url=${BASE_URL}"
+log_info "Options: force-error=${FORCE_ERROR:-none}, scenarios=${SCENARIOS_PATH:-none}, scenario=${SCENARIO_NAME:-none}, cycle=${CYCLE}, base-url=${BASE_URL}"
 log_info "Hitting root at ${BASE_URL}/ …"
 ROOT_PAYLOAD="$(curl -fsSL -H "Accept: ${ACCEPT_HAL_FORMS}" "${BASE_URL}/")"
 log_debug_json "Root payload" "${ROOT_PAYLOAD}"
@@ -259,13 +266,32 @@ fi
 
 load_scenario
 
+if [[ "${CYCLE}" == "true" ]]; then
+  if [[ -z "${SCENARIOS_PATH}" ]]; then
+    printf '--cycle requires --scenarios FILE.\n' >&2
+    exit 1
+  fi
+  if [[ "${RUN_ALL_SCENARIOS}" == "true" ]]; then
+    log_info "Cycle mode: will repeat all ${SCENARIO_COUNT} scenarios until interrupted (Ctrl+C)."
+  else
+    log_info "Cycle mode: will repeat scenario '${SCENARIO_NAME}' until interrupted (Ctrl+C)."
+  fi
+fi
+
 if [[ "${RUN_ALL_SCENARIOS}" == "true" ]]; then
   SCENARIO_ITERATIONS="${SCENARIO_COUNT}"
 else
   SCENARIO_ITERATIONS=1
 fi
 
-for ((SCENARIO_IDX=0; SCENARIO_IDX<SCENARIO_ITERATIONS; SCENARIO_IDX++)); do
+CYCLE_COUNT=0
+while true; do
+  if [[ "${CYCLE}" == "true" ]]; then
+    CYCLE_COUNT=$((CYCLE_COUNT + 1))
+    log_info "——— Cycle ${CYCLE_COUNT} ———"
+  fi
+
+  for ((SCENARIO_IDX=0; SCENARIO_IDX<SCENARIO_ITERATIONS; SCENARIO_IDX++)); do
   if [[ "${RUN_ALL_SCENARIOS}" == "true" ]]; then
     SCENARIO_JSON="$(echo "${SCENARIOS_RAW}" | jq --argjson i "${SCENARIO_IDX}" '.[$i]')"
   fi
@@ -443,9 +469,14 @@ log_info "Taking receipt (completing order) …"
 curl -fsSL -X DELETE "${RECEIPT_URL}" >/dev/null
 
 log_info "Done. Order lifecycle completed successfully."
+  done
+
+  if [[ "${CYCLE}" != "true" ]]; then
+    break
+  fi
 done
 
-if [[ "${RUN_ALL_SCENARIOS}" == "true" ]]; then
+if [[ "${RUN_ALL_SCENARIOS}" == "true" ]] && [[ "${CYCLE}" != "true" ]]; then
   log_info "All ${SCENARIO_COUNT} scenarios completed."
 fi
 
