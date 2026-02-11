@@ -50,8 +50,18 @@ fi
 
 printf '[%s] Starting %s parallel user(s). Press Ctrl+C to stop all.\n' "$(date '+%H:%M:%S')" "${USERS}"
 PIDS=()
+FIFOS=()
+cleanup_fifos() {
+  for f in "${FIFOS[@]}"; do rm -f "$f"; done
+}
+trap cleanup_fifos EXIT
+
 for ((i=1; i<=USERS; i++)); do
-  "${TRAFFIC_SCRIPT}" --scenarios="${SCENARIOS_FILE}" --random-scenario --cycle "${EXTRA_ARGS[@]}" &
+  FIFO=$(mktemp -u "${TMPDIR:-/tmp}/parallel-traffic.XXXXXXXXXX")
+  mkfifo "$FIFO"
+  FIFOS+=("$FIFO")
+  ( awk -v n="$i" '{printf "[%s]> %s\n", n, $0; fflush()}' < "$FIFO" ) &
+  "${TRAFFIC_SCRIPT}" --scenarios="${SCENARIOS_FILE}" --random-scenario --cycle "${EXTRA_ARGS[@]}" > "$FIFO" 2>&1 &
   PIDS+=($!)
 done
 
