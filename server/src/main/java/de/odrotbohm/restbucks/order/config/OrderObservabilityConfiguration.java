@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.odrotbohm.restbucks.order.web;
+package de.odrotbohm.restbucks.order.config;
 
 import de.odrotbohm.restbucks.order.Order.OrderCreated;
 import de.odrotbohm.restbucks.order.Order.OrderLineItemCreated;
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.modulith.observability.ModulithEventMetricsCustomizer;
 
 /**
- * Additional customizations for counters produced for the
+ * Additional customizations for counters produced for the events published from the order module.
  *
  * @author Oliver Drotbohm
  */
