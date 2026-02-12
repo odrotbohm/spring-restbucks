@@ -23,6 +23,7 @@ import de.odrotbohm.restbucks.order.Orders;
 import de.odrotbohm.restbucks.payment.CreditCardNumber;
 import de.odrotbohm.restbucks.payment.Payment;
 import de.odrotbohm.restbucks.payment.Payment.Receipt;
+import de.odrotbohm.restbucks.payment.PaymentFailed;
 import de.odrotbohm.restbucks.payment.PaymentService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,6 +40,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -120,6 +122,17 @@ class PaymentController {
 		return paymentService.takeReceiptFor(order) //
 				.map(this::createReceiptResponse) //
 				.orElseGet(() -> new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED));
+	}
+
+	/**
+	 * Make sure that we translate {@link PaymentFailed} into 400.
+	 *
+	 * @param exception will never be {@literal null}.
+	 * @return will never be {@literal null}.
+	 */
+	@ExceptionHandler
+	ResponseEntity<String> handle(PaymentFailed exception) {
+		return ResponseEntity.badRequest().body(exception.getMessage());
 	}
 
 	/**
