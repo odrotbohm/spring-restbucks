@@ -109,7 +109,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 		<dependency>
 			<groupId>org.springframework.modulith</groupId>
-			<artifactId>spring-modulith-observability</artifactId>
+			<artifactId>spring-modulith-starter-insight</artifactId>
 		</dependency>
 
 		<dependency>
@@ -231,12 +231,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-actuator</artifactId>
-					<exclusions>
-						<exclusion>
-							<groupId>com.fasterxml.jackson.core</groupId>
-							<artifactId>*</artifactId>
-						</exclusion>
-					</exclusions>
 				</dependency>
 
 			</dependencies>
@@ -248,11 +242,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<id>observability</id>
 
 			<dependencies>
-
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-actuator</artifactId>
-				</dependency>
 
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
