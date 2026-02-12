@@ -20,7 +20,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<datasource-micrometer.version>2.1.1</datasource-micrometer.version>
 		<java.version>25</java.version>
 		<jmolecules.version>2025.0.2</jmolecules.version>
-		<spring-modulith.version>2.0.2</spring-modulith.version>
+		<spring-modulith.version>2.1.0-SNAPSHOT</spring-modulith.version>
 		
 		<!-- Enable full annotation processing on Java 23+ -->
 		<maven.compiler.proc>full</maven.compiler.proc>
