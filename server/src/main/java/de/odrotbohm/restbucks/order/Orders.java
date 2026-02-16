@@ -16,11 +16,14 @@
 package de.odrotbohm.restbucks.order;
 
 import de.odrotbohm.restbucks.order.Order.OrderIdentifier;
+import de.odrotbohm.restbucks.order.Order.ProcessingCompleted;
+import de.odrotbohm.restbucks.order.Order.ProcessingStarted;
 import de.odrotbohm.restbucks.order.Order.Status;
 
 import java.util.List;
 
 import org.jmolecules.ddd.integration.AssociationResolver;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -62,13 +65,14 @@ public interface Orders extends CrudRepository<Order, OrderIdentifier>,
 	 * @param id must not be {@literal null}.
 	 * @return
 	 */
-	@Transactional
-	default Order markInPreparation(OrderIdentifier id) {
+	@EventListener
+	default Order on(ProcessingStarted event) {
 
-		var order = findById(id) //
-				.orElseThrow(() -> new IllegalStateException(String.format("No order found for identifier %s!", id)));
-
-		return save(order.markInPreparation());
+		return findById(event.identifier())
+				.map(Order::markInPreparation)
+				.map(this::save)
+				.orElseThrow(
+						() -> new IllegalStateException("No order found for identifier %s!".formatted(event.identifier())));
 	}
 
 	/**
@@ -77,9 +81,14 @@ public interface Orders extends CrudRepository<Order, OrderIdentifier>,
 	 * @param order must not be {@literal null}.
 	 * @return
 	 */
-	@Transactional
-	default Order markPrepared(Order order) {
-		return save(order.markPrepared());
+	@EventListener
+	default Order on(ProcessingCompleted event) {
+
+		return findById(event.identifier())
+				.map(Order::markPrepared)
+				.map(this::save)
+				.orElseThrow(
+						() -> new IllegalStateException("No order found for identifier %s!".formatted(event.identifier())));
 	}
 
 	/**

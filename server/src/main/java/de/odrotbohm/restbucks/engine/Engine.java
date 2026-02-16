@@ -15,19 +15,18 @@
  */
 package de.odrotbohm.restbucks.engine;
 
-import de.odrotbohm.restbucks.order.Order;
+import de.odrotbohm.restbucks.order.Order.OrderIdentifier;
 import de.odrotbohm.restbucks.order.Order.OrderPaid;
-import de.odrotbohm.restbucks.order.Orders;
+import de.odrotbohm.restbucks.order.Order.ProcessingCompleted;
+import de.odrotbohm.restbucks.order.Order.ProcessingStarted;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.jmolecules.ddd.annotation.Service;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 
 /**
@@ -44,9 +43,8 @@ class Engine {
 
 	private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
-	private final @NonNull Orders orders;
 	private final @NonNull EngineSettings settings;
-	private final Set<Order> ordersInProgress = Collections.newSetFromMap(new ConcurrentHashMap<Order, Boolean>());
+	private final ApplicationEventPublisher events;
 
 	/**
 	 * Starts preparing the drinks contained in the order that was just paid. Simulates busy work by sleeping for the
@@ -64,12 +62,13 @@ class Engine {
 			}
 		}
 
-		var order = orders.markInPreparation(event.orderIdentifier());
+		var identifier = event.orderIdentifier();
+
+		events.publishEvent(new PreparationStarted(identifier));
+
 		var processingTime = settings.getProcessingTime();
 
-		ordersInProgress.add(order);
-
-		LOG.info("Starting to process order {} for {}.", order, processingTime.toString());
+		LOG.info("Starting to process order {} for {}.", identifier, processingTime.toString());
 
 		try {
 			Thread.sleep(processingTime.toMillis());
@@ -77,10 +76,12 @@ class Engine {
 			throw new RuntimeException(e);
 		}
 
-		order = orders.markPrepared(order);
+		events.publishEvent(new PreparationFinished(identifier));
 
-		ordersInProgress.remove(order);
-
-		LOG.info("Finished processing order {}.", order);
+		LOG.info("Finished processing order {}.", identifier);
 	}
+
+	public record PreparationStarted(OrderIdentifier identifier) implements ProcessingStarted {}
+
+	public record PreparationFinished(OrderIdentifier identifier) implements ProcessingCompleted {}
 }

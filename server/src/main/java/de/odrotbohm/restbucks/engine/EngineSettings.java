@@ -15,12 +15,14 @@
  */
 package de.odrotbohm.restbucks.engine;
 
-import java.time.Duration;
-
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Value;
 
+import java.time.Duration;
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 /**
  * Configuration settings for {@link Engine}.
@@ -28,6 +30,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  * @author Oliver Drotbohm
  */
 @Value
+@Getter(value = AccessLevel.NONE)
 @ConfigurationProperties("restbucks.engine")
 class EngineSettings {
 
@@ -35,14 +38,34 @@ class EngineSettings {
 	 * The duration for how the {@link Engine} is supposed to process the Order.
 	 */
 	private final Duration processingTime;
+	private final Duration maxProcessingTime;
 
-	private final boolean failRandomly;
+	private final @Getter boolean failRandomly;
 
 	/**
 	 * @param processingTime must not be {@literal null}.
 	 */
-	public EngineSettings(@DefaultValue("2s") Duration processingTime, boolean failRandomly) {
+	public EngineSettings(Duration processingTime, Duration maxProcessingTime, boolean failRandomly) {
+
 		this.processingTime = processingTime;
+		this.maxProcessingTime = maxProcessingTime;
 		this.failRandomly = failRandomly;
+	}
+
+	Duration getProcessingTime() {
+
+		if (processingTime != null) {
+			return processingTime;
+		}
+
+		if (maxProcessingTime != null) {
+
+			long maxMs = maxProcessingTime.toMillis();
+			long randomMs = maxMs > 0 ? ThreadLocalRandom.current().nextLong(0, maxMs) : 0;
+
+			return Duration.ofMillis(randomMs);
+		}
+
+		return Duration.ofSeconds(2);
 	}
 }

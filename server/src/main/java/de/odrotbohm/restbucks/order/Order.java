@@ -147,7 +147,6 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 		}
 
 		this.status = Status.PREPARING;
-		registerEvent(new OrderInPreparation(id));
 		return this;
 	}
 
@@ -236,14 +235,6 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	public record OrderIdentifier(UUID id) implements Identifier {}
 
 	/**
-	 * Event to be thrown when an {@link Order} has been paid.
-	 *
-	 * @author Oliver Drotbohm
-	 * @author Stéphane Nicoll
-	 */
-	public record OrderPaid(OrderIdentifier orderIdentifier, MonetaryAmount total) implements DomainEvent {}
-
-	/**
 	 * Event to be thrown when an {@link Order} has been created.
 	 *
 	 * @author Marcin Grzejszczak
@@ -258,18 +249,37 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	public record OrderLineItemCreated(Order.OrderIdentifier id, LineItem lineItem) implements DomainEvent {}
 
 	/**
+	 * Event to be thrown when an {@link Order} has been paid.
+	 *
+	 * @author Oliver Drotbohm
+	 * @author Stéphane Nicoll
+	 */
+	public record OrderPaid(OrderIdentifier orderIdentifier, MonetaryAmount total) implements DomainEvent {}
+
+	/**
 	 * Event to be thrown when an {@link Order} is in preparation.
 	 *
 	 * @author Marcin Grzejszczak
 	 */
-	public record OrderInPreparation(Order.OrderIdentifier id) implements DomainEvent {}
+	public interface ProcessingStarted extends DomainEvent {
+		OrderIdentifier identifier();
+	}
 
 	/**
 	 * Event to be thrown when an {@link Order} has been prepared.
 	 *
 	 * @author Marcin Grzejszczak
 	 */
-	public record OrderPrepared(Order.OrderIdentifier id) implements DomainEvent {}
+	public interface ProcessingCompleted extends DomainEvent {
+		OrderIdentifier identifier();
+	}
+
+	/**
+	 * Event to be thrown when an {@link Order} has been prepared.
+	 *
+	 * @author Oliver Drotbohm
+	 */
+	public record OrderPrepared(OrderIdentifier orderIdentifier) implements DomainEvent {}
 
 	/**
 	 * Event to be thrown when an {@link Order} has been taken.
