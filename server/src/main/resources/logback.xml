@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 
-	<property name="CONSOLE_LOG_PATTERN" value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(%1.-1level){green} - %8.8t : %m%n%wEx" />
+	<property name="CONSOLE_LOG_PATTERN" value="%clr(%d{HH:mm:ss.SSS}){faint} %clr([%replace(%replace(%X{traceId:-}){'^(.{0,6}).*', '$1'}){'^$', ' none '}]){magenta} %clr(%1.-1level){green} - %8.8t : %m%n%wEx" />
 
 	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 

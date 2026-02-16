@@ -39,6 +39,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -131,8 +132,8 @@ class PaymentController {
 	 * @return will never be {@literal null}.
 	 */
 	@ExceptionHandler
-	ResponseEntity<String> handle(PaymentFailed exception) {
-		return ResponseEntity.badRequest().body(exception.getMessage());
+	ErrorResponse handle(PaymentFailed exception) {
+		return ErrorResponse.builder(exception, HttpStatus.BAD_REQUEST, exception.getMessage()).build();
 	}
 
 	/**

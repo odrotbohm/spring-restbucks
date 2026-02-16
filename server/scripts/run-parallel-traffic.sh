@@ -60,8 +60,8 @@ for ((i=1; i<=USERS; i++)); do
   FIFO=$(mktemp -u "${TMPDIR:-/tmp}/parallel-traffic.XXXXXXXXXX")
   mkfifo "$FIFO"
   FIFOS+=("$FIFO")
-  ( awk -v n="$i" '{printf "[%s]> %s\n", n, $0; fflush()}' < "$FIFO" ) &
-  "${TRAFFIC_SCRIPT}" --scenarios="${SCENARIOS_FILE}" --random-scenario --cycle "${EXTRA_ARGS[@]}" > "$FIFO" 2>&1 &
+  ( cat < "$FIFO" ) &
+  CLIENT_INDEX="$i" "${TRAFFIC_SCRIPT}" --scenarios="${SCENARIOS_FILE}" --random-scenario --cycle "${EXTRA_ARGS[@]}" > "$FIFO" 2>&1 &
   PIDS+=($!)
 done
 

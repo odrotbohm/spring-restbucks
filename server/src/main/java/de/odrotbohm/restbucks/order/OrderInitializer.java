@@ -56,7 +56,7 @@ class OrderInitializer {
 		}
 
 		var javaChip = drinks.save(new Drink("Java Chip", Milk.WHOLE, Size.LARGE, Money.of(4.20, EURO)));
-		var cappuchino = drinks.save(new Drink("Cappuchino", Milk.WHOLE, Size.LARGE, Money.of(3.20, EURO)));
+		var cappuchino = drinks.save(new Drink("Cappuchino", Milk.SEMI, Size.SMALL, Money.of(3.20, EURO)));
 
 		Stream.of(javaChip, cappuchino)
 				.map(it -> new Order().add(it))

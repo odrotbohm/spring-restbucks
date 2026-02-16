@@ -49,9 +49,28 @@ CYCLE=false
 RANDOM_SCENARIO=false
 DELAY_MAX_MS=3000
 
+log_ts() {
+  local ts
+  ts=$(date '+%H:%M:%S.%3N' 2>/dev/null)
+  # BSD date prints %3N literally; require trailing .NNN for valid milliseconds
+  if [[ -z "${ts}" || "${ts}" == *%* || "${ts}" != *.[0-9][0-9][0-9] ]]; then
+    ts=$(date '+%H:%M:%S.000')
+  fi
+  printf '%s' "${ts}"
+}
+
 log_with_level() {
   local level="$1"; shift
-  printf '[%s][%s] %s\n' "$(date '+%H:%M:%S')" "${level}" "$*"
+  local msg="$*"
+  if [[ "${VERBOSE}" != "true" && "${level}" == "INFO" ]]; then
+    msg="$(printf '%s' "${msg}" | tr '\n' ' ' | tr -s ' ' | sed -e 's/^ *//' -e 's/ *$//')"
+  fi
+  local ts
+  ts="$(log_ts)"
+  # Match server order: time (no brackets), trace id, then index in [ ]; pad so colons align with server (level - %8.8t = 12 chars)
+  local log_trace="${TRACE_PREFIX:- none }"
+  local log_idx="${LOG_INDEX:-00}"
+  printf '%s [%-6s]         [%s] : %s\n' "${ts}" "${log_trace}" "${log_idx}" "${msg}"
 }
 
 log_info() {
@@ -96,6 +115,28 @@ need_tool() {
 strip_template() {
   # HAL templated links often look like ".../orders{?page,size,sort}"
   printf '%s' "$1" | sed 's/{.*$//'
+}
+
+# Generate N bytes of random hex (output length 2*N). Used for W3C Trace Context.
+# Reads from /dev/urandom (OS CSPRNG) so trace/span IDs are cryptographically random.
+random_hex() {
+  local n="${1:-16}"
+  local hex
+  hex="$(od -A n -t x1 -N "$n" /dev/urandom 2>/dev/null | tr -d ' \n')"
+  if [[ ${#hex} -ne $((n * 2)) ]]; then
+    printf 'Failed to read %s random bytes from /dev/urandom.\n' "$n" >&2
+    exit 1
+  fi
+  printf '%s' "${hex}"
+}
+
+# Set a fresh trace and span for the next request (call before each request).
+# Builds TRACEPARENT in this shell so curl's subshell sees the value when we use -H "traceparent: ${TRACEPARENT}".
+begin_request_trace() {
+  TRACE_ID="$(random_hex 16)"
+  TRACE_PREFIX="${TRACE_ID:0:6}"
+  SPAN_ID="$(random_hex 8)"
+  TRACEPARENT="00-${TRACE_ID}-${SPAN_ID}-00"
 }
 
 load_scenario() {
@@ -257,6 +298,11 @@ done
 
 set_error_flags
 
+# When run by run-parallel-traffic.sh, CLIENT_INDEX (1-based user number) is set; use it for log index
+if [[ -n "${CLIENT_INDEX:-}" && "${CLIENT_INDEX}" =~ ^[0-9]+$ ]]; then
+  LOG_INDEX="$(printf '%02d' "${CLIENT_INDEX}")"
+fi
+
 log_info "Verbose mode: ${VERBOSE}"
 log_info "Options: force-error=${FORCE_ERROR:-none}, scenarios=${SCENARIOS_PATH:-none}, scenario=${SCENARIO_NAME:-none}, random-scenario=${RANDOM_SCENARIO}, cycle=${CYCLE}, delay-max-ms=${DELAY_MAX_MS}, base-url=${BASE_URL}"
 log_info "Hitting root at ${BASE_URL}/ …"
@@ -390,10 +436,15 @@ while true; do
   fi
   log_info "Running scenario: ${SCENARIO_DISPLAY}"
 
+  # Use scenario index only when not running as a parallel client (CLIENT_INDEX unset)
+  if [[ -z "${CLIENT_INDEX:-}" ]]; then
+    LOG_INDEX="$(printf '%02d' $((SCENARIO_IDX + 1)))"
+  fi
   PAYLOAD="$(jq -n --argjson drinks "${DRINK_URIS_JSON}" --arg location "${LOCATION_OPTION}" '{drinks: $drinks, location: $location}')"
 HEADERS_FILE="$(mktemp)"
 
 log_info "Placing order at ${ORDERS_URL} using ${DRINK_URIS_JSON} and location ${LOCATION_OPTION} …"
+log_debug_json "Order request payload" "${PAYLOAD}"
 ORDER_RESPONSE="$(curl -fsSL -D "${HEADERS_FILE}" \
   -H "Content-Type: application/json" \
   -H "Accept: ${ACCEPT_HAL_JSON}" \
@@ -482,7 +533,8 @@ fi
 
 log_info "Receipt available at ${RECEIPT_URL}"
 log_info "Reading receipt …"
-curl -fsSL -H "Accept: ${ACCEPT_HAL_JSON}" "${RECEIPT_URL}" | jq .
+RECEIPT_JSON="$(curl -fsSL -H "Accept: ${ACCEPT_HAL_JSON}" "${RECEIPT_URL}")"
+log_debug_json "Receipt" "${RECEIPT_JSON}"
 
 if [[ "${FORCE_DOUBLE_PAY}" == "true" ]]; then
   log_info "Triggering second payment to force 'already paid' error …"
