@@ -36,7 +36,7 @@ class OrderObservabilityConfiguration {
 		return metrics -> {
 
 			metrics.customize(OrderCreated.class, (event, it) -> {
-				it.tags("location", event.location() != null ? event.location().name() : "NONE");
+				it.tags("location", event.location().name());
 			});
 
 			metrics.customize(OrderLineItemCreated.class, (event, it) -> {

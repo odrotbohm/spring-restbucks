@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 the original author or authors.
+ * Copyright 2013-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,13 @@ import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import de.odrotbohm.restbucks.AbstractWebIntegrationTest;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 /**
  * Integration test for REST resources exposed by Spring Data REST.
@@ -30,6 +33,8 @@ import org.springframework.http.HttpStatus;
  * @author Oliver Drotbohm
  */
 class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
+
+	@Autowired JsonMapper mapper;
 
 	@Test
 	void exposesOrdersResourceViaRootResource() throws Exception {
@@ -39,5 +44,17 @@ class OrderResourceIntegrationTest extends AbstractWebIntegrationTest {
 		assertThat(result).hasStatus(HttpStatus.OK);
 		assertThat(result).contentType().isCompatibleWith(MediaTypes.VND_HAL_JSON);
 		assertThat(result).bodyJson().hasPath("$._links.restbucks:orders.href").isNotNull();
+	}
+
+	@Test
+	void rejectsMissingFieldsInLocationAndDrinks() throws Exception {
+
+		var payload = new LocationAndDrinks();
+
+		var result = mvc.perform(post("/orders")
+				.content(mapper.writeValueAsString(payload))
+				.contentType(MediaType.APPLICATION_JSON));
+
+		assertThat(result).hasStatus4xxClientError();
 	}
 }

@@ -62,7 +62,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	 * Creates a new {@link Order} for the given {@link LineItem}s and {@link Location}.
 	 *
 	 * @param lineItems must not be {@literal null}.
-	 * @param location
+	 * @param location must not be {@literal null}.
 	 */
 	public Order(Collection<LineItem> lineItems, Location location) {
 
@@ -80,7 +80,7 @@ public class Order extends AbstractAggregateRoot<Order> implements AggregateRoot
 	 * @param items must not be {@literal null}.
 	 */
 	public Order(LineItem... items) {
-		this(List.of(items), null);
+		this(List.of(items), Location.TAKE_AWAY);
 	}
 
 	Order() {

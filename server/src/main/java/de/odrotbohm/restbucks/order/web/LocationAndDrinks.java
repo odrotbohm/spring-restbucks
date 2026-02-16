@@ -21,6 +21,7 @@ import de.odrotbohm.restbucks.order.Order;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class LocationAndDrinks {
 
 	@NotNull //
 	private Location location;
-	@NotNull
-	private List<Drink> drinks;
+	@NotNull //
+	private List<Drink> drinks = new ArrayList<>();
 
 	public Order toOrder() {
 
