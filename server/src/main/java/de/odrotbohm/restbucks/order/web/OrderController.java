@@ -25,6 +25,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -46,7 +47,7 @@ class OrderController {
 	 * @return
 	 */
 	@PostMapping(path = "/orders")
-	public HttpEntity<?> placeOrder(@RequestBody LocationAndDrinks payload, Errors errors,
+	public HttpEntity<?> placeOrder(@RequestBody @Validated LocationAndDrinks payload, Errors errors,
 			PersistentEntityResourceAssembler assembler) {
 
 		return MappedPayloads.of(payload, errors)
