@@ -1,9 +1,0 @@
-[
-  {
-    "name": "org.hibernate.cfg.beanvalidation.TypeSafeActivator",
-    "allDeclaredMethods":true,
-    "condition": {
-      "typeReachable": "jakarta.validation.ValidatorFactory"
-    }
-  }
-]

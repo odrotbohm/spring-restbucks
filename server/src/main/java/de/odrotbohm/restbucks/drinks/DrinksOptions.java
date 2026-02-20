@@ -15,13 +15,12 @@
  */
 package de.odrotbohm.restbucks.drinks;
 
-import static org.springframework.data.domain.Sort.*;
-
 import de.odrotbohm.restbucks.Restbucks;
 
 import java.util.Optional;
 
 import org.springframework.data.rest.webmvc.BasePathAwareController;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.hal.HalLinkRelation;
 import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
@@ -69,7 +68,7 @@ public class DrinksOptions {
 	@GetMapping("/drinks/by-name")
 	public HttpEntity<?> getOptions(@RequestParam Optional<String> q) {
 
-		var sortByName = sort(Drink.class).by(Drink::getName).ascending();
+		var sortByName = Sort.by(Drink::getName).ascending();
 
 		var options = q.map(it -> drinks.findByNameContaining(it, sortByName))
 				.orElseGet(() -> drinks.findAll(sortByName))

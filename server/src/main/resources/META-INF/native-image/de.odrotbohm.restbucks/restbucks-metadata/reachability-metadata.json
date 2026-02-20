@@ -1,0 +1,27 @@
+{
+	"reflection": [
+		{
+			"type": {
+				"lambda": {
+					"declaringClass": "de.odrotbohm.restbucks.drinks.DrinksOptions",
+					"interfaces": [
+						"org.springframework.data.core.TypedPropertyPath"
+					]
+				}
+			},
+			"methods": [
+				{
+					"name": "writeReplace",
+					"parameterTypes": []
+				}
+			]
+		},
+		{
+			"type": "org.hibernate.cfg.beanvalidation.TypeSafeActivator",
+			"allDeclaredMethods": true,
+			"condition": {
+				"typeReached": "jakarta.validation.ValidatorFactory"
+			}
+		}
+	]
+}
