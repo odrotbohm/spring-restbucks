@@ -1,0 +1,6 @@
+applications:
+  - name: restbucks
+    path: target/restbucks-1.0.0-SNAPSHOT.jar
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 25.+ } }'
+      JBP_CONFIG_SPRING_BOOT_EFFICIENCY: '{ "aot_enabled": true, "cds_enabled": true }'
