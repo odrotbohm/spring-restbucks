@@ -66,9 +66,9 @@ public interface Orders extends CrudRepository<Order, OrderIdentifier>,
 	 * @return
 	 */
 	@EventListener
-	default Order on(ProcessingStarted event) {
+	default void on(ProcessingStarted event) {
 
-		return findById(event.identifier())
+		findById(event.identifier())
 				.map(Order::markInPreparation)
 				.map(this::save)
 				.orElseThrow(
@@ -82,9 +82,9 @@ public interface Orders extends CrudRepository<Order, OrderIdentifier>,
 	 * @return
 	 */
 	@EventListener
-	default Order on(ProcessingCompleted event) {
+	default void on(ProcessingCompleted event) {
 
-		return findById(event.identifier())
+		findById(event.identifier())
 				.map(Order::markPrepared)
 				.map(this::save)
 				.orElseThrow(
