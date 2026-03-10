@@ -27,8 +27,12 @@ import javax.money.MonetaryAmount;
 
 import org.javamoney.moneta.Money;
 import org.springframework.data.rest.webmvc.RepositoryLinksResource;
+import org.springframework.data.rest.webmvc.support.ETag;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
+import org.springframework.http.HttpStatus;
 import org.springframework.modulith.events.ApplicationModuleListener;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,6 +60,16 @@ class Dashboard implements RepresentationModelProcessor<RepositoryLinksResource>
 	@ApplicationModuleListener
 	void on(OrderPaid event) {
 		this.revenue = revenue.add(event.total());
+	}
+
+	@GetMapping("/exception")
+	void exception() {
+		throw new IllegalArgumentException();
+	}
+
+	@ExceptionHandler
+	ErrorResponse handle(IllegalArgumentException exception, ETag etag) {
+		return ErrorResponse.builder(exception, HttpStatus.NOT_ACCEPTABLE, "Boo!").build();
 	}
 
 	/*
