@@ -21,7 +21,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		<java.version>25</java.version>
 		<jmolecules.version>2025.0.2</jmolecules.version>
 		<spring-modulith.version>2.1.0-M3</spring-modulith.version>
-		
+		<tanzu.spring.version>1.0.0-SNAPSHOT</tanzu.spring.version>
+
 		<!-- Enable full annotation processing on Java 23+ -->
 		<maven.compiler.proc>full</maven.compiler.proc>
 	</properties>
@@ -49,6 +50,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<!-- <dependency>
+				<groupId>com.vmware.tanzu.spring</groupId>
+				<artifactId>tanzu-spring-bom</artifactId>
+				<version>${tanzu.spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency> -->
 		</dependencies>
 	</dependencyManagement>
 
@@ -122,6 +130,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<groupId>org.springframework.modulith</groupId>
 			<artifactId>spring-modulith-junit</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Tanzu Spring -->
+
+		<dependency>
+			<groupId>com.vmware.tanzu.spring</groupId>
+			<artifactId>tanzu-spring-starter</artifactId>
+			<version>${tanzu.spring.version}</version>
 		</dependency>
 
 		<!-- Spring Data REST -->
@@ -488,6 +504,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	</build>
 
 	<repositories>
+		<repository>
+			<id>spring-govern-gradle-dev-local</id>
+			<url>https://gcplabs-usw1.packages.broadcom.net/artifactory/spring-govern-gradle-dev-local</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
 		<repository>
 			<id>spring-milestone</id>
 			<url>https://repo.spring.io/milestone</url>

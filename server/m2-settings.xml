@@ -1,0 +1,12 @@
+<settings>
+    <servers>
+        <server>
+            <id>spring-govern-gradle-dev-local</id>
+            <!-- For username, user your short Broadcom Id -->
+            <!-- For password, go to https://gcplabs-usw1.packages.broadcom.net/ui/user_profile (VPN required) and generate an Identity Token-->
+            <username>${env.ART_USER}</username>
+            <password>${env.ART_PASS}</password>
+        </server>
+    </servers>
+</settings>
+
