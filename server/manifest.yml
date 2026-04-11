@@ -1,6 +1,7 @@
 applications:
   - name: restbucks
     path: target/restbucks-1.0.0-SNAPSHOT.jar
+    buildpack: java_buildpack_offline
     env:
       JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 25.+ } }'
       JBP_CONFIG_SPRING_BOOT_EFFICIENCY: '{ "spring_aot_enabled": false, "aot_cache_enabled": false }'
