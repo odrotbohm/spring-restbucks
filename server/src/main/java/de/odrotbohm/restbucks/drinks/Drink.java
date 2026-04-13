@@ -18,6 +18,7 @@ package de.odrotbohm.restbucks.drinks;
 import de.odrotbohm.restbucks.drinks.Drink.DrinkIdentifier;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
 import java.util.UUID;
 
@@ -30,6 +31,7 @@ import org.jmolecules.ddd.types.Identifier;
  * @author Oliver Drotbohm
  */
 @Getter
+@AllArgsConstructor
 public class Drink implements AggregateRoot<Drink, DrinkIdentifier> {
 
 	private DrinkIdentifier id;
@@ -39,12 +41,7 @@ public class Drink implements AggregateRoot<Drink, DrinkIdentifier> {
 	private MonetaryAmount price;
 
 	public Drink(String name, Milk milk, Size size, MonetaryAmount price) {
-
-		this.id = new DrinkIdentifier(UUID.randomUUID());
-		this.name = name;
-		this.milk = milk;
-		this.size = size;
-		this.price = price;
+		this(new DrinkIdentifier(UUID.randomUUID()), name, milk, size, price);
 	}
 
 	public record DrinkIdentifier(@NotNull UUID id) implements Identifier {}
