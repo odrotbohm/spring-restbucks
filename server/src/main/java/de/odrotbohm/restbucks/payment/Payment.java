@@ -18,6 +18,7 @@ package de.odrotbohm.restbucks.payment;
 import de.odrotbohm.restbucks.order.Order;
 import de.odrotbohm.restbucks.order.Order.OrderIdentifier;
 import de.odrotbohm.restbucks.payment.Payment.PaymentIdentifier;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
@@ -89,5 +90,5 @@ public abstract class Payment<T extends AggregateRoot<T, PaymentIdentifier>>
 		private final Association<Order, OrderIdentifier> order;
 	}
 
-	public record PaymentIdentifier(UUID id) implements Identifier {}
+	public record PaymentIdentifier(@NotNull UUID id) implements Identifier {}
 }
