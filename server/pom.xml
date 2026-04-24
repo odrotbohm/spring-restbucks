@@ -271,11 +271,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 				<dependency>
 					<groupId>net.ttddyy.observation</groupId>
 					<artifactId>datasource-micrometer-opentelemetry</artifactId>
+					<scope>runtime</scope>
 				</dependency>
 
 				<dependency>
 					<groupId>net.ttddyy.observation</groupId>
 					<artifactId>datasource-micrometer-spring-boot</artifactId>
+					<scope>runtime</scope>
 				</dependency>
 
 				<dependency>
